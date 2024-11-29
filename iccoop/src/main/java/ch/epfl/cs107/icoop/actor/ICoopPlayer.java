@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.icoop.actor;
+package ch.epfl.cs107.icoop.actor;
 
 import java.awt.*;
 import java.util.Collections;

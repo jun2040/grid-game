@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.icoop.area;
+package ch.epfl.cs107.icoop.area;
 
 
 import ch.epfl.cs107.play.areagame.actor.Interactable;

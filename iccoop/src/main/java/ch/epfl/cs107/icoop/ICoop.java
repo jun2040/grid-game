@@ -1,9 +1,9 @@
-package ch.epfl.cs107.play.icoop;
+package ch.epfl.cs107.icoop;
 
 import ch.epfl.cs107.play.areagame.AreaGame;
-import ch.epfl.cs107.play.icoop.area.ICoopArea;
-import ch.epfl.cs107.play.icoop.area.maps.OrbWay;
-import ch.epfl.cs107.play.icoop.area.maps.Spawn;
+import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.area.maps.OrbWay;
+import ch.epfl.cs107.icoop.area.maps.Spawn;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
@@ -15,7 +15,7 @@ import ch.epfl.cs107.play.areagame.AreaGame;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
-import ch.epfl.cs107.play.icoop.actor.ICoopPlayer;
+import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 //import ch.epfl.cs107.play.icoop.area.ICoopArea;
 //import ch.epfl.cs107.play.icoop.area.maps.Spawn;
 //import ch.epfl.cs107.play.icoop.area.maps.OrbWay;
