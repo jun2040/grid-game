@@ -1,20 +1,15 @@
 package ch.epfl.cs107.icoop.area;
 
-
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
+import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.window.Window;
 
-public final class ICoopBehavior extends AreaBehavior {
-    /**
-     * Default Tuto2Behavior Constructor
-     *
-     * @param window (Window), not null
-     * @param name   (String): Name of the Behavior, not null
-     */
-    public ICoopBehavior(Window window, String name) {
-        super(window, name);
+public class ICoopBehavior extends AreaBehavior {
+    public ICoopBehavior(Window window, String title) {
+        super(window, title);
         int height = getHeight();
         int width = getWidth();
         for (int y = 0; y < height; y++) {
@@ -24,7 +19,6 @@ public final class ICoopBehavior extends AreaBehavior {
             }
         }
     }
-
     public enum ICoopCellType {
         //https://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
         NULL(0, false , false),
@@ -56,9 +50,6 @@ public final class ICoopBehavior extends AreaBehavior {
         }
     }
 
-    /**
-     * Cell adapted to the Tuto2 game
-     */
     public class ICoopCell extends Cell {
         /// Type of the cell following the enum
         private final ICoopCellType type;
@@ -87,11 +78,9 @@ public final class ICoopBehavior extends AreaBehavior {
 
         @Override
         public boolean takeCellSpace() {
-            for(Interactable entity : entities){
-                if(entity.takeCellSpace()){
-                    return true;
-                }
-            }
+            for(Interactable entity : entities)
+                return entity.takeCellSpace();
+
             return false;
         }
 
@@ -105,12 +94,7 @@ public final class ICoopBehavior extends AreaBehavior {
             return false;
         }
 
-        @Override
         public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         }
-
     }
 }
-
-
-

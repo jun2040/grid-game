@@ -1,70 +1,141 @@
 package ch.epfl.cs107.icoop.actor;
 
-import java.awt.*;
-import java.util.Collections;
-import java.util.List;
-
+import ch.epfl.cs107.icoop.KeyBindings.PlayerKeyBindings;
+import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.play.areagame.actor.Interactable;
+import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.engine.actor.Sprite;
-import ch.epfl.cs107.play.engine.actor.TextGraphics;
+import ch.epfl.cs107.play.engine.actor.*;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
+import static ch.epfl.cs107.play.math.Orientation.*;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
+import java.util.Collections;
+import java.util.List;
 
-public class ICoopPlayer extends MovableAreaEntity {
 
-    private final static int MOVE_DURATION = 2;
-    private final TextGraphics message;
-    private final Sprite sprite;
-    private float hp;
+/**
+ * A ICoopPlayer is a player for the ICoop game.
+ */
+public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
+    private final static int MOVE_DURATION = 4;
+    private final static int ANIMATION_DURATION = 4;
+    private final ICoopPlayerInteractionHandler handler;
 
+    //private final TextGraphics message;
+    private float hp = 10;
+    public String element;
+    private final OrientedAnimation animation;
+    private Sprite[][] sprites;
+    private final String spriteName;
+    private PlayerKeyBindings keybinds;
+    private Animation currentAnimation;
+
+    //private String prefix;
     /**
-     * @param owner (Area) area to which the player belong
-     * @param orientation (Orientation) the initial orientation of the player
-     * @param coordinates (DiscreteCoordinates) the initial position in the grid
-     * @param spriteName (String) name of the sprite used as graphical representation
+     * Default MovableAreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     * @param position    (Coordinate): Initial position of the entity. Not null
      */
-    public ICoopPlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates, String spriteName) {
-        super(owner, orientation, coordinates);
-        this.hp = 10;
-        message = new TextGraphics(Integer.toString((int) hp), 0.4f, Color.BLUE);
+    public ICoopPlayer(
+            Area area,
+            Orientation orientation,
+            DiscreteCoordinates position,
+            String spriteName,
+            String element,
+            PlayerKeyBindings keybinds
+    ) {
+        // Initialize player properties
+        super(area, orientation, position);
+        this.element = element;
+
+        /*message = new TextGraphics(Integer.toString((int) hp), 0.4f, Color.BLUE);
         message.setParent(this);
-        message.setAnchor(new Vector(-0.3f, 0.1f));
-        sprite = new Sprite(spriteName, 1.f, 1.f, this);
+        message.setAnchor(new Vector(-0.3f, 0.1f));*/
+
+        // Initialize sprite & animation
+        final Orientation[] orders = new Orientation[] { DOWN, RIGHT, UP, LEFT };
+        final String prefix = "icoop/" + spriteName;
+        final Vector anchor = new Vector(0, 0);
+
+        this.spriteName = spriteName;
+        this.animation = new OrientedAnimation(
+                prefix, ANIMATION_DURATION,
+                this, anchor, orders,
+                4, 1, 2,
+                16, 32, true
+        );
+
+        // Initialize keybinds
+        this.keybinds = keybinds;
+
+        this.handler = new ICoopPlayerInteractionHandler();
+
         resetMotion();
     }
 
-    /**
-     * @param deltaTime elapsed time since last update, in seconds, non-negative
-     */
     @Override
     public void update(float deltaTime) {
-        if (hp > 0) {
-            hp -= deltaTime;
-            message.setText(Integer.toString((int) hp));
-        }
-        if (hp < 0) hp = 0.f;
         Keyboard keyboard = getOwnerArea().getKeyboard();
-        moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
-        moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
-        moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
-        moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
+
+        moveIfPressed(LEFT, keyboard.get(keybinds.left()));
+        moveIfPressed(UP, keyboard.get(keybinds.up()));
+        moveIfPressed(RIGHT, keyboard.get(keybinds.right()));
+        moveIfPressed(DOWN, keyboard.get(keybinds.down()));
+
+        if (isDisplacementOccurs())
+            animation.update(deltaTime);
+        else
+            animation.reset();
+
         super.update(deltaTime);
     }
 
-    /**
-     * @param canvas target, not null
-     */
     @Override
-    public void draw(Canvas canvas) {
-        sprite.draw(canvas);
-        message.draw(canvas);
+    public void draw(Canvas canvas) { this.animation.draw(canvas); }
+
+    public void enterArea(ICoopArea area, DiscreteCoordinates coords) {
+        area.registerActor(this);
+        area.setViewCandidate(this);
+
+        setOwnerArea(area);
+        setCurrentPosition(coords.toVector());
+
+        resetMotion();
+    }
+
+    public void centerCamera() { getOwnerArea().setViewCandidate(this); }
+
+    @Override
+    public String element() { return this.element; }
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+    }
+
+    @Override
+    public boolean wantsCellInteraction() {
+        return true;
+    }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        return keybinds.useItem() == 1;
     }
 
     @Override
@@ -83,21 +154,13 @@ public class ICoopPlayer extends MovableAreaEntity {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+        other.acceptInteraction(handler, isCellInteraction);
     }
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {}
 
-    }
-
-    /**
-     * Orientate and Move this player in the given orientation if the given button is down
-     *
-     * @param orientation (Orientation): given orientation, not null
-     * @param b           (Button): button corresponding to the given orientation, not null
-     */
     private void moveIfPressed(Orientation orientation, Button b) {
         if (b.isDown()) {
             if (!isDisplacementOccurs()) {
@@ -107,46 +170,16 @@ public class ICoopPlayer extends MovableAreaEntity {
         }
     }
 
-    /**
-     * Leave an area by unregister this player
-     */
-    public void leaveArea() {
-        getOwnerArea().unregisterActor(this);
+    public class ICoopPlayerInteractionHandler implements ICoopInteractionVisitor {
+        @Override
+        public void interactWith(Interactable other, boolean isCellInteraction) {
+        }
+
+        public void interactWith(Door door, boolean isCellInteraction) {
+            System.out.println("Door interaction");
+            if (isCellInteraction && door.getSignal().isOn()) {
+                //
+            }
+        }
     }
-
-    /**
-     * makes the player entering a given area
-     * @param area     (Area):  the area to be entered, not null
-     * @param position (DiscreteCoordinates): initial position in the entered area, not null
-     */
-    public void enterArea(Area area, DiscreteCoordinates position) {
-        area.registerActor(this);
-        area.setViewCandidate(this);
-        setOwnerArea(area);
-        setCurrentPosition(position.toVector());
-        resetMotion();
-    }
-
-    /**
-     * @return true if the hp level is <= 0
-     */
-    public boolean isWeak() {
-        return (hp <= 0.f);
-    }
-
-    /**
-     * Center the camera on the player
-     */
-    public void centerCamera() {
-        getOwnerArea().setViewCandidate(this);
-    }
-
-    /**
-     * heals the player
-     */
-    public void strengthen() {
-        hp = 10;
-    }
-
-
 }

@@ -1,25 +1,29 @@
 package ch.epfl.cs107.icoop.area.maps;
 
+import ch.epfl.cs107.icoop.actor.Door;
+import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
-import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.Vector;
+import ch.epfl.cs107.play.math.Orientation;
+import ch.epfl.cs107.play.signal.logic.Logic;
 
 public class OrbWay extends ICoopArea {
-    @Override
+    private final DiscreteCoordinates[] coordsDoor1 = new DiscreteCoordinates[] {new DiscreteCoordinates(0,13),new DiscreteCoordinates(0,12),new DiscreteCoordinates(0,11), new DiscreteCoordinates(0,10)};
+    private final DiscreteCoordinates[] coordsDoor2 = new DiscreteCoordinates[] {new DiscreteCoordinates(0,7), new DiscreteCoordinates(0,6), new DiscreteCoordinates(0,5), new DiscreteCoordinates(0,4)};
+    private final DiscreteCoordinates[] destinationCoords = new DiscreteCoordinates[] {new DiscreteCoordinates(18,16), new DiscreteCoordinates(18,15)};
     protected void createArea() {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
-//        registerActor(new SimpleGhost(new Vector(20, 10), "ghost.2"));
+//        registerActor(new Door(this, Orientation.RIGHT, new DiscreteCoordinates(0,14), "Spawn", coordsDoor1 , Logic.TRUE, destinationCoords ));
+//        registerActor(new Door(this, Orientation.RIGHT, new DiscreteCoordinates(0,8), "Spawn", coordsDoor2 , Logic.TRUE, destinationCoords ));
+
+
     }
 
     @Override
     public DiscreteCoordinates getPlayerSpawnPosition() {
         return new DiscreteCoordinates(1, 12);
-    }
-    public DiscreteCoordinates getBluePlayerSpawnPosition() {
-        return new DiscreteCoordinates(1, 5);
     }
 
     @Override
