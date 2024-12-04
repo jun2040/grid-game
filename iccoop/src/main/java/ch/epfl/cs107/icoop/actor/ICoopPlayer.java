@@ -3,6 +3,8 @@ package ch.epfl.cs107.icoop.actor;
 import ch.epfl.cs107.icoop.KeyBindings.PlayerKeyBindings;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.utility.event.DoorTeleportEvent;
+import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventArgs;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
@@ -36,7 +38,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private Sprite[][] sprites;
     private final String spriteName;
     private PlayerKeyBindings keybinds;
-    private Animation currentAnimation;
+    private DoorTeleportEvent doorTeleportEvent;
 
     //private String prefix;
     /**
@@ -80,6 +82,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         this.handler = new ICoopPlayerInteractionHandler();
 
+        this.doorTeleportEvent = new DoorTeleportEvent();
+
         resetMotion();
     }
 
@@ -113,7 +117,13 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         resetMotion();
     }
 
+    public void leaveArea() {
+        getOwnerArea().unregisterActor(this);
+    }
+
     public void centerCamera() { getOwnerArea().setViewCandidate(this); }
+
+    public DoorTeleportEvent getDoorTeleportEvent() { return doorTeleportEvent; }
 
     @Override
     public String element() { return this.element; }
@@ -129,29 +139,19 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     @Override
-    public boolean wantsCellInteraction() {
-        return true;
-    }
+    public boolean wantsCellInteraction() { return true; }
 
     @Override
-    public boolean wantsViewInteraction() {
-        return keybinds.useItem() == 1;
-    }
+    public boolean wantsViewInteraction() { return keybinds.useItem() == 1; }
 
     @Override
-    public boolean takeCellSpace() {
-        return true;
-    }
+    public boolean takeCellSpace() { return true; }
 
     @Override
-    public boolean isCellInteractable() {
-        return true;
-    }
+    public boolean isCellInteractable() { return true; }
 
     @Override
-    public boolean isViewInteractable() {
-        return true;
-    }
+    public boolean isViewInteractable() { return true; }
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
@@ -176,10 +176,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
 
         public void interactWith(Door door, boolean isCellInteraction) {
-            System.out.println("Door interaction");
-            if (isCellInteraction && door.getSignal().isOn()) {
-                //
-            }
+            if (isCellInteraction && door.getSignal().isOn())
+                doorTeleportEvent.emit(new DoorTeleportEventArgs(door));
         }
     }
 }

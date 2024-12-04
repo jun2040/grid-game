@@ -75,6 +75,14 @@ public class Door extends AreaEntity implements Interactable {
         return openSignal;
     }
 
+    public String getDestinationAreaName() {
+        return destinationAreaName;
+    }
+
+    public DiscreteCoordinates[] getTargetCoords() {
+        return targetCoords;
+    }
+
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return positions;
