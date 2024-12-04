@@ -27,10 +27,13 @@ import java.util.List;
  * A ICoopPlayer is a player for the ICoop game.
  */
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
+    private static int PLAYER_COUNT = 0;
+
     private final static int MOVE_DURATION = 4;
     private final static int ANIMATION_DURATION = 4;
 
     //private final TextGraphics message;
+    private int id;
     private float hp = 10;
     private final String element;
     private final OrientedAnimation animation;
@@ -84,6 +87,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.doorTeleportEvent = new DoorTeleportEvent();
 
         resetMotion();
+
+        this.id = PLAYER_COUNT;
+        PLAYER_COUNT++;
     }
 
     @Override
@@ -106,12 +112,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     @Override
     public void draw(Canvas canvas) { this.animation.draw(canvas); }
 
-    public void enterArea(ICoopArea area, DiscreteCoordinates coords) {
+    public void enterArea(ICoopArea area, DiscreteCoordinates position) {
         area.registerActor(this);
         area.setViewCandidate(this);
 
         setOwnerArea(area);
-        setCurrentPosition(coords.toVector());
+        setCurrentPosition(position.toVector());
 
         resetMotion();
     }
@@ -123,6 +129,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public void centerCamera() { getOwnerArea().setViewCandidate(this); }
 
     public DoorTeleportEvent getDoorTeleportEvent() { return doorTeleportEvent; }
+
+    public int getId() { return this.id; }
 
     @Override
     public String element() { return this.element; }

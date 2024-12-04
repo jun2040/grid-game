@@ -9,14 +9,17 @@ import ch.epfl.cs107.icoop.area.maps.Spawn;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventListener;
 import ch.epfl.cs107.play.areagame.AreaGame;
 import ch.epfl.cs107.play.io.FileSystem;
-import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.Orientation;
+import static ch.epfl.cs107.play.math.Orientation.*;
 import ch.epfl.cs107.play.window.Window;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ICoop extends AreaGame implements DoorTeleportEventListener {
     private final String[] areas = {"Spawn", "OrbWay"};
-    private ICoopPlayer player;
+    private final List<ICoopPlayer> players = new ArrayList<>();
+//    private ICoopPlayer player;
     private int areaIndex;
 
     private void createAreas() {
@@ -31,16 +34,34 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
             initArea(areas[areaIndex]);
             return true;
         }
+
         return false;
     }
 
     private void initArea(String areaKey) {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
-        DiscreteCoordinates coords = area.getPlayerSpawnPosition();
-        player = new ICoopPlayer(area, Orientation.DOWN, coords, "player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS);
-        player.enterArea(area, coords);
+
+        addPlayer(new ICoopPlayer(
+                area, DOWN, area.getPlayerSpawnPosition(),
+                "player", "feu",
+                KeyBindings.RED_PLAYER_KEY_BINDINGS
+        ));
+
+        addPlayer(new ICoopPlayer(
+                area, DOWN, area.getPlayerSpawnPosition(),
+                "player2", "feu",
+                KeyBindings.BLUE_PLAYER_KEY_BINDINGS
+        ));
+    }
+
+    private void addPlayer(ICoopPlayer player) {
+        ICoopArea area = (ICoopArea) getCurrentArea();
+
+        player.enterArea(area, area.getPlayerSpawnPosition());
         player.centerCamera();
         player.getDoorTeleportEvent().addEventListener(this);
+
+        players.add(player);
     }
 
     @Override
@@ -48,8 +69,10 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
 
     @Override
     public void teleport(Door door) {
-        player.leaveArea();
+        players.forEach(ICoopPlayer::leaveArea);
         setCurrentArea(door.getDestinationAreaName(), true);
-        player.enterArea((ICoopArea) getCurrentArea(), door.getTargetCoords()[0]);
+        players.forEach(player -> {
+            player.enterArea((ICoopArea) getCurrentArea(), door.getTargetCoords()[player.getId()]);
+        });
     }
 }
