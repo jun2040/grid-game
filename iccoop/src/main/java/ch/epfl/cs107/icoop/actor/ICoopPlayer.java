@@ -29,16 +29,15 @@ import java.util.List;
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
     private final static int MOVE_DURATION = 4;
     private final static int ANIMATION_DURATION = 4;
-    private final ICoopPlayerInteractionHandler handler;
 
     //private final TextGraphics message;
     private float hp = 10;
-    public String element;
+    private final String element;
     private final OrientedAnimation animation;
-    private Sprite[][] sprites;
     private final String spriteName;
-    private PlayerKeyBindings keybinds;
-    private DoorTeleportEvent doorTeleportEvent;
+    private final PlayerKeyBindings keybinds;
+    private final DoorTeleportEvent doorTeleportEvent;
+    private final ICoopPlayerInteractionHandler handler;
 
     //private String prefix;
     /**
