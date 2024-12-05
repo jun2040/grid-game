@@ -114,7 +114,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     public void enterArea(ICoopArea area, DiscreteCoordinates position) {
         area.registerActor(this);
-        area.setViewCandidate(this);
 
         setOwnerArea(area);
         setCurrentPosition(position.toVector());

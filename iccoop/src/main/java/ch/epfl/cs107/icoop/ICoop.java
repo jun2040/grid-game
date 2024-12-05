@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop;
 
 
+import ch.epfl.cs107.icoop.actor.CenterOfMass;
 import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
@@ -19,13 +20,7 @@ import java.util.List;
 public class ICoop extends AreaGame implements DoorTeleportEventListener {
     private final String[] areas = {"Spawn", "OrbWay"};
     private final List<ICoopPlayer> players = new ArrayList<>();
-//    private ICoopPlayer player;
     private int areaIndex;
-
-    private void createAreas() {
-        addArea(new Spawn());
-        addArea(new OrbWay());
-    }
 
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
@@ -36,6 +31,11 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
         }
 
         return false;
+    }
+
+    private void createAreas() {
+        addArea(new Spawn());
+        addArea(new OrbWay());
     }
 
     private void initArea(String areaKey) {
@@ -52,6 +52,9 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
                 "player2", "feu",
                 KeyBindings.BLUE_PLAYER_KEY_BINDINGS
         ));
+
+        CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
+        area.setViewCandidate(centerOfMass);
     }
 
     private void addPlayer(ICoopPlayer player) {
@@ -70,9 +73,14 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
     @Override
     public void teleport(Door door) {
         players.forEach(ICoopPlayer::leaveArea);
-        setCurrentArea(door.getDestinationAreaName(), true);
+
+        ICoopArea area = (ICoopArea) setCurrentArea(door.getDestinationAreaName(), true);
+
         players.forEach(player -> {
             player.enterArea((ICoopArea) getCurrentArea(), door.getTargetCoords()[player.getId()]);
         });
+
+        CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
+        area.setViewCandidate(centerOfMass);
     }
 }
