@@ -14,6 +14,8 @@ import ch.epfl.cs107.play.engine.actor.*;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import static ch.epfl.cs107.play.math.Orientation.*;
+
+import ch.epfl.cs107.play.math.Transform;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
@@ -28,16 +30,18 @@ import java.util.List;
  */
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
     private static int PLAYER_COUNT = 0;
+    private static final int MAX_LIFE = 10;
 
     private final static int MOVE_DURATION = 4;
     private final static int ANIMATION_DURATION = 4;
 
     //private final TextGraphics message;
     private final int id;
-    private float hp = 10;
     private final String element;
     private final OrientedAnimation animation;
     private final String spriteName;
+    private final Health health;
+
     private final PlayerKeyBindings keybinds;
     private final DoorTeleportEvent doorTeleportEvent;
     private final ICoopPlayerInteractionHandler handler;
@@ -79,11 +83,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 16, 32, true
         );
 
-        // Initialize keybinds
+        this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
+
         this.keybinds = keybinds;
-
         this.handler = new ICoopPlayerInteractionHandler();
-
         this.doorTeleportEvent = new DoorTeleportEvent();
 
         resetMotion();
@@ -110,7 +113,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     @Override
-    public void draw(Canvas canvas) { this.animation.draw(canvas); }
+    public void draw(Canvas canvas) {
+        this.animation.draw(canvas);
+        this.health.draw(canvas);
+    }
 
     public void enterArea(ICoopArea area, DiscreteCoordinates position) {
         area.registerActor(this);
