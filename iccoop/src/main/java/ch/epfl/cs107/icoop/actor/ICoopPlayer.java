@@ -33,7 +33,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final static int ANIMATION_DURATION = 4;
 
     //private final TextGraphics message;
-    private int id;
+    private final int id;
     private float hp = 10;
     private final String element;
     private final OrientedAnimation animation;
