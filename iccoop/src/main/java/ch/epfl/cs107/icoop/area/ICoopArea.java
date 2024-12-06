@@ -22,10 +22,10 @@ public abstract class ICoopArea extends Area {
         return false;
     }
 
-    public boolean isViewCentered() { return true; }
-
     @Override
-    public float getCameraScaleFactor() {
-        return cameraScaleFactor;
+    public float getCameraScaleFactor() { return cameraScaleFactor; }
+
+    public void setCameraScaleFactor(float cameraScaleFactor) {
+        this.cameraScaleFactor = cameraScaleFactor;
     }
 }
