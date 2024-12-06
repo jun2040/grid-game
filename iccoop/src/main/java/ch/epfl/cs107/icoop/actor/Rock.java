@@ -24,17 +24,14 @@ public class Rock extends Obstacle {
         super(area, orientation, position);
 
         this.sprite = new Sprite("rock.1", 1, 1, this);
-        this.isDestroyed = false;
     }
 
-    public void destroy() {
-        isDestroyed = true;
-    }
+    public void destroy() { unregister(); }
+
+    private void unregister() { getOwnerArea().unregisterActor(this); }
 
     @Override
     public void draw(Canvas canvas) {
-        if (isDestroyed) return;
-
         sprite.draw(canvas);
     }
 

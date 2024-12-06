@@ -69,8 +69,10 @@ public class Explosive extends AreaEntity implements Interactor {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (explosion.isCompleted())
+        if (explosion.isCompleted()) {
+            unregister();
             return;
+        }
 
         if (this.timer == 0) {
             explode();
@@ -86,6 +88,8 @@ public class Explosive extends AreaEntity implements Interactor {
     public void activate() { isActivated = true;}
 
     private void explode() { isExploded = true; }
+
+    private void unregister() { getOwnerArea().unregisterActor(this); }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
