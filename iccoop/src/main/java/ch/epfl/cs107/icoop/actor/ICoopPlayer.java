@@ -148,7 +148,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public boolean wantsCellInteraction() { return true; }
 
     @Override
-    public boolean wantsViewInteraction() { return keybinds.useItem() == 1; }
+    public boolean wantsViewInteraction() { return true; }
 
     @Override
     public boolean takeCellSpace() { return true; }
@@ -165,7 +165,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {}
+    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
+    }
 
     private void moveIfPressed(Orientation orientation, Button b) {
         if (b.isDown()) {
@@ -178,12 +180,20 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     public class ICoopPlayerInteractionHandler implements ICoopInteractionVisitor {
         @Override
-        public void interactWith(Interactable other, boolean isCellInteraction) {
-        }
+        public void interactWith(Interactable other, boolean isCellInteraction) {}
 
+        @Override
         public void interactWith(Door door, boolean isCellInteraction) {
             if (isCellInteraction && door.getSignal().isOn())
                 doorTeleportEvent.emit(new DoorTeleportEventArgs(door));
+        }
+
+        @Override
+        public void interactWith(Explosive explosive, boolean isCellInteraction) {
+            Keyboard keyboard = getOwnerArea().getKeyboard();
+
+            if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated())
+                explosive.activate();
         }
     }
 }

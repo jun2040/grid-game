@@ -1,6 +1,8 @@
 package ch.epfl.cs107.icoop.actor;
 
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.area.Area;
+import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.engine.actor.Sprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
@@ -25,10 +27,19 @@ public class Rock extends Obstacle {
         this.isDestroyed = false;
     }
 
+    public void destroy() {
+        isDestroyed = true;
+    }
+
     @Override
     public void draw(Canvas canvas) {
         if (isDestroyed) return;
 
         sprite.draw(canvas);
+    }
+
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        ((ICoopInteractionVisitor) v).interactWith(this,isCellInteraction);
     }
 }
