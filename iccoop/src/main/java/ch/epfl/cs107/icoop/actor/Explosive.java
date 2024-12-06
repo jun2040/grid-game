@@ -56,22 +56,28 @@ public class Explosive extends AreaEntity implements Interactor {
 
     @Override
     public void draw(Canvas canvas) {
-        if (timer == 0 && !explosion.isCompleted()) {
+        if (isExploded && !explosion.isCompleted()) {
             explosion.draw(canvas);
-        } else {
-            if (timer != 0)
-                explosive.draw(canvas);
+            return;
         }
+
+        if (!isExploded)
+            explosive.draw(canvas);
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        if (explosion.isCompleted())
+            return;
+
         if (this.timer == 0) {
             explode();
             explosion.update(deltaTime);
-        } else if (isActivated && this.timer >= 0) {
+        }
+
+        if (isActivated && this.timer > 0) {
             this.timer--;
             explosive.update(deltaTime);
         }
