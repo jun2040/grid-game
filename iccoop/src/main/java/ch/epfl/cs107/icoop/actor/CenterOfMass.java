@@ -22,8 +22,6 @@ public class CenterOfMass implements Actor {
             position = position.add(actor.getPosition());
         }
 
-        System.out.println(position);
-
         return position.mul(1f / actors.length);
     }
 
