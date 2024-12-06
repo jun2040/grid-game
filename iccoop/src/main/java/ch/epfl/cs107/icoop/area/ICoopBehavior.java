@@ -67,14 +67,10 @@ public class ICoopBehavior extends AreaBehavior {
         }
 
         @Override
-        protected boolean canLeave(Interactable entity) {
-            return true;
-        }
+        protected boolean canLeave(Interactable entity) { return true; }
 
         @Override
-        protected boolean canEnter(Interactable entity) {
-            return !(this.takeCellSpace());
-        }
+        protected boolean canEnter(Interactable entity) { return !(this.takeCellSpace()); }
 
         @Override
         public boolean takeCellSpace() {
@@ -85,16 +81,11 @@ public class ICoopBehavior extends AreaBehavior {
         }
 
         @Override
-        public boolean isCellInteractable() {
-            return true;
-        }
+        public boolean isCellInteractable() { return true; }
 
         @Override
-        public boolean isViewInteractable() {
-            return false;
-        }
+        public boolean isViewInteractable() { return false; }
 
-        public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-        }
+        public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {}
     }
 }
