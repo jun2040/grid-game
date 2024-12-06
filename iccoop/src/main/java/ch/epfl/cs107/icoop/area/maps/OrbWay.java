@@ -28,6 +28,15 @@ public class OrbWay extends ICoopArea {
                 new DiscreteCoordinates(0, 11),
                 new DiscreteCoordinates(0, 10)
         ));
+        registerActor(new Door(
+                this, RIGHT, "Spawn", Logic.TRUE,
+                new DiscreteCoordinates[] { new DiscreteCoordinates(18, 16), new DiscreteCoordinates(18, 15) },
+                new DiscreteCoordinates(0, 8),
+                new DiscreteCoordinates(0, 7),
+                new DiscreteCoordinates(0, 6),
+                new DiscreteCoordinates(0, 5),
+                new DiscreteCoordinates(0, 4)
+        ));
     }
 
     @Override
