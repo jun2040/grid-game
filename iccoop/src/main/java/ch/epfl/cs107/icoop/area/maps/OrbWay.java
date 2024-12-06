@@ -31,6 +31,9 @@ public class OrbWay extends ICoopArea {
     }
 
     @Override
+    public boolean isViewCentered() { return true; }
+
+    @Override
     public DiscreteCoordinates getPlayerSpawnPosition() {
         return new DiscreteCoordinates(1, 12);
     }

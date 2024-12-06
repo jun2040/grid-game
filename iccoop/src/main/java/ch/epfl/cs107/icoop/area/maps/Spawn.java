@@ -23,6 +23,9 @@ public class Spawn extends ICoopArea {
     }
 
     @Override
+    public boolean isViewCentered() { return true; }
+
+    @Override
     public DiscreteCoordinates getPlayerSpawnPosition() {
         return new DiscreteCoordinates(13, 6);
     }
