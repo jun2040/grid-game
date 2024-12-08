@@ -158,6 +158,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     public int getId() { return this.id; }
 
+    public boolean isDead() { return this.health.getIntensity() <= 0.0f; }
+
     public void hit(DamageType damageType) {
         if (damageType.equals(immunityType) || isInGracePeriod)
             return;

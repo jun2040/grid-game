@@ -93,6 +93,16 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
 
         if (keyboard.get(KeyBindings.RESET_AREA).isDown())
             resetArea();
+
+        /*
+        * Use index-based for-loop over iteration:
+        * Avoid concurrentModificationException caused by
+        * attempting to access Collection while iterating
+        */
+        for (int i = 0; i < players.size(); ++i) {
+            if (players.get(i).isDead())
+                resetArea();
+        }
     }
 
     public void resetGame() {
