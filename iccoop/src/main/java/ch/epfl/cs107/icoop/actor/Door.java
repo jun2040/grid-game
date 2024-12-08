@@ -105,6 +105,6 @@ public class Door extends AreaEntity implements Interactable {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-        ((ICoopPlayer.ICoopPlayerInteractionHandler) v).interactWith(this, isCellInteraction);
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
 }

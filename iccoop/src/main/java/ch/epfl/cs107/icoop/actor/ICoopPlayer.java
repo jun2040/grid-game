@@ -208,7 +208,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
     }
 
-    public class ICoopPlayerInteractionHandler implements ICoopInteractionVisitor {
+    private class ICoopPlayerInteractionHandler implements ICoopInteractionVisitor {
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {}
 
