@@ -110,20 +110,27 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         moveIfPressed(RIGHT, keyboard.get(keybinds.right()));
         moveIfPressed(DOWN, keyboard.get(keybinds.down()));
 
-        if (isDisplacementOccurs())
-            animation.update(deltaTime);
-        else
-            animation.reset();
+        updateAnimation(deltaTime);
 
-        if (isInGracePeriod && gracePeriodTimer >= 0)
+        if (isInGracePeriod && gracePeriodTimer >= 0) {
             gracePeriodTimer--;
-
-        if (gracePeriodTimer < 0) {
+        } else if (gracePeriodTimer < 0) {
             isInGracePeriod = false;
             gracePeriodTimer = 0;
         }
 
         super.update(deltaTime);
+    }
+
+    private void updateAnimation(float deltaTime) {
+        if (isDisplacementOccurs()) {
+            if (isInGracePeriod && gracePeriodTimer % 3 != 0)
+                return;
+
+            animation.update(deltaTime);
+        } else {
+            animation.reset();
+        }
     }
 
     @Override
