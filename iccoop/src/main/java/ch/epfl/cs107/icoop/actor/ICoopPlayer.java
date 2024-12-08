@@ -32,7 +32,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private static final int MAX_LIFE = 10;
     private static final int GRACE_PERIOD = 24;
 
-    private final static int MOVE_DURATION = 4;
+    private final static int MOVE_DURATION = 8;
     private final static int ANIMATION_DURATION = 4;
 
     //private final TextGraphics message;
