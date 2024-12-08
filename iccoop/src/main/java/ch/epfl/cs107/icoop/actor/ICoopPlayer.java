@@ -235,7 +235,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     public enum DamageType {
-        PHYSICAL(1), EXPLOSIVE(5);
+        PHYSICAL(2), EXPLOSIVE(5);
 
         final int damage;
         DamageType(int damage) {

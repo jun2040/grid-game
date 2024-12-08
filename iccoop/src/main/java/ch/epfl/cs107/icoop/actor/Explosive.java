@@ -145,7 +145,7 @@ public class Explosive extends AreaEntity implements Interactor {
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
             if (isExploded)
-                player.hit(ICoopPlayer.DamageType.PHYSICAL);
+                player.hit(ICoopPlayer.DamageType.EXPLOSIVE);
         }
     }
 }
