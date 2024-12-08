@@ -12,13 +12,18 @@ import ch.epfl.cs107.play.signal.logic.Logic;
 import static ch.epfl.cs107.play.math.Orientation.*;
 
 public class Spawn extends ICoopArea {
+    public static DiscreteCoordinates[] SPAWN_POINTS =
+            new DiscreteCoordinates[] { new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6) };
+    public static DiscreteCoordinates[] TP_POINTS=
+            new DiscreteCoordinates[] { new DiscreteCoordinates(18, 16), new DiscreteCoordinates(18, 15) };
+
     @Override
     protected void createArea() {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
         registerActor(new Door(
                 this, LEFT, "OrbWay", Logic.TRUE,
-                new DiscreteCoordinates[] { new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5) },
+                OrbWay.TP_POINTS,
                 new DiscreteCoordinates(19, 15),
                 new DiscreteCoordinates(19, 16)
                 ));
@@ -33,8 +38,8 @@ public class Spawn extends ICoopArea {
     public boolean isViewCentered() { return true; }
 
     @Override
-    public DiscreteCoordinates getPlayerSpawnPosition() {
-        return new DiscreteCoordinates(13, 6);
+    public DiscreteCoordinates getPlayerSpawnPosition(int id) {
+        return SPAWN_POINTS[id];
     }
     //have to implement for 2 players
 

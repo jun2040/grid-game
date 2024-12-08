@@ -11,6 +11,8 @@ import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventListener;
 import ch.epfl.cs107.play.areagame.AreaGame;
 import ch.epfl.cs107.play.io.FileSystem;
 import static ch.epfl.cs107.play.math.Orientation.*;
+
+import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
 import java.util.ArrayList;
@@ -41,26 +43,22 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
     private void initArea(String areaKey) {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
 
-        addPlayer(new ICoopPlayer(
-                area, DOWN, area.getPlayerSpawnPosition(),
-                "player", "feu",
-                KeyBindings.RED_PLAYER_KEY_BINDINGS
-        ));
-
-        addPlayer(new ICoopPlayer(
-                area, DOWN, area.getPlayerSpawnPosition(),
-                "player2", "feu",
-                KeyBindings.BLUE_PLAYER_KEY_BINDINGS
-        ));
+        players.clear();
+        addPlayer("player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS);
+        addPlayer("player2", "feu", KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
 
         CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
         area.setViewCandidate(centerOfMass);
     }
 
-    private void addPlayer(ICoopPlayer player) {
+    private void addPlayer(String spriteName, String element, KeyBindings.PlayerKeyBindings keyBindings) {
         ICoopArea area = (ICoopArea) getCurrentArea();
+        ICoopPlayer player = new ICoopPlayer(
+                area, DOWN, area.getPlayerSpawnPosition(players.size()),
+                spriteName, element, keyBindings, players.size()
+        );
 
-        player.enterArea(area, area.getPlayerSpawnPosition());
+        player.enterArea(area, area.getPlayerSpawnPosition(player.getId()));
         player.centerCamera();
         player.getDoorTeleportEvent().addEventListener(this);
 
@@ -82,5 +80,27 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
 
         CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
         area.setViewCandidate(centerOfMass);
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        Keyboard keyboard = getCurrentArea().getKeyboard();
+
+        if (keyboard.get(KeyBindings.RESET_GAME).isDown())
+            resetGame();
+
+        if (keyboard.get(KeyBindings.RESET_AREA).isDown())
+            resetArea();
+    }
+
+    public void resetGame() {
+        begin(getWindow(), getFileSystem());
+    }
+
+    public void resetArea() {
+        getCurrentArea().begin(getWindow(), getFileSystem());
+        initArea(getCurrentArea().getTitle());
     }
 }

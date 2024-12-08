@@ -11,7 +11,7 @@ public abstract class ICoopArea extends Area {
 
     protected abstract void createArea();
 
-    public abstract DiscreteCoordinates getPlayerSpawnPosition();
+    public abstract DiscreteCoordinates getPlayerSpawnPosition(int id);
 
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {

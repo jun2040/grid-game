@@ -29,7 +29,6 @@ import java.util.List;
  * A ICoopPlayer is a player for the ICoop game.
  */
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
-    private static int PLAYER_COUNT = 0;
     private static final int MAX_LIFE = 10;
 
     private final static int MOVE_DURATION = 4;
@@ -60,7 +59,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             DiscreteCoordinates position,
             String spriteName,
             String element,
-            PlayerKeyBindings keybinds
+            PlayerKeyBindings keybinds,
+            int id
     ) {
         // Initialize player properties
         super(area, orientation, position);
@@ -91,8 +91,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         resetMotion();
 
-        this.id = PLAYER_COUNT;
-        PLAYER_COUNT++;
+        this.id = id;
     }
 
     @Override
