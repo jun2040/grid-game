@@ -30,6 +30,7 @@ import java.util.List;
  */
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
     private static final int MAX_LIFE = 10;
+    private static final int GRACE_PERIOD = 24;
 
     private final static int MOVE_DURATION = 4;
     private final static int ANIMATION_DURATION = 4;
@@ -44,6 +45,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final PlayerKeyBindings keybinds;
     private final DoorTeleportEvent doorTeleportEvent;
     private final ICoopPlayerInteractionHandler handler;
+
+    private DamageType immunityType;
+    private boolean isInGracePeriod = false;
+    private int gracePeriodTimer = 0;
 
     //private String prefix;
     /**
@@ -92,6 +97,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         resetMotion();
 
         this.id = id;
+
+        this.immunityType = null;
     }
 
     @Override
@@ -107,6 +114,14 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             animation.update(deltaTime);
         else
             animation.reset();
+
+        if (isInGracePeriod && gracePeriodTimer >= 0)
+            gracePeriodTimer--;
+
+        if (gracePeriodTimer < 0) {
+            isInGracePeriod = false;
+            gracePeriodTimer = 0;
+        }
 
         super.update(deltaTime);
     }
@@ -135,6 +150,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public DoorTeleportEvent getDoorTeleportEvent() { return doorTeleportEvent; }
 
     public int getId() { return this.id; }
+
+    public void hit(DamageType damageType) {
+        if (damageType.equals(immunityType) || isInGracePeriod)
+            return;
+
+        health.decrease(damageType.damage);
+
+        gracePeriodTimer = GRACE_PERIOD;
+        isInGracePeriod = true;
+    }
 
     @Override
     public String element() { return this.element; }
@@ -199,6 +224,15 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
             if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated())
                 explosive.activate();
+        }
+    }
+
+    public enum DamageType {
+        PHYSICAL(1), EXPLOSIVE(5);
+
+        final int damage;
+        DamageType(int damage) {
+            this.damage = damage;
         }
     }
 }
