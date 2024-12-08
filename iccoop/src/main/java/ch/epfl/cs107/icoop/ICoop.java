@@ -9,6 +9,7 @@ import ch.epfl.cs107.icoop.area.maps.OrbWay;
 import ch.epfl.cs107.icoop.area.maps.Spawn;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventListener;
 import ch.epfl.cs107.play.areagame.AreaGame;
+import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.io.FileSystem;
 import static ch.epfl.cs107.play.math.Orientation.*;
 
@@ -24,11 +25,14 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
     private final List<ICoopPlayer> players = new ArrayList<>();
     private int areaIndex;
 
+    private Dialog dialog = null;
+
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             createAreas();
             areaIndex = 0;
             initArea(areas[areaIndex]);
+            dialog = new Dialog("orb_water_msg");
             return true;
         }
 
@@ -83,10 +87,26 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
     }
 
     @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
+    public void draw() {
+        super.draw();
 
+        if (dialog != null)
+            dialog.draw(getWindow());
+    }
+
+    // TODO: Pause when dialog opens
+    @Override
+    public void update(float deltaTime) {
         Keyboard keyboard = getCurrentArea().getKeyboard();
+
+        if (dialog != null) {
+            dialog.update(deltaTime);
+
+            if (keyboard.get(KeyBindings.NEXT_DIALOG).isPressed() && dialog.isCompleted())
+                dialog = null;
+
+            getCurrentArea().requestPause();
+        }
 
         if (keyboard.get(KeyBindings.RESET_GAME).isDown())
             resetGame();
@@ -103,11 +123,13 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
             if (players.get(i).isDead())
                 resetArea();
         }
+
+        super.update(deltaTime);
     }
 
-    public void resetGame() {
-        begin(getWindow(), getFileSystem());
-    }
+    public void setActiveDialog(Dialog dialog) { this.dialog = dialog; }
+
+    public void resetGame() { begin(getWindow(), getFileSystem()); }
 
     public void resetArea() {
         getCurrentArea().begin(getWindow(), getFileSystem());
