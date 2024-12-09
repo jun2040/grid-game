@@ -72,7 +72,7 @@ public class ICoopBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
-            // FIXME: Very rudimentary implementation of elemental category role
+//            // FIXME: Very rudimentary implementation of elemental category role
             String element = null;
             for (Interactable e : entities) {
                 if (e instanceof ElementalEntity)
@@ -82,7 +82,7 @@ public class ICoopBehavior extends AreaBehavior {
             if (element != null && entity instanceof ElementalEntity)
                 return element.equals(((ElementalEntity) entity).element());
             else
-                return !(this.takeCellSpace());
+                return type.isWalkable && !(this.takeCellSpace());
         }
 
         @Override
