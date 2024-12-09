@@ -61,7 +61,7 @@ public class OrbWay extends ICoopArea {
         /*
          * Create & register elemental walls
          */
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 5; ++i) {
             registerActor(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 10 + i),
                     Logic.TRUE, "fire_wall", "feu"
