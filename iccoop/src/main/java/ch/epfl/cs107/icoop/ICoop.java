@@ -7,6 +7,7 @@ import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.area.maps.OrbWay;
 import ch.epfl.cs107.icoop.area.maps.Spawn;
+import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventListener;
 import ch.epfl.cs107.play.areagame.AreaGame;
 import ch.epfl.cs107.play.engine.actor.Dialog;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ICoop extends AreaGame implements DoorTeleportEventListener {
+public class ICoop extends AreaGame implements DoorTeleportEventListener, DialogHandler {
     private final String[] areas = {"Spawn", "OrbWay"};
     private final List<ICoopPlayer> players = new ArrayList<>();
     private int areaIndex;
@@ -32,7 +33,6 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
             createAreas();
             areaIndex = 0;
             initArea(areas[areaIndex]);
-            dialog = new Dialog("orb_water_msg");
             return true;
         }
 
@@ -40,7 +40,10 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
     }
 
     private void createAreas() {
-        addArea(new Spawn());
+        Spawn spawn = new Spawn();
+        spawn.setDialogHandler(this);
+
+        addArea(spawn);
         addArea(new OrbWay());
     }
 
@@ -99,13 +102,11 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
     public void update(float deltaTime) {
         Keyboard keyboard = getCurrentArea().getKeyboard();
 
-        if (dialog != null) {
+        if (dialog != null && keyboard.get(KeyBindings.NEXT_DIALOG).isPressed()) {
             dialog.update(deltaTime);
 
-            if (keyboard.get(KeyBindings.NEXT_DIALOG).isPressed() && dialog.isCompleted())
+            if (dialog.isCompleted())
                 dialog = null;
-
-            getCurrentArea().requestPause();
         }
 
         if (keyboard.get(KeyBindings.RESET_GAME).isDown())
@@ -127,12 +128,13 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener {
         super.update(deltaTime);
     }
 
-    public void setActiveDialog(Dialog dialog) { this.dialog = dialog; }
-
     public void resetGame() { begin(getWindow(), getFileSystem()); }
 
     public void resetArea() {
         getCurrentArea().begin(getWindow(), getFileSystem());
         initArea(getCurrentArea().getTitle());
     }
+
+    @Override
+    public void publish(Dialog dialog) { this.dialog = dialog; }
 }
