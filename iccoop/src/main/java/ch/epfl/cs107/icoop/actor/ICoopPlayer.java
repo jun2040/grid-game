@@ -237,9 +237,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(ElementalWall elementalWall, boolean isCellInteraction) {
-            if (isCellInteraction && !elementalWall.getElementDamage().equals(element)) {
+            if (isCellInteraction)
                 hit(DamageType.toType(element));
-            }
         }
     }
 
