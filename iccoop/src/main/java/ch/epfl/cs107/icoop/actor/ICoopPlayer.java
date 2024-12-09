@@ -244,6 +244,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             if (isCellInteraction)
                 hit(DamageType.toType(element));
         }
+
+        @Override
+        public void interactWith(ElementalItem elementalItem, boolean isCellInteraction) {
+            if (isCellInteraction && elementalItem.element().equals(element))
+                elementalItem.collect();
+        }
     }
 
     public enum DamageType {
