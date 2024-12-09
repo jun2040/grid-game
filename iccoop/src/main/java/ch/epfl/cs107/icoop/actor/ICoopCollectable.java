@@ -21,9 +21,12 @@ public abstract class ICoopCollectable extends CollectableAreaEntity implements 
     public boolean isViewInteractable() { return false; }
 
     @Override
-    public void collect() {
-        super.collect();
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if (isCollected())
+            unregister();
     }
 
-    public void destroy() { getOwnerArea().unregisterActor(this); }
+    public void unregister() { getOwnerArea().unregisterActor(this); }
 }
