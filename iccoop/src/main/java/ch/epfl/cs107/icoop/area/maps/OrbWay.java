@@ -48,6 +48,15 @@ public class OrbWay extends ICoopArea {
                     Logic.TRUE, "water_wall", "eau"
             ));
         }
+
+        registerActor(new ElementalWall(
+                this, LEFT, new DiscreteCoordinates(7, 12),
+                Logic.TRUE, "water_wall", "eau"
+        ));
+        registerActor(new ElementalWall(
+                this, LEFT, new DiscreteCoordinates(7, 6),
+                Logic.TRUE, "fire_wall", "feu"
+        ));
     }
 
     @Override

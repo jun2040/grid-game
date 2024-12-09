@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.area;
 
+import ch.epfl.cs107.icoop.actor.ElementalEntity;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -70,7 +71,19 @@ public class ICoopBehavior extends AreaBehavior {
         protected boolean canLeave(Interactable entity) { return true; }
 
         @Override
-        protected boolean canEnter(Interactable entity) { return !(this.takeCellSpace()); }
+        protected boolean canEnter(Interactable entity) {
+            // FIXME: Very rudimentary implementation of elemental category role
+            String element = null;
+            for (Interactable e : entities) {
+                if (e instanceof ElementalEntity)
+                    element = ((ElementalEntity) e).element();
+            }
+
+            if (element != null && entity instanceof ElementalEntity)
+                return element.equals(((ElementalEntity) entity).element());
+            else
+                return !(this.takeCellSpace());
+        }
 
         @Override
         public boolean takeCellSpace() {

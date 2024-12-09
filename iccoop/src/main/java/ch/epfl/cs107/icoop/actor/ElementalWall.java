@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 // FIXME: Verify the use of Logic interface
-public class ElementalWall extends AreaEntity implements Interactable, Interactor {
+public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor {
     private final Sprite[] wallSprites;
     private final String elementDamage; // TODO: Replace with enum
 
@@ -56,7 +56,11 @@ public class ElementalWall extends AreaEntity implements Interactable, Interacto
         wallSprites[getOrientation().ordinal()].draw(canvas);
     }
 
-    public String getElementDamage() {
+    /*
+     * ElementalEntity implementation
+     */
+    @Override
+    public String element() {
         return elementDamage;
     }
 
