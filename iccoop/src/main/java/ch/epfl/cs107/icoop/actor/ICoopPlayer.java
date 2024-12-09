@@ -31,9 +31,8 @@ import java.util.List;
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
     private static final int MAX_LIFE = 10;
     private static final int GRACE_PERIOD = 24;
-
-    private final static int MOVE_DURATION = 8;
-    private final static int ANIMATION_DURATION = 4;
+    private static final int MOVE_DURATION = 8;
+    private static final int ANIMATION_DURATION = 4;
 
     //private final TextGraphics message;
     private final int id;
@@ -217,6 +216,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
     }
 
+    private void setImmunityType(DamageType damageType) {
+        this.immunityType = damageType;
+    }
+
     private class ICoopPlayerInteractionHandler implements ICoopInteractionVisitor {
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {}
@@ -249,6 +252,14 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         public void interactWith(ElementalItem elementalItem, boolean isCellInteraction) {
             if (isCellInteraction && elementalItem.element().equals(element))
                 elementalItem.collect();
+        }
+
+        @Override
+        public void interactWith(Orb orb, boolean isCellInteraction) {
+            if (isCellInteraction && orb.element().equals(element)) {
+                setImmunityType(DamageType.toType(orb.element()));
+                orb.triggerDialog();
+            }
         }
     }
 

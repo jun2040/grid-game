@@ -2,18 +2,26 @@ package ch.epfl.cs107.icoop.area.maps;
 
 import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.ElementalWall;
+import ch.epfl.cs107.icoop.actor.Orb;
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
+import static ch.epfl.cs107.icoop.actor.ElementType.*;
 
 public class OrbWay extends ICoopArea {
     public static DiscreteCoordinates[] TP_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5) };
+
+    DialogHandler dialogHandler;
+
+    public OrbWay(DialogHandler dialogHandler) {
+        this.dialogHandler = dialogHandler;
+    }
 
     protected void createArea() {
         registerActor(new Background(this));
@@ -38,6 +46,21 @@ public class OrbWay extends ICoopArea {
                 new DiscreteCoordinates(0, 4)
         ));
 
+        /*
+         * Create & register elemental orbs
+         */
+        Orb fireOrb = new Orb(this, new DiscreteCoordinates(17, 12), FIRE);
+        Orb waterOrb = new Orb(this, new DiscreteCoordinates(17, 6), WATER);
+
+        fireOrb.setDialogHandler(dialogHandler);
+        waterOrb.setDialogHandler(dialogHandler);
+
+        registerActor(fireOrb);
+        registerActor(waterOrb);
+
+        /*
+         * Create & register elemental walls
+         */
         for (int i = 0; i < 4; ++i) {
             registerActor(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 10 + i),

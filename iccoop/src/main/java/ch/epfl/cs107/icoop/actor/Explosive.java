@@ -89,8 +89,6 @@ public class Explosive extends ICoopCollectable implements Interactor {
 
     private void explode() { isExploded = true; }
 
-    private void unregister() { getOwnerArea().unregisterActor(this); }
-
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());

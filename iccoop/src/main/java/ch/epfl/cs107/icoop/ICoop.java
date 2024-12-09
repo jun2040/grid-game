@@ -44,7 +44,7 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener, Dialog
         spawn.setDialogHandler(this);
 
         addArea(spawn);
-        addArea(new OrbWay());
+        addArea(new OrbWay(this));
     }
 
     private void initArea(String areaKey) {
@@ -52,7 +52,7 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener, Dialog
 
         players.clear();
         addPlayer("player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS);
-        addPlayer("player2", "feu", KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
+        addPlayer("player2", "eau", KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
 
         CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
         area.setViewCandidate(centerOfMass);
