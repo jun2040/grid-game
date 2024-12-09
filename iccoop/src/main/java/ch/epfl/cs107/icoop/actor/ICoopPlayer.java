@@ -234,14 +234,37 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated())
                 explosive.activate();
         }
+
+        @Override
+        public void interactWith(ElementalWall elementalWall, boolean isCellInteraction) {
+            if (isCellInteraction && !elementalWall.getElementDamage().equals(element)) {
+                hit(DamageType.toType(element));
+            }
+        }
     }
 
     public enum DamageType {
-        PHYSICAL(2), EXPLOSIVE(5);
+        PHYSICAL(2, "physical"),
+        EXPLOSIVE(5, "explosive"),
+        FIRE(1, "feu"),
+        WATER(1, "eau"),
+        NONE(0, "none")
+        ;
 
         final int damage;
-        DamageType(int damage) {
+        final String damageName;
+        DamageType(int damage, String damageName) {
             this.damage = damage;
+            this.damageName = damageName;
+        }
+
+        public static DamageType toType(String damageName) {
+            for (DamageType damageType : DamageType.values()) {
+                if (damageType.damageName.equals(damageName))
+                    return damageType;
+            }
+
+            return NONE;
         }
     }
 }

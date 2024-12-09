@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.area.maps;
 
 import ch.epfl.cs107.icoop.actor.Door;
+import ch.epfl.cs107.icoop.actor.ElementalWall;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
@@ -36,15 +37,24 @@ public class OrbWay extends ICoopArea {
                 new DiscreteCoordinates(0, 5),
                 new DiscreteCoordinates(0, 4)
         ));
+
+        for (int i = 0; i < 4; ++i) {
+            registerActor(new ElementalWall(
+                    this, LEFT, new DiscreteCoordinates(12, 10 + i),
+                    Logic.TRUE, "fire_wall", "feu"
+            ));
+            registerActor(new ElementalWall(
+                    this, LEFT, new DiscreteCoordinates(12, 4 + i),
+                    Logic.TRUE, "water_wall", "eau"
+            ));
+        }
     }
 
     @Override
     public boolean isViewCentered() { return true; }
 
     @Override
-    public DiscreteCoordinates getPlayerSpawnPosition(int id) {
-        return TP_POINTS[id];
-    }
+    public DiscreteCoordinates getPlayerSpawnPosition(int id) { return TP_POINTS[id]; }
 
     @Override
     public String getTitle() { return "OrbWay"; }
