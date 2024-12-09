@@ -72,7 +72,8 @@ public class ICoopBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
-//            // FIXME: Very rudimentary implementation of elemental category role
+            // FIXME: Very rudimentary implementation of elemental category role
+            // FIXME: Allows player to phase through another player
             String element = null;
             for (Interactable e : entities) {
                 if (e instanceof ElementalEntity)
