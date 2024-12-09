@@ -43,10 +43,10 @@ public class Spawn extends ICoopArea {
                 new DiscreteCoordinates(19, 16)
                 ));
 
-        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(9, 10)));
-        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(11, 10)));
-        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(10, 11)));
-        registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(10, 10), 100));
+        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(9, 9)));
+        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(11, 9)));
+        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(10, 10)));
+        registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(10, 9), 100));
     }
 
     @Override
