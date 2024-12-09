@@ -229,10 +229,14 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(Explosive explosive, boolean isCellInteraction) {
-            Keyboard keyboard = getOwnerArea().getKeyboard();
-
-            if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated())
-                explosive.activate();
+            if (isCellInteraction) {
+                if (!explosive.isActivated() && !explosive.isExploded())
+                    explosive.destroy();
+            } else {
+                Keyboard keyboard = getOwnerArea().getKeyboard();
+                if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated())
+                    explosive.activate();
+            }
         }
 
         @Override

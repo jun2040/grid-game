@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Explosive extends AreaEntity implements Interactor {
+public class Explosive extends ICoopCollectable implements Interactor {
     private final static int ANIMATION_DURATION = 24;
 
     private final Animation explosive;
@@ -50,9 +50,9 @@ public class Explosive extends AreaEntity implements Interactor {
         this.handler = new ExplosiveInteractionHandler();
     }
 
-    public boolean isActivated() {
-        return isActivated;
-    }
+    public boolean isActivated() { return isActivated; }
+
+    public boolean isExploded() { return isExploded; }
 
     @Override
     public void draw(Canvas canvas) {
