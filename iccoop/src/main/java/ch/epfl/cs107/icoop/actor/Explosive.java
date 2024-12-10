@@ -19,14 +19,17 @@ import java.util.List;
 public class Explosive extends ICoopCollectable implements Interactor {
     private final static int ANIMATION_DURATION = 24;
 
-    private final Animation explosive;
-    private final Animation explosion;
+    private final Animation explosive =
+            new Animation("icoop/explosive", 2, 1, 1, this , 16, 16,
+                                       ANIMATION_DURATION / 2, true);
+    private final Animation explosion =
+            new Animation("icoop/explosion", 7, 1, 1, this , 32, 32,
+                                       ANIMATION_DURATION / 7, false);
+    private final ExplosiveInteractionHandler handler = new ExplosiveInteractionHandler();
 
     private int timer;
-    private boolean isActivated;
-    private boolean isExploded;
-
-    private final ExplosiveInteractionHandler handler;
+    private boolean isActivated = false;
+    private boolean isExploded = false;
 
     /**
      * Default AreaEntity constructor
@@ -38,16 +41,7 @@ public class Explosive extends ICoopCollectable implements Interactor {
     public Explosive(Area area, Orientation orientation, DiscreteCoordinates position, int timer) {
         super(area, orientation, position);
 
-        this.explosive = new Animation("icoop/explosive", 2, 1, 1, this , 16, 16,
-                ANIMATION_DURATION / 2, true);
-        this.explosion = new Animation("icoop/explosion", 7, 1, 1, this , 32, 32,
-                ANIMATION_DURATION / 7, false);
-
         this.timer = timer;
-        this.isActivated = false;
-        this.isExploded = false;
-
-        this.handler = new ExplosiveInteractionHandler();
     }
 
     public boolean isActivated() { return isActivated; }

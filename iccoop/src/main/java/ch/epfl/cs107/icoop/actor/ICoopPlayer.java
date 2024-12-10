@@ -1,8 +1,11 @@
 package ch.epfl.cs107.icoop.actor;
 
+import ch.epfl.cs107.icoop.ICoop;
 import ch.epfl.cs107.icoop.KeyBindings.PlayerKeyBindings;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.handler.ICoopInventory;
+import ch.epfl.cs107.icoop.handler.ICoopItem;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEvent;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventArgs;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
@@ -10,6 +13,8 @@ import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.areagame.handler.Inventory;
+import ch.epfl.cs107.play.areagame.handler.InventoryItem;
 import ch.epfl.cs107.play.engine.actor.*;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
@@ -21,14 +26,14 @@ import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import java.util.Collections;
-import java.util.List;
+import javax.swing.plaf.synth.SynthUI;
+import java.util.*;
 
 
 /**
  * A ICoopPlayer is a player for the ICoop game.
  */
-public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
+public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor, Inventory.Holder {
     private static final int MAX_LIFE = 10;
     private static final int GRACE_PERIOD = 24;
     private static final int MOVE_DURATION = 8;
@@ -40,6 +45,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final OrientedAnimation animation;
     private final String spriteName;
     private final Health health;
+    private final ICoopInventory inventory;
+    private ICoopItem currentItem;
 
     private final PlayerKeyBindings keybinds;
     private final DoorTeleportEvent doorTeleportEvent;
@@ -89,6 +96,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
 
+        this.inventory = new ICoopInventory();
+        this.inventory.addPocketItem(ICoopItem.SWORD, 1);
+        this.inventory.addPocketItem(ICoopItem.BOMB, 5);
+
+        this.currentItem = ICoopItem.SWORD;
+
         this.keybinds = keybinds;
         this.handler = new ICoopPlayerInteractionHandler();
         this.doorTeleportEvent = new DoorTeleportEvent();
@@ -102,6 +115,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public void update(float deltaTime) {
+        super.update(deltaTime);
+
         Keyboard keyboard = getOwnerArea().getKeyboard();
 
         moveIfPressed(LEFT, keyboard.get(keybinds.left()));
@@ -118,7 +133,55 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             gracePeriodTimer = 0;
         }
 
-        super.update(deltaTime);
+        if (keyboard.get(keybinds.useItem()).isPressed()) {
+            boolean success = false;
+
+            switch (currentItem) {
+                case BOMB:
+                    success = placeExplosive();
+                    break;
+                default:
+                    break;
+            }
+
+            if (currentItem.isConsumable() && success) {
+                System.out.println("place bomb");
+                inventory.removePocketItem(currentItem, 1);
+            }
+
+            if (!inventory.contains(currentItem))
+                getNextItem();
+        }
+
+        if (keyboard.get(keybinds.switchItem()).isPressed())
+            getNextItem();
+    }
+
+    private boolean placeExplosive() {
+        Explosive explosive = new Explosive(getOwnerArea(), LEFT, getFieldOfViewCells().getFirst(), 100);
+
+        // FIXME: Bombs can be placed in the same tile since they are walkable & does not take cell space
+        if (getOwnerArea().canEnterAreaCells(explosive, getFieldOfViewCells())) {
+            // FIXME: Prevent activation of bomb immediately after placing
+            getOwnerArea().registerActor(explosive);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void getNextItem() {
+        ICoopItem[] items = ICoopItem.values();
+        int index = ICoopItem.getIndex(currentItem);
+
+        for (int i = 0; i < items.length; i++) {
+            int x = (i + index + 1) % items.length;
+
+            if (inventory.contains(items[x])) {
+                currentItem = items[x];
+                break;
+            }
+        }
     }
 
     private void updateAnimation(float deltaTime) {
@@ -224,6 +287,11 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.immunityType = damageType;
     }
 
+    @Override
+    public boolean possess(InventoryItem item) {
+        return inventory.contains(item);
+    }
+
     private class ICoopPlayerInteractionHandler implements ICoopInteractionVisitor {
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {}
@@ -237,12 +305,18 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         @Override
         public void interactWith(Explosive explosive, boolean isCellInteraction) {
             if (isCellInteraction) {
-                if (!explosive.isActivated() && !explosive.isExploded())
+                // FIXME: Flatten out if-statements for readability + branching minimization
+                if (!explosive.isActivated() && !explosive.isExploded()) {
+                    if (!explosive.isCollected())
+                        inventory.addPocketItem(ICoopItem.BOMB, 1);
+
                     explosive.collect();
+                }
             } else {
                 Keyboard keyboard = getOwnerArea().getKeyboard();
-                if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated())
+                if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated()) {
                     explosive.activate();
+                }
             }
         }
 
@@ -306,4 +380,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             return NONE;
         }
     }
+
+    // TODO: Verify that inventory implementation is correct and extract the record out
+    public record Pair<K, V>(K key, V value) {}
 }
