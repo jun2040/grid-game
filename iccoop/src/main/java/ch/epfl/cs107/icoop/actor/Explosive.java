@@ -81,7 +81,10 @@ public class Explosive extends ICoopCollectable implements Interactor {
 
     public void activate() { isActivated = true;}
 
-    private void explode() { isExploded = true; }
+    private void explode() {
+        timer = 0;
+        isExploded = true;
+    }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
@@ -138,6 +141,13 @@ public class Explosive extends ICoopCollectable implements Interactor {
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
             if (isExploded)
                 player.hit(ICoopPlayer.DamageType.EXPLOSIVE);
+        }
+
+        @Override
+        public void interactWith(Explosive explosive, boolean isCellInteraction) {
+            // FIXME: Does not affect already activated bombs (see isViewInteractable method)
+            if (!isCellInteraction && isExploded)
+                explosive.explode();
         }
     }
 }
