@@ -99,7 +99,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
     public boolean isCellInteractable() { return true; }
 
     @Override
-    public boolean isViewInteractable() { return false; }
+    public boolean isViewInteractable() { return true; }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
@@ -118,6 +118,16 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
     @Override
     public void deactivate() {
         isActive = false;
+    }
+
+    // TODO: Consider a Destructable interface for further abstraction
+    public void destroy() {
+        unregister();
+    }
+
+    // TODO: Consider extending AreaEntity to include this method
+    private void unregister() {
+        getOwnerArea().unregisterActor(this);
     }
 
     @Override
