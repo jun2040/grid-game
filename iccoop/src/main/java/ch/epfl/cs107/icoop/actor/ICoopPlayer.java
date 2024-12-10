@@ -6,6 +6,7 @@ import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.icoop.handler.ICoopInventory;
 import ch.epfl.cs107.icoop.handler.ICoopItem;
+import ch.epfl.cs107.icoop.handler.ICoopPlayerStatusGUI;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEvent;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventArgs;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
@@ -45,8 +46,11 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final OrientedAnimation animation;
     private final String spriteName;
     private final Health health;
+
     private final ICoopInventory inventory;
     private ICoopItem currentItem;
+
+    private final ICoopPlayerStatusGUI gui;
 
     private final PlayerKeyBindings keybinds;
     private final DoorTeleportEvent doorTeleportEvent;
@@ -102,6 +106,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         this.currentItem = ICoopItem.SWORD;
 
+        // FIXME: Temporary placeholder for determining flipped flag
+        this.gui = new ICoopPlayerStatusGUI(this, id % 2 != 0);
+        this.gui.setCurrentItem(currentItem);
+
         this.keybinds = keybinds;
         this.handler = new ICoopPlayerInteractionHandler();
         this.doorTeleportEvent = new DoorTeleportEvent();
@@ -145,7 +153,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             }
 
             if (currentItem.isConsumable() && success) {
-                System.out.println("place bomb");
                 inventory.removePocketItem(currentItem, 1);
             }
 
@@ -182,6 +189,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 break;
             }
         }
+
+        gui.setCurrentItem(currentItem);
     }
 
     private void updateAnimation(float deltaTime) {
@@ -199,6 +208,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public void draw(Canvas canvas) {
         this.animation.draw(canvas);
         this.health.draw(canvas);
+        this.gui.draw(canvas);
     }
 
     public void enterArea(ICoopArea area, DiscreteCoordinates position) {

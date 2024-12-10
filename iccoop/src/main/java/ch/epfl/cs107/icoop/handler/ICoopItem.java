@@ -29,7 +29,7 @@ public enum ICoopItem implements InventoryItem {
     }
 
     public String getSpriteName() {
-        return spriteName;
+        return "icoop/" + spriteName;
     }
 
     public boolean isConsumable() {

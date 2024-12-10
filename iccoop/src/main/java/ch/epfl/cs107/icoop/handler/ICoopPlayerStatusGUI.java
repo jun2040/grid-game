@@ -17,9 +17,15 @@ public class ICoopPlayerStatusGUI implements Graphics {
     private final ICoopPlayer player;
     private final boolean flipped;
 
+    private ICoopItem item = null;
+
     public ICoopPlayerStatusGUI(ICoopPlayer player, boolean flipped) {
         this.player = player;
         this.flipped = flipped;
+    }
+
+    public void setCurrentItem(ICoopItem item) {
+        this.item = item;
     }
 
     @Override
@@ -39,5 +45,12 @@ public class ICoopPlayerStatusGUI implements Graphics {
         //Draw selected gear
         ImageGraphics gearDisplay = new ImageGraphics(ResourcePath.getSprite("icoop/gearDisplay"), 1.5f, 1.5f, new RegionOfInterest(0, 0, 32, 32), anchor.add(new Vector(0, height - 1.75f)), 1, DEPTH);
         gearDisplay.draw(canvas);
+
+        if (item != null) {
+            ImageGraphics itemDisplay = new ImageGraphics(ResourcePath.getSprite(item.getSpriteName()), 0.5f,
+                    0.5f, new RegionOfInterest(0, 0, 16, 16), anchor.add(new
+                    Vector (0.5f, height - 1.25f)), 1, DEPTH);
+            itemDisplay.draw(canvas);
+        }
     }
 }
