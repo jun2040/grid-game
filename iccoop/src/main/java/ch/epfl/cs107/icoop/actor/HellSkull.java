@@ -33,7 +33,7 @@ public class HellSkull extends Enemy {
      * @param position       (Coordinate): Initial position of the entity. Not null
      */
     public HellSkull(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position, 1, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.FIRE)));
+        super(area, orientation, position, 1, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.FIRE, ICoopPlayer.DamageType.EXPLOSIVE)));
 
         Orientation[] orders = new Orientation []{ Orientation.UP,
                 Orientation.LEFT , Orientation.DOWN , Orientation.RIGHT};
