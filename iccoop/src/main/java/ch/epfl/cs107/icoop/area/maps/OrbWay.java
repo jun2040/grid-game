@@ -71,21 +71,21 @@ public class OrbWay extends ICoopArea {
         for (int i = 0; i < 5; ++i) {
             addElementalWall(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 10 + i),
-                    Logic.TRUE, "fire_wall", "feu"
+                    true, "fire_wall", "feu"
             ), bluePressurePlate);
             addElementalWall(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 4 + i),
-                    Logic.TRUE, "water_wall", "eau"
+                    true, "water_wall", "eau"
             ), redPressurePlate);
         }
 
         registerActor(new ElementalWall(
                 this, LEFT, new DiscreteCoordinates(7, 12),
-                Logic.TRUE, "water_wall", "eau"
+                true, "water_wall", "eau"
         ));
         registerActor(new ElementalWall(
                 this, LEFT, new DiscreteCoordinates(7, 6),
-                Logic.TRUE, "fire_wall", "feu"
+                true, "fire_wall", "feu"
         ));
 
         /*

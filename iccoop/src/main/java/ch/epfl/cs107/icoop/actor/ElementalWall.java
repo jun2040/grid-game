@@ -19,11 +19,11 @@ import java.util.Collections;
 import java.util.List;
 
 // FIXME: Verify the use of Logic interface
-public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor, WallActivateEventListener {
+public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor, Logic, WallActivateEventListener {
     private final Sprite[] wallSprites;
     private final String elementDamage; // TODO: Replace with enum
 
-    private Logic isActive;
+    private boolean isActive;
 
     /**
      * Default AreaEntity constructor
@@ -36,7 +36,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
             Area area,
             Orientation orientation,
             DiscreteCoordinates position,
-            Logic isActive,
+            boolean isActive,
             String spriteName,
             String elementDamage
     ) {
@@ -54,7 +54,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
 
     @Override
     public void draw(Canvas canvas) {
-        if (isActive == Logic.TRUE)
+        if (isActive)
             wallSprites[getOrientation().ordinal()].draw(canvas);
     }
 
@@ -112,11 +112,21 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
 
     @Override
     public void activate() {
-        isActive = Logic.TRUE;
+        isActive = true;
     }
 
     @Override
     public void deactivate() {
-        isActive = Logic.FALSE;
+        isActive = false;
+    }
+
+    @Override
+    public boolean isOn() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isActive;
     }
 }
