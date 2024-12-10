@@ -37,6 +37,7 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
         move(MOVE_DURATION / speed);
         range--;
 
+        // TODO: Destroy projectile when it reaches map border / static props
         if (range < 0)
             destroy();
     }
