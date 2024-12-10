@@ -107,7 +107,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.currentItem = ICoopItem.SWORD;
 
         // FIXME: Temporary placeholder for determining flipped flag
-        this.gui = new ICoopPlayerStatusGUI(this, id % 2 != 0);
+        this.gui = new ICoopPlayerStatusGUI(this, id % 2 == 0);
         this.gui.setCurrentItem(currentItem);
 
         this.keybinds = keybinds;
