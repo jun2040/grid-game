@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.handler.ICoopItem;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -39,7 +40,7 @@ public class Explosive extends ICoopCollectable implements Interactor {
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
     public Explosive(Area area, Orientation orientation, DiscreteCoordinates position, int timer) {
-        super(area, orientation, position);
+        super(area, orientation, position, ICoopItem.BOMB);
 
         this.timer = timer;
     }

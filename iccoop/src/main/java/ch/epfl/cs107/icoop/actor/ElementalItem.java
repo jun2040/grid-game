@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.handler.ICoopItem;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -12,6 +13,12 @@ public abstract class ElementalItem extends ICoopCollectable implements Elementa
 
     public ElementalItem(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType) {
         super(area, orientation, position);
+
+        this.elementType = elementType;
+    }
+
+    public ElementalItem(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType, ICoopItem itemModel) {
+        super(area, orientation, position, itemModel);
 
         this.elementType = elementType;
     }
