@@ -1,9 +1,6 @@
 package ch.epfl.cs107.icoop.area.maps;
 
-import ch.epfl.cs107.icoop.actor.Door;
-import ch.epfl.cs107.icoop.actor.Explosive;
-import ch.epfl.cs107.icoop.actor.Heart;
-import ch.epfl.cs107.icoop.actor.Rock;
+import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.play.engine.actor.Background;
@@ -48,8 +45,6 @@ public class Spawn extends ICoopArea {
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(11, 9)));
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(10, 10)));
         registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(10, 9), 100));
-
-        registerActor(new Heart(this, LEFT, new DiscreteCoordinates(8, 8), 1));
     }
 
     @Override
