@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.area;
 
 import ch.epfl.cs107.icoop.actor.ElementalEntity;
+import ch.epfl.cs107.icoop.actor.Unstoppable;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -72,6 +73,9 @@ public class ICoopBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
+            if (entity instanceof Unstoppable)
+                return true;
+
             // FIXME: Very rudimentary implementation of elemental category role
             // FIXME: Allows player to phase through another player
             String element = null;

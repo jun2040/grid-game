@@ -1,6 +1,5 @@
 package ch.epfl.cs107.icoop.actor;
 
-import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
 import ch.epfl.cs107.play.areagame.area.Area;
@@ -11,7 +10,7 @@ import ch.epfl.cs107.play.math.Orientation;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Projectile extends MovableAreaEntity implements Interactor {
+public abstract class Projectile extends MovableAreaEntity implements Interactor, Unstoppable {
     private static int MOVE_DURATION = 10;
 
     private final int speed;
