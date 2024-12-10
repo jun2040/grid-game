@@ -169,6 +169,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         isInGracePeriod = true;
     }
 
+    public void heal(int restorationFactor) {
+        health.increase(restorationFactor);
+    }
+
     @Override
     public String element() { return this.element; }
 
@@ -260,6 +264,14 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 // TODO: Verify that orb disappears only after the dialog is completed
                 orb.triggerDialog();
                 setImmunityType(DamageType.toType(orb.element()));
+            }
+        }
+
+        @Override
+        public void interactWith(Heart heart, boolean isCellInteraction) {
+            if (isCellInteraction) {
+                heal(heart.getRestorationFactor());
+                heart.collect();
             }
         }
     }

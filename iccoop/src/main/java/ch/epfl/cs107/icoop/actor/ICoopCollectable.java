@@ -25,8 +25,6 @@ public abstract class ICoopCollectable extends CollectableAreaEntity implements 
         super.update(deltaTime);
 
         if (isCollected())
-            unregister();
+            getOwnerArea().unregisterActor(this);
     }
-
-    public void unregister() { getOwnerArea().unregisterActor(this); }
 }

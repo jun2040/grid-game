@@ -69,8 +69,8 @@ public class Explosive extends ICoopCollectable implements Interactor {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (explosion.isCompleted() || isCollected()) {
-            unregister();
+        if (explosion.isCompleted()) {
+            getOwnerArea().unregisterActor(this);
             return;
         }
 
