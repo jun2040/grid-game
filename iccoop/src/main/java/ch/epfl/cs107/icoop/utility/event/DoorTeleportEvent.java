@@ -4,7 +4,6 @@ package ch.epfl.cs107.icoop.utility.event;
 public class DoorTeleportEvent extends Event {
     @Override
     public void handleListener(EventListener listener, EventArgs eventArgs) {
-        System.out.println("Firing listener");
         ((DoorTeleportEventListener) listener).teleport(((DoorTeleportEventArgs) eventArgs).getDoor());
     }
 }
