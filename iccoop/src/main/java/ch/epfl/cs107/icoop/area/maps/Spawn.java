@@ -14,7 +14,7 @@ import static ch.epfl.cs107.play.math.Orientation.*;
 public class Spawn extends ICoopArea {
     public static DiscreteCoordinates[] SPAWN_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6) };
-    public static DiscreteCoordinates[] TP_POINTS =
+    public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(18, 16), new DiscreteCoordinates(18, 15) };
 
     private DialogHandler dialogHandler;
@@ -36,7 +36,7 @@ public class Spawn extends ICoopArea {
         registerActor(new Foreground(this));
         registerActor(new Door(
                 this, LEFT, "OrbWay", Logic.TRUE,
-                OrbWay.TP_POINTS,
+                OrbWay.ARRIVAL_POINTS,
                 new DiscreteCoordinates(19, 15),
                 new DiscreteCoordinates(19, 16)
                 ));

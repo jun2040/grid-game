@@ -12,7 +12,7 @@ import static ch.epfl.cs107.play.math.Orientation.*;
 import static ch.epfl.cs107.icoop.actor.ElementType.*;
 
 public class OrbWay extends ICoopArea {
-    public static DiscreteCoordinates[] TP_POINTS =
+    public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5) };
 
     DialogHandler dialogHandler;
@@ -27,7 +27,7 @@ public class OrbWay extends ICoopArea {
 
         registerActor(new Door(
                 this, RIGHT, "Spawn", Logic.TRUE,
-                Spawn.TP_POINTS,
+                Spawn.ARRIVAL_POINTS,
                 new DiscreteCoordinates(0, 14),
                 new DiscreteCoordinates(0, 13),
                 new DiscreteCoordinates(0, 12),
@@ -36,7 +36,7 @@ public class OrbWay extends ICoopArea {
         ));
         registerActor(new Door(
                 this, RIGHT, "Spawn", Logic.TRUE,
-                Spawn.TP_POINTS,
+                Spawn.ARRIVAL_POINTS,
                 new DiscreteCoordinates(0, 8),
                 new DiscreteCoordinates(0, 7),
                 new DiscreteCoordinates(0, 6),
@@ -108,7 +108,7 @@ public class OrbWay extends ICoopArea {
     public boolean isViewCentered() { return true; }
 
     @Override
-    public DiscreteCoordinates getPlayerSpawnPosition(int id) { return TP_POINTS[id]; }
+    public DiscreteCoordinates getPlayerSpawnPosition(int id) { return ARRIVAL_POINTS[id]; }
 
     @Override
     public String getTitle() { return "OrbWay"; }
