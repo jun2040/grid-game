@@ -1,8 +1,10 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.play.areagame.actor.Interactable;
+import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.area.Area;
-import ch.epfl.cs107.play.engine.actor.Animation;
 import ch.epfl.cs107.play.engine.actor.OrientedAnimation;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
@@ -19,6 +21,7 @@ public class HellSkull extends Enemy {
     private static final int ANIMATION_DURATION = 12;
 
     private final OrientedAnimation animation;
+    private final HellSkullInteractionHandler handler = new HellSkullInteractionHandler();
 
     private float flameSpawnTimer;
 
@@ -80,5 +83,21 @@ public class HellSkull extends Enemy {
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+    }
+
+    @Override
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+        other.acceptInteraction(handler, isCellInteraction);
+    }
+
+    private class HellSkullInteractionHandler implements ICoopInteractionVisitor {
+        @Override
+        public void interactWith(Interactable other, boolean isCellInteraction) {}
+
+        @Override
+        public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
+            // FIXME: Interaction doesn't trigger because player cannot be in the same cell (some confusion about "contact interaction")
+            player.hit(ICoopPlayer.DamageType.FIRE);
+        }
     }
 }

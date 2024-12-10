@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.actor;
 
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
@@ -107,11 +108,7 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         return true;
     }
 
-    @Override
-    public void interactWith(Interactable other, boolean isCellInteraction) {
-
-    }
-
+    // FIXME: Cannot do contact interaction
     @Override
     public boolean takeCellSpace() {
         return !isDead;
@@ -128,7 +125,5 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
     }
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-
-    }
+    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {}
 }
