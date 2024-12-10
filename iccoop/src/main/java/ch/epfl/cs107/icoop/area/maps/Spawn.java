@@ -34,12 +34,19 @@ public class Spawn extends ICoopArea {
     protected void createArea() {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
+
         registerActor(new Door(
                 this, LEFT, "OrbWay", Logic.TRUE,
                 OrbWay.ARRIVAL_POINTS,
                 new DiscreteCoordinates(19, 15),
                 new DiscreteCoordinates(19, 16)
                 ));
+        registerActor(new Door(
+                this, UP, "Maze", Logic.TRUE,
+                Maze.ARRIVAL_POINTS,
+                new DiscreteCoordinates(4, 0),
+                new DiscreteCoordinates(5, 0)
+        ));
 
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(9, 9)));
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(11, 9)));

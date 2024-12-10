@@ -5,6 +5,7 @@ import ch.epfl.cs107.icoop.actor.CenterOfMass;
 import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.area.maps.Maze;
 import ch.epfl.cs107.icoop.area.maps.OrbWay;
 import ch.epfl.cs107.icoop.area.maps.Spawn;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
@@ -45,6 +46,7 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener, Dialog
 
         addArea(spawn);
         addArea(new OrbWay(this));
+        addArea(new Maze());
     }
 
     private void initArea(String areaKey) {
