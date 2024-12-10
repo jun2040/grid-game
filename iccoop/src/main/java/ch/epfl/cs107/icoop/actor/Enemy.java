@@ -18,9 +18,9 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
     private static final int GRACE_PERIOD = 10;
 
     private int maxHealthPoint;
-    private int heathPoint;
+    private int healthPoint;
 
-    private final Animation deathAnimation;
+    protected final Animation deathAnimation;
 
     private boolean isDead = false;
 
@@ -45,7 +45,7 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         super(area, orientation, position);
 
         this.maxHealthPoint = maxHealthPoint;
-        this.heathPoint = maxHealthPoint;
+        this.healthPoint = maxHealthPoint;
 
         this.deathAnimation =
                 new Animation(
@@ -60,8 +60,11 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (heathPoint < 0)
+        if (healthPoint < 0)
             die();
+
+        if (isDead && !deathAnimation.isCompleted())
+            deathAnimation.update(deltaTime);
 
         if (isInGracePeriod && gracePeriodTimer >= 0) {
             gracePeriodTimer--;
@@ -84,7 +87,7 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
                 return;
         }
 
-        heathPoint -= damageType.damage;
+        healthPoint -= damageType.damage;
 
         gracePeriodTimer = GRACE_PERIOD;
         isInGracePeriod = true;

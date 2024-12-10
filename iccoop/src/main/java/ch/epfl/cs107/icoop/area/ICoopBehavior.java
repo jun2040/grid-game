@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
 public class ICoopBehavior extends AreaBehavior {
@@ -21,6 +22,12 @@ public class ICoopBehavior extends AreaBehavior {
             }
         }
     }
+
+    public boolean isCellFree(DiscreteCoordinates coordinates) {
+        ICoopCell cell = (ICoopCell) getCell(coordinates.x, coordinates.y);
+        return !cell.takeCellSpace();
+    }
+
     public enum ICoopCellType {
         //https://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
         NULL(0, false , false),
