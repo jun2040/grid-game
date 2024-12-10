@@ -1,6 +1,9 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.utility.event.EventArgs;
+import ch.epfl.cs107.icoop.utility.event.WallActivateEvent;
+import ch.epfl.cs107.icoop.utility.event.WallActivateEventArgs;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
@@ -18,7 +21,8 @@ import java.util.List;
 public class PressurePlate extends AreaEntity implements Logic {
     private boolean isPressed = false;
 
-    private Sprite plateSprite;
+    private final WallActivateEvent wallActivateEvent = new WallActivateEvent();
+    private final Sprite plateSprite;
 
     /**
      * Default AreaEntity constructor
@@ -40,6 +44,25 @@ public class PressurePlate extends AreaEntity implements Logic {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        if (isPressed)
+            wallActivateEvent.emit(new WallActivateEventArgs(false));
+        else
+            wallActivateEvent.emit(new WallActivateEventArgs(true));
+
+        deactivate();
+    }
+
+    public void activate() {
+        isPressed = true;
+    }
+
+    public void deactivate() {
+        isPressed = false;
+    }
+
+    public void linkWall(ElementalWall elementalWall) {
+        wallActivateEvent.addEventListener(elementalWall);
     }
 
     @Override

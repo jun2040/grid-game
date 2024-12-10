@@ -11,6 +11,11 @@ public abstract class Event {
         eventListeners.add(eventListener);
     }
 
+    public final void emit() {
+        for (EventListener listener : eventListeners)
+            handleListener(listener, EventArgs.EMPTY);
+    }
+
     public final void emit(EventArgs eventArgs) {
         for (EventListener listener : eventListeners)
             handleListener(listener, eventArgs);

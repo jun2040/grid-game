@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.utility.event.WallActivateEventListener;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -18,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 // FIXME: Verify the use of Logic interface
-public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor {
+public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor, WallActivateEventListener {
     private final Sprite[] wallSprites;
     private final String elementDamage; // TODO: Replace with enum
 
@@ -53,7 +54,13 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
 
     @Override
     public void draw(Canvas canvas) {
-        wallSprites[getOrientation().ordinal()].draw(canvas);
+        if (isActive == Logic.TRUE)
+            wallSprites[getOrientation().ordinal()].draw(canvas);
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
     }
 
     /*
@@ -99,9 +106,17 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
 
-    @Override
-    public void onLeaving(List<DiscreteCoordinates> coordinates) { }
+    /*
+     * Listener implementation
+     */
 
     @Override
-    public void onEntering(List<DiscreteCoordinates> coordinates) { }
+    public void activate() {
+        isActive = Logic.TRUE;
+    }
+
+    @Override
+    public void deactivate() {
+        isActive = Logic.FALSE;
+    }
 }

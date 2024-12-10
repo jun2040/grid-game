@@ -57,17 +57,26 @@ public class OrbWay extends ICoopArea {
         registerActor(waterOrb);
 
         /*
+         * Create & register pressure plates
+         */
+        PressurePlate redPressurePlate = new PressurePlate(this, new DiscreteCoordinates(5, 10));
+        PressurePlate bluePressurePlate = new PressurePlate(this, new DiscreteCoordinates(5, 7));
+
+        registerActor(redPressurePlate);
+        registerActor(bluePressurePlate);
+
+        /*
          * Create & register elemental walls
          */
         for (int i = 0; i < 5; ++i) {
-            registerActor(new ElementalWall(
+            addElementalWall(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 10 + i),
                     Logic.TRUE, "fire_wall", "feu"
-            ));
-            registerActor(new ElementalWall(
+            ), bluePressurePlate);
+            addElementalWall(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 4 + i),
                     Logic.TRUE, "water_wall", "eau"
-            ));
+            ), redPressurePlate);
         }
 
         registerActor(new ElementalWall(
@@ -87,11 +96,12 @@ public class OrbWay extends ICoopArea {
         registerActor(new Heart(this, LEFT, new DiscreteCoordinates(5, 13), 1));
         registerActor(new Heart(this, LEFT, new DiscreteCoordinates(10, 11), 1));
 
-        /*
-         * Create & register pressure plates
-         */
-        registerActor(new PressurePlate(this, new DiscreteCoordinates(5, 7)));
-        registerActor(new PressurePlate(this, new DiscreteCoordinates(5, 10)));
+
+    }
+
+    private void addElementalWall(ElementalWall elementalWall, PressurePlate pressurePlate) {
+        pressurePlate.linkWall(elementalWall);
+        registerActor(elementalWall);
     }
 
     @Override

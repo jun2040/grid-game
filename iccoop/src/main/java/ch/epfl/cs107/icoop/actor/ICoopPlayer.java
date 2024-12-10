@@ -274,6 +274,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 heart.collect();
             }
         }
+
+        @Override
+        public void interactWith(PressurePlate pressurePlate, boolean isCellInteraction) {
+            if (isCellInteraction)
+                pressurePlate.activate();
+        }
     }
 
     public enum DamageType {
