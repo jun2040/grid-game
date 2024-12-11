@@ -64,7 +64,7 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         if (deathAnimation.isCompleted())
             getOwnerArea().unregisterActor(this);
 
-        if (healthPoint < 0)
+        if (healthPoint <= 0)
             die();
 
         if (isDead && !deathAnimation.isCompleted())

@@ -61,7 +61,7 @@ public class ElementalProjectile extends Projectile {
 
         @Override
         public void interactWith(Enemy enemy, boolean isCellInteraction) {
-            if (isCellInteraction) {
+            if (isCellInteraction && !enemy.isDead()) {
                 enemy.hit(ICoopPlayer.DamageType.toType(elementType.getName()));
                 destroy();
             }
