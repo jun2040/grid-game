@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.area.maps;
 
+import ch.epfl.cs107.icoop.actor.Grenadier;
 import ch.epfl.cs107.icoop.actor.HellSkull;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.play.engine.actor.Background;
@@ -20,14 +21,21 @@ public class Maze extends ICoopArea {
             new DiscreteCoordinates(10, 28), new DiscreteCoordinates(10, 26)
     };
 
+    private static final DiscreteCoordinates[] grenadierSpawn = new DiscreteCoordinates[] {
+            new DiscreteCoordinates(5, 15), new DiscreteCoordinates(6, 17),
+            new DiscreteCoordinates(10, 17), new DiscreteCoordinates(5, 14)
+    };
+
     @Override
     protected void createArea() {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
 
-        for (DiscreteCoordinates coord : hellSkullSpawn) {
+        for (DiscreteCoordinates coord : hellSkullSpawn)
             registerActor(new HellSkull(this, RIGHT, coord));
-        }
+
+        for (DiscreteCoordinates coord : grenadierSpawn)
+            registerActor(new Grenadier(this, RIGHT, coord));
     }
 
     @Override
