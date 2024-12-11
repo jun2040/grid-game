@@ -35,7 +35,7 @@ public class Grenadier extends Enemy {
      * @param position       (Coordinate): Initial position of the entity. Not null
      */
     public Grenadier(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position, 3, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.WATER)));
+        super(area, orientation, position, 1, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.WATER)));
 
         final Vector anchor = new Vector(-0.5f, 0);
         final Orientation[] orders = {DOWN , RIGHT , UP, LEFT};
@@ -54,14 +54,18 @@ public class Grenadier extends Enemy {
 
     @Override
     public void draw(Canvas canvas) {
-        switch (currentState) {
-            case IDLE:
-            case ATTACK:
-                idleAnimation.draw(canvas);
-                break;
-            case PROTECT:
-                protectingAnimation.draw(canvas);
-                break;
+        if (!isDead()) {
+            switch (currentState) {
+                case IDLE:
+                case ATTACK:
+                    idleAnimation.draw(canvas);
+                    break;
+                case PROTECT:
+                    protectingAnimation.draw(canvas);
+                    break;
+            }
+        } else {
+            deathAnimation.draw(canvas);
         }
     }
 

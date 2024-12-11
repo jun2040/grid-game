@@ -61,6 +61,9 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        if (deathAnimation.isCompleted())
+            getOwnerArea().unregisterActor(this);
+
         if (healthPoint < 0)
             die();
 
@@ -80,15 +83,20 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
     }
 
     public void hit(ICoopPlayer.DamageType damageType) {
+        System.out.println("Hit1");
         if (isInGracePeriod || isDead)
             return;
 
+        System.out.println("Hit2");
         for (ICoopPlayer.DamageType t : immunityType) {
             if (damageType.equals(t))
                 return;
         }
 
+        System.out.println("Hit3");
         healthPoint -= damageType.damage;
+
+        System.out.println(healthPoint);
 
         gracePeriodTimer = GRACE_PERIOD;
         isInGracePeriod = true;
