@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.areagame.handler.InventoryItem;
 public enum ICoopItem implements InventoryItem {
     BOMB("bomb", "explosive", true),
     SWORD("sword", "sword.icon", false),
+    STAFF("staff", "staff.icon", false)
     ;
 
     private final String name;

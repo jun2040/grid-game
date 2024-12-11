@@ -27,7 +27,6 @@ import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import javax.swing.plaf.synth.SynthUI;
 import java.util.*;
 
 
@@ -39,12 +38,15 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private static final int GRACE_PERIOD = 24;
     private static final int MOVE_DURATION = 8;
     private static final int ANIMATION_DURATION = 4;
+    private static final int SWORD_ANIMATION_DURATION = 2;
+    private static final int STAFF_ANIMATION_DURATION = 2;
 
     //private final TextGraphics message;
     private final int id;
     private final String element;
-    private final OrientedAnimation animation;
-    private final String spriteName;
+    private final OrientedAnimation idleAnimation;
+    private final OrientedAnimation swordAttackAnimation;
+    private final OrientedAnimation staffAttackAnimation;
     private final Health health;
 
     private final ICoopInventory inventory;
@@ -59,6 +61,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private DamageType immunityType;
     private boolean isInGracePeriod = false;
     private int gracePeriodTimer = 0;
+    private PlayerState currentState;
 
     //private String prefix;
     /**
@@ -85,23 +88,33 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         message.setParent(this);
         message.setAnchor(new Vector(-0.3f, 0.1f));*/
 
-        // Initialize sprite & animation
+        // Initialize sprite & idleAnimation
         final Orientation[] orders = new Orientation[] { DOWN, RIGHT, UP, LEFT };
         final String prefix = "icoop/" + spriteName;
         final Vector anchor = new Vector(0, 0);
 
-        this.spriteName = spriteName;
-        this.animation = new OrientedAnimation(
+        this.idleAnimation = new OrientedAnimation(
                 prefix, ANIMATION_DURATION,
                 this, anchor, orders,
                 4, 1, 2,
                 16, 32, true
         );
 
+        final Vector swordAttackAnimAnchor = new Vector(-.5f, 0);
+        this.swordAttackAnimation = new OrientedAnimation(prefix + ".sword",
+                SWORD_ANIMATION_DURATION , this ,
+                swordAttackAnimAnchor, orders , 4, 2, 2, 32, 32);
+
+        final Vector staffAttackAnimAnchor = new Vector(-.5f, -.20f);
+        String name = spriteName.equals("player") ? "player.staff_water" : "player2.staff_water";
+        this.staffAttackAnimation = new OrientedAnimation("icoop/" + name, STAFF_ANIMATION_DURATION , this ,
+                staffAttackAnimAnchor, orders , 4, 2, 2, 32, 32);
+
         this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
 
         this.inventory = new ICoopInventory();
         this.inventory.addPocketItem(ICoopItem.SWORD, 1);
+        this.inventory.addPocketItem(ICoopItem.STAFF, 1);
         this.inventory.addPocketItem(ICoopItem.BOMB, 5);
 
         this.currentItem = ICoopItem.SWORD;
@@ -119,6 +132,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.id = id;
 
         this.immunityType = null;
+
+        this.currentState = PlayerState.IDLE;
     }
 
     @Override
@@ -131,8 +146,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         moveIfPressed(UP, keyboard.get(keybinds.up()));
         moveIfPressed(RIGHT, keyboard.get(keybinds.right()));
         moveIfPressed(DOWN, keyboard.get(keybinds.down()));
-
-        updateAnimation(deltaTime);
 
         if (isInGracePeriod && gracePeriodTimer >= 0) {
             gracePeriodTimer--;
@@ -148,6 +161,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 case BOMB:
                     success = placeExplosive();
                     break;
+                case SWORD:
+                case STAFF:
+                    currentState = PlayerState.ATTACK;
+                    break;
                 default:
                     break;
             }
@@ -162,6 +179,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         if (keyboard.get(keybinds.switchItem()).isPressed())
             getNextItem();
+
+        updateAnimation(deltaTime);
     }
 
     private boolean placeExplosive() {
@@ -194,19 +213,44 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     private void updateAnimation(float deltaTime) {
-        if (isDisplacementOccurs()) {
-            if (isInGracePeriod && gracePeriodTimer % 3 != 0)
-                return;
+        if (currentState == PlayerState.IDLE) {
+            if (isDisplacementOccurs()) {
+                if (isInGracePeriod && gracePeriodTimer % 3 != 0)
+                    return;
 
-            animation.update(deltaTime);
-        } else {
-            animation.reset();
+                idleAnimation.update(deltaTime);
+            } else {
+                idleAnimation.reset();
+            }
+        } else if (currentState == PlayerState.ATTACK) {
+            if (currentItem.equals(ICoopItem.SWORD)) {
+                if (swordAttackAnimation.isCompleted()) {
+                    swordAttackAnimation.reset();
+                    currentState = PlayerState.IDLE;
+                } else {
+                    swordAttackAnimation.update(deltaTime);
+                }
+            } else if (currentItem.equals(ICoopItem.STAFF)) {
+                if (staffAttackAnimation.isCompleted()) {
+                    staffAttackAnimation.reset();
+                    currentState = PlayerState.IDLE;
+                } else {
+                    staffAttackAnimation.update(deltaTime);
+                }
+            }
         }
     }
 
     @Override
     public void draw(Canvas canvas) {
-        this.animation.draw(canvas);
+        if (currentState == PlayerState.IDLE) {
+            this.idleAnimation.draw(canvas);
+        } if (currentState == PlayerState.ATTACK) {
+            if (currentItem.equals(ICoopItem.SWORD))
+                this.swordAttackAnimation.draw(canvas);
+            else if (currentItem.equals(ICoopItem.STAFF))
+                this.staffAttackAnimation.draw(canvas);
+        }
         this.health.draw(canvas);
         this.gui.draw(canvas);
     }
@@ -391,6 +435,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
     }
 
-    // TODO: Verify that inventory implementation is correct and extract the record out
-    public record Pair<K, V>(K key, V value) {}
+    private enum PlayerState {
+        IDLE,
+        ATTACK
+        ;
+    }
 }
