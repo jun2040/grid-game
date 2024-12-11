@@ -39,6 +39,13 @@ public class ElementalProjectile extends Projectile {
     }
 
     @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        animation.update(deltaTime);
+    }
+
+    @Override
     public void draw(Canvas canvas) {
         animation.draw(canvas);
     }
@@ -54,8 +61,10 @@ public class ElementalProjectile extends Projectile {
 
         @Override
         public void interactWith(Enemy enemy, boolean isCellInteraction) {
-            if (isCellInteraction)
+            if (isCellInteraction) {
                 enemy.hit(ICoopPlayer.DamageType.toType(elementType.getName()));
+                destroy();
+            }
         }
     }
 }
