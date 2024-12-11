@@ -411,9 +411,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(Enemy enemy, boolean isCellInteraction) {
-            if (!isCellInteraction && currentState == PlayerState.ATTACK) {
+            if (!isCellInteraction && currentState == PlayerState.ATTACK && currentItem.equals(ICoopItem.SWORD))
                 enemy.hit(DamageType.PHYSICAL);
-            }
         }
     }
 
