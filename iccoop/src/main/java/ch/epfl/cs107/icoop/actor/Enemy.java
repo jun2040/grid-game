@@ -125,5 +125,7 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
     }
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {}
+    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
+    }
 }

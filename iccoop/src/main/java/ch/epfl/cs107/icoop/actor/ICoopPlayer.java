@@ -408,6 +408,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             if (isCellInteraction)
                 pressurePlate.activate();
         }
+
+        @Override
+        public void interactWith(Enemy enemy, boolean isCellInteraction) {
+            if (!isCellInteraction && currentState == PlayerState.ATTACK)
+                enemy.hit(DamageType.PHYSICAL);
+        }
     }
 
     public enum DamageType {
