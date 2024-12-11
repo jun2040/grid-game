@@ -14,4 +14,13 @@ public enum ElementType {
     public String getName() {
         return name;
     }
+
+    public static ElementType fromString(String name) {
+        for (ElementType type : ElementType.values()) {
+            if (type.name.equals(name))
+                return type;
+        }
+
+        return NONE;
+    }
 }
