@@ -1,7 +1,9 @@
 package ch.epfl.cs107.icoop.area.maps;
 
+import ch.epfl.cs107.icoop.actor.ElementType;
 import ch.epfl.cs107.icoop.actor.Grenadier;
 import ch.epfl.cs107.icoop.actor.HellSkull;
+import ch.epfl.cs107.icoop.actor.Staff;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
@@ -36,6 +38,9 @@ public class Maze extends ICoopArea {
 
         for (DiscreteCoordinates coord : grenadierSpawn)
             registerActor(new Grenadier(this, RIGHT, coord));
+
+        registerActor(new Staff(this, new DiscreteCoordinates(13, 2), ElementType.FIRE, "staff_fire"));
+        registerActor(new Staff(this, new DiscreteCoordinates(8, 2), ElementType.WATER, "staff_water"));
     }
 
     @Override
