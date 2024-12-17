@@ -40,10 +40,10 @@ public class Grenadier extends Enemy {
         final Vector anchor = new Vector(-0.5f, 0);
         final Orientation[] orders = {DOWN , RIGHT , UP, LEFT};
 
-        this.idleAnimation = new OrientedAnimation("icoop/bombMonster", ANIMATION_DURATION / 3,
+        this.idleAnimation = new OrientedAnimation("icoop/bombFoe", ANIMATION_DURATION / 3,
                 this , anchor , orders , 4, 2, 2, 32, 32,
                 true);
-        this.protectingAnimation = new OrientedAnimation("icoop/bombMonster.protecting", ANIMATION_DURATION / 3,
+        this.protectingAnimation = new OrientedAnimation("icoop/bombFoe.protecting", ANIMATION_DURATION / 3,
                 this, anchor, orders, 4, 2, 2, 32, 32,
                 false);
 
