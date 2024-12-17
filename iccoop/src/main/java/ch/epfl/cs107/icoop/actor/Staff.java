@@ -44,9 +44,4 @@ public class Staff extends ElementalItem {
 
         animation.update(deltaTime);
     }
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
 }

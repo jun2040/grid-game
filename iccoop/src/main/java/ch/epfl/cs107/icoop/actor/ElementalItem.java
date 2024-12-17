@@ -8,6 +8,9 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class ElementalItem extends ICoopCollectable implements ElementalEntity, Logic {
     private final ElementType elementType;
 
@@ -36,6 +39,11 @@ public abstract class ElementalItem extends ICoopCollectable implements Elementa
     @Override
     public boolean isOff() {
         return !isCollected();
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override

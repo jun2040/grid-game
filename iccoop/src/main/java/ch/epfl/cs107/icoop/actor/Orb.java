@@ -52,11 +52,6 @@ public class Orb extends ElementalItem {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
-
-    @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
         ((ICoopInteractionVisitor) v).interactWith((ElementalItem) this, isCellInteraction);
