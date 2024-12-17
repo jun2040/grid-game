@@ -65,5 +65,11 @@ public class ElementalProjectile extends Projectile {
                 destroy();
             }
         }
+
+        @Override
+        public void interactWith(Rock rock, boolean isCellInteraction) {
+            if (isCellInteraction)
+                rock.destroy();
+        }
     }
 }
