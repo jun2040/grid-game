@@ -41,7 +41,7 @@ public class Maze extends ICoopArea {
         registerActor(new Staff(this, new DiscreteCoordinates(8, 2), ElementType.WATER, "staff_water"));
 
         registerActor(new Door(
-                this, UP, "Arena", Logic.TRUE,
+                this, UP, "Arena", true,
                 Arena.ARRIVAL_POINTS,
                 new DiscreteCoordinates(19, 6),
                 new DiscreteCoordinates(19, 7)

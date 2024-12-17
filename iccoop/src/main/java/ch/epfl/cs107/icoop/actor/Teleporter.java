@@ -10,17 +10,15 @@ import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
-public class Teleporter extends Door implements Logic {
+public class Teleporter extends Door {
     private final Queue<Key> keys;
     private final Sprite sprite;
 
     public Teleporter(Area area, Orientation orientation, String destinationAreaName, DiscreteCoordinates[] targetCoords, DiscreteCoordinates mainPosition) {
-        super(area, orientation, destinationAreaName, Logic.FALSE, targetCoords, mainPosition);
+        super(area, orientation, destinationAreaName, false, targetCoords, mainPosition);
 
         this.keys = new LinkedList<>();
         this.sprite = new RPGSprite("shadow", 1, 1, this,
@@ -29,7 +27,8 @@ public class Teleporter extends Door implements Logic {
 
     @Override
     public void draw(Canvas canvas) {
-        sprite.draw(canvas);
+        if (isOn())
+            sprite.draw(canvas);
     }
 
     @Override
@@ -48,22 +47,11 @@ public class Teleporter extends Door implements Logic {
         }
         keys.addAll(newKeys);
 
-        setSignal(logic);
+        if (logic.isOn())
+            open();
+        else
+            close();
     }
 
     public void addKey(Key key) { keys.add(key); }
-
-    // TODO: Refactor
-    @Override
-    public boolean isOn() {
-        Logic logic = Logic.TRUE;
-        for (Key key : keys)
-            logic = new And(logic, key);
-        return logic.isOn();
-    }
-
-    @Override
-    public boolean isOff() {
-        return !isOn();
-    }
 }

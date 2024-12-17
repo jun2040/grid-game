@@ -12,11 +12,11 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.*;
 
-public class Door extends AreaEntity implements Interactable {
+public class Door extends AreaEntity implements Interactable, Logic {
     private String destinationAreaName;
     private DiscreteCoordinates[] targetCoords;
     private List<DiscreteCoordinates> positions;
-    private Logic openSignal;
+    private boolean isOpen;
 
     /**
      * Default AreaEntity constructor
@@ -29,14 +29,14 @@ public class Door extends AreaEntity implements Interactable {
             Area area,
             Orientation orientation,
             String destinationAreaName,
-            Logic openSignal,
+            boolean isOpen,
             DiscreteCoordinates[] targetCoords,
             DiscreteCoordinates mainPosition
     ) {
         super(area, orientation, mainPosition);
         this.destinationAreaName = destinationAreaName;
         this.targetCoords = targetCoords;
-        this.openSignal = openSignal;
+        this.isOpen = isOpen;
 
         this.positions = new ArrayList<>();
         this.positions.add(mainPosition);
@@ -46,18 +46,12 @@ public class Door extends AreaEntity implements Interactable {
             Area area,
             Orientation orientation,
             String destinationAreaName,
-            Logic openSignal,
+            boolean isOpen,
             DiscreteCoordinates[] targetCoords,
             DiscreteCoordinates mainPosition,
             DiscreteCoordinates ...otherPositions
     ) {
-        super(area, orientation, mainPosition);
-        this.destinationAreaName = destinationAreaName;
-        this.targetCoords = targetCoords;
-        this.openSignal = openSignal;
-
-        this.positions = new ArrayList<>();
-        this.positions.add(mainPosition);
+        this(area, orientation, destinationAreaName, isOpen, targetCoords, mainPosition);
         this.positions.addAll(Arrays.asList(otherPositions));
     }
 
@@ -71,12 +65,12 @@ public class Door extends AreaEntity implements Interactable {
         super.draw(canvas);
     }
 
-    public Logic getSignal() {
-        return openSignal;
+    protected void open() {
+        isOpen = true;
     }
 
-    public void setSignal(Logic signal) {
-        this.openSignal = signal;
+    protected void close() {
+        isOpen = false;
     }
 
     public String getDestinationAreaName() {
@@ -110,5 +104,15 @@ public class Door extends AreaEntity implements Interactable {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
+    }
+
+    @Override
+    public boolean isOn() {
+        return isOpen;
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isOpen;
     }
 }

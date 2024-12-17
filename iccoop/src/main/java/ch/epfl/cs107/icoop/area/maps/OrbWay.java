@@ -26,7 +26,7 @@ public class OrbWay extends ICoopArea {
         registerActor(new Foreground(this));
 
         registerActor(new Door(
-                this, RIGHT, "Spawn", Logic.TRUE,
+                this, RIGHT, "Spawn", true,
                 Spawn.ARRIVAL_POINTS,
                 new DiscreteCoordinates(0, 14),
                 new DiscreteCoordinates(0, 13),
@@ -35,7 +35,7 @@ public class OrbWay extends ICoopArea {
                 new DiscreteCoordinates(0, 10)
         ));
         registerActor(new Door(
-                this, RIGHT, "Spawn", Logic.TRUE,
+                this, RIGHT, "Spawn", true,
                 Spawn.ARRIVAL_POINTS,
                 new DiscreteCoordinates(0, 8),
                 new DiscreteCoordinates(0, 7),
