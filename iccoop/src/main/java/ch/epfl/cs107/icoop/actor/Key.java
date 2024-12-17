@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.window.Canvas;
 public class Key extends ElementalItem {
     private final Sprite sprite;
 
+    // TODO: Consider defaulting the orientation to UP for items
     public Key(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType) {
         super(area, orientation, position, elementType);
 
