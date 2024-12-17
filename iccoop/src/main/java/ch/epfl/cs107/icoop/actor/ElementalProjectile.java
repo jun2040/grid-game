@@ -29,9 +29,7 @@ public class ElementalProjectile extends Projectile {
         super(area, orientation, position, speed, range);
 
         // FIXME: Encapsulate in enum;
-        // TODO: Figure out why all the fire-element related assets are missing
-//        String name = "icoop/" + (elementType.getName().equals("feu") ? "magicFireProjectile" : "magicWaterProjectile");
-        String name = "icoop/magicWaterProjectile";
+        String name = "icoop/" + (elementType.getName().equals("feu") ? "magicFireProjectile" : "magicWaterProjectile");
         this.animation = new Animation(name , 4, 1, 1, this , 32, 32,
                 ANIMATION_DURATION / 4, true);
         this.elementType = elementType;
