@@ -16,7 +16,7 @@ public class Spawn extends ICoopArea {
     public static DiscreteCoordinates[] SPAWN_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6) };
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
-            new DiscreteCoordinates[] { new DiscreteCoordinates(18, 16), new DiscreteCoordinates(18, 15) };
+            new DiscreteCoordinates[] { new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6) };
 
     private DialogHandler dialogHandler;
     private boolean isDirty = false;
