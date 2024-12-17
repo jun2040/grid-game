@@ -1,23 +1,38 @@
 package ch.epfl.cs107.icoop.area;
 
 import ch.epfl.cs107.icoop.actor.ElementalEntity;
+import ch.epfl.cs107.icoop.actor.Obstacle;
+import ch.epfl.cs107.icoop.actor.Rock;
 import ch.epfl.cs107.icoop.actor.Unstoppable;
-import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
-import ch.epfl.cs107.play.areagame.actor.Interactor;
+import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
+import static ch.epfl.cs107.play.math.Orientation.*;
+
 public class ICoopBehavior extends AreaBehavior {
-    public ICoopBehavior(Window window, String title) {
+    public ICoopBehavior(Window window, String title, Area area) {
         super(window, title);
+
         int height = getHeight();
         int width = getWidth();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 ICoopCellType color = ICoopCellType.toType(getRGB(height - 1 - y, x));
+                DiscreteCoordinates position = new DiscreteCoordinates(x, y);
+
+                switch (color) {
+                    case ROCK:
+                        area.registerActor(new Rock(area, UP, position));
+                        break;
+                    case OBSTACLE:
+                        area.registerActor(new Obstacle(area, UP, position));
+                        break;
+                }
+
                 setCell(x, y, new ICoopCell(x, y, color));
             }
         }
