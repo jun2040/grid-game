@@ -3,6 +3,7 @@ package ch.epfl.cs107.icoop.area.maps;
 import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
+import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.engine.actor.Foreground;

@@ -5,12 +5,12 @@ import ch.epfl.cs107.icoop.actor.CenterOfMass;
 import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.area.maps.Arena;
 import ch.epfl.cs107.icoop.area.maps.Maze;
 import ch.epfl.cs107.icoop.area.maps.OrbWay;
 import ch.epfl.cs107.icoop.area.maps.Spawn;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
-import ch.epfl.cs107.icoop.handler.ICoopPlayerStatusGUI;
-import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventListener;
+import ch.epfl.cs107.icoop.handler.TeleportController;
 import ch.epfl.cs107.play.areagame.AreaGame;
 import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.io.FileSystem;
@@ -23,18 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ICoop extends AreaGame implements DoorTeleportEventListener, DialogHandler {
-    private final String[] areas = {"Spawn", "OrbWay"};
+public class ICoop extends AreaGame implements DialogHandler {
     private final List<ICoopPlayer> players = new ArrayList<>();
-    private int areaIndex;
-
+    private ICoopPlayer player1;
+    private ICoopPlayer player2;
     private Dialog dialog = null;
+    private TeleportController teleportController = new TeleportController();
 
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             createAreas();
-            areaIndex = 0;
-            initArea(areas[areaIndex]);
+            initArea("Maze");
             return true;
         }
 
@@ -48,48 +47,68 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener, Dialog
         addArea(spawn);
         addArea(new OrbWay(this));
         addArea(new Maze());
+        addArea(new Arena());
     }
 
     private void initArea(String areaKey) {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
 
         players.clear();
-        addPlayer("player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS);
-        addPlayer("player2", "eau", KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
+//        addPlayer("player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS);
+//        addPlayer("player2", "eau", KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
+        if (player1 == null)
+            player1 = new ICoopPlayer(area, UP, area.getPlayerSpawnPosition(0), "player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS, teleportController, 0);
 
-        CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
+        if (player2 == null)
+            player2 = new ICoopPlayer(area, UP, area.getPlayerSpawnPosition(1), "player2", "eau", KeyBindings.BLUE_PLAYER_KEY_BINDINGS, teleportController, 1);
+
+//        player1.getDoorTeleportEvent().addEventListener(this);
+//        player2.getDoorTeleportEvent().addEventListener(this);
+
+        area.registerActor(player1);
+        area.registerActor(player2);
+
+//        CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
+        CenterOfMass centerOfMass = new CenterOfMass(player1, player2);
         area.setViewCandidate(centerOfMass);
     }
 
-    private void addPlayer(String spriteName, String element, KeyBindings.PlayerKeyBindings keyBindings) {
-        ICoopArea area = (ICoopArea) getCurrentArea();
-        ICoopPlayer player = new ICoopPlayer(
-                area, DOWN, area.getPlayerSpawnPosition(players.size()),
-                spriteName, element, keyBindings, players.size()
-        );
-
-        player.enterArea(area, area.getPlayerSpawnPosition(player.getId()));
-        player.centerCamera();
-        player.getDoorTeleportEvent().addEventListener(this);
-
-        players.add(player);
-    }
+//    private void addPlayer(String spriteName, String element, KeyBindings.PlayerKeyBindings keyBindings) {
+//        ICoopArea area = (ICoopArea) getCurrentArea();
+//        ICoopPlayer player = new ICoopPlayer(
+//                area, DOWN, area.getPlayerSpawnPosition(players.size()),
+//                spriteName, element, keyBindings, players.size()
+//        );
+//
+//        player.enterArea(area, area.getPlayerSpawnPosition(player.getId()));
+//        player.centerCamera();
+//        player.getDoorTeleportEvent().addEventListener(this);
+//
+//        players.add(player);
+//    }
 
     @Override
     public String getTitle() { return "ICoop"; }
 
-    @Override
-    public void teleport(Door door) {
-        players.forEach(ICoopPlayer::leaveArea);
+    public void teleport() {
+    //        players.forEach(ICoopPlayer::leaveArea);
+        player1.leaveArea();
+        player2.leaveArea();
 
-        ICoopArea area = (ICoopArea) setCurrentArea(door.getDestinationAreaName(), true);
+        initArea(teleportController.getTargetDestination());
 
-        players.forEach(player -> {
-            player.enterArea((ICoopArea) getCurrentArea(), door.getTargetCoords()[player.getId()]);
-        });
+//        ICoopArea area = (ICoopArea) setCurrentArea(door.getDestinationAreaName(), true);
 
-        CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
-        area.setViewCandidate(centerOfMass);
+//        players.get(0).enterArea(area, door.getTargetCoords()[0]);
+//        player1.enterArea(area, door.getTargetCoords()[0]);
+//        player2.enterArea(area, door.getTargetCoords()[1]);
+//
+//        players.forEach(player -> {
+//            player.enterArea((ICoopArea) getCurrentArea(), door.getTargetCoords()[player.getId()]);
+//        });
+
+//        CenterOfMass centerOfMass = new CenterOfMass(players.getFirst(), players.subList(1, players.size()).toArray(new ICoopPlayer[0]));
+//        area.setViewCandidate(centerOfMass);
     }
 
     @Override
@@ -118,6 +137,8 @@ public class ICoop extends AreaGame implements DoorTeleportEventListener, Dialog
         if (keyboard.get(KeyBindings.RESET_AREA).isDown())
             resetArea();
 
+        if (teleportController.isTeleportRequested())
+            teleport();
         /*
         * Use index-based for-loop over iteration:
         * Avoid concurrentModificationException caused by

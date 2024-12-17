@@ -3,10 +3,7 @@ package ch.epfl.cs107.icoop.actor;
 import ch.epfl.cs107.icoop.ICoop;
 import ch.epfl.cs107.icoop.KeyBindings.PlayerKeyBindings;
 import ch.epfl.cs107.icoop.area.ICoopArea;
-import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
-import ch.epfl.cs107.icoop.handler.ICoopInventory;
-import ch.epfl.cs107.icoop.handler.ICoopItem;
-import ch.epfl.cs107.icoop.handler.ICoopPlayerStatusGUI;
+import ch.epfl.cs107.icoop.handler.*;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEvent;
 import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventArgs;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
@@ -57,6 +54,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final PlayerKeyBindings keybinds;
     private final DoorTeleportEvent doorTeleportEvent;
     private final ICoopPlayerInteractionHandler handler;
+    private final TeleportController teleportController;
 
     private DamageType immunityType;
     private boolean isInGracePeriod = false;
@@ -78,6 +76,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             String spriteName,
             String element,
             PlayerKeyBindings keybinds,
+            TeleportController teleportController,
             int id
     ) {
         // Initialize player properties
@@ -128,6 +127,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.doorTeleportEvent = new DoorTeleportEvent();
 
         resetMotion();
+
+        this.teleportController = teleportController;
 
         this.id = id;
 
@@ -269,10 +270,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public void enterArea(ICoopArea area, DiscreteCoordinates position) {
         area.registerActor(this);
 
-        setOwnerArea(area);
-        setCurrentPosition(position.toVector());
+//        setOwnerArea(area);
+//        setCurrentPosition(position.toVector());
 
-        resetMotion();
+//        resetMotion();
     }
 
     public void leaveArea() {
@@ -364,7 +365,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         @Override
         public void interactWith(Door door, boolean isCellInteraction) {
             if (isCellInteraction && door.getSignal().isOn())
-                doorTeleportEvent.emit(new DoorTeleportEventArgs(door));
+                teleportController.setTargetDestination(door.getDestinationAreaName());
         }
 
         @Override

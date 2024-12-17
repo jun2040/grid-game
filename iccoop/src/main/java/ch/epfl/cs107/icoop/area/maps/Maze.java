@@ -1,13 +1,11 @@
 package ch.epfl.cs107.icoop.area.maps;
 
-import ch.epfl.cs107.icoop.actor.ElementType;
-import ch.epfl.cs107.icoop.actor.Grenadier;
-import ch.epfl.cs107.icoop.actor.HellSkull;
-import ch.epfl.cs107.icoop.actor.Staff;
+import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Logic;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
 
@@ -41,6 +39,13 @@ public class Maze extends ICoopArea {
 
         registerActor(new Staff(this, new DiscreteCoordinates(13, 2), ElementType.FIRE, "staff_fire"));
         registerActor(new Staff(this, new DiscreteCoordinates(8, 2), ElementType.WATER, "staff_water"));
+
+        registerActor(new Door(
+                this, UP, "Arena", Logic.TRUE,
+                Arena.ARRIVAL_POINTS,
+                new DiscreteCoordinates(19, 6),
+                new DiscreteCoordinates(19, 7)
+        ));
     }
 
     @Override
@@ -50,7 +55,7 @@ public class Maze extends ICoopArea {
 
     @Override
     public DiscreteCoordinates getPlayerSpawnPosition(int id) {
-        return new DiscreteCoordinates(0, 0);
+        return ARRIVAL_POINTS[id];
     }
 
     @Override
