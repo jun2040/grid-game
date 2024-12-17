@@ -75,6 +75,10 @@ public class Door extends AreaEntity implements Interactable {
         return openSignal;
     }
 
+    public void setSignal(Logic signal) {
+        this.openSignal = signal;
+    }
+
     public String getDestinationAreaName() {
         return destinationAreaName;
     }
