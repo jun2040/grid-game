@@ -1,11 +1,8 @@
 package ch.epfl.cs107.icoop.actor;
 
-import ch.epfl.cs107.icoop.ICoop;
 import ch.epfl.cs107.icoop.KeyBindings.PlayerKeyBindings;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.*;
-import ch.epfl.cs107.icoop.utility.event.DoorTeleportEvent;
-import ch.epfl.cs107.icoop.utility.event.DoorTeleportEventArgs;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
@@ -52,7 +49,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final ICoopPlayerStatusGUI gui;
 
     private final PlayerKeyBindings keybinds;
-    private final DoorTeleportEvent doorTeleportEvent;
     private final ICoopPlayerInteractionHandler handler;
     private final TeleportController teleportController;
 
@@ -124,7 +120,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         this.keybinds = keybinds;
         this.handler = new ICoopPlayerInteractionHandler();
-        this.doorTeleportEvent = new DoorTeleportEvent();
 
         resetMotion();
 
@@ -281,8 +276,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     public void centerCamera() { getOwnerArea().setViewCandidate(this); }
-
-    public DoorTeleportEvent getDoorTeleportEvent() { return doorTeleportEvent; }
 
     public int getId() { return this.id; }
 
