@@ -20,13 +20,9 @@ import java.util.List;
 public class Explosive extends ICoopCollectable implements Interactor {
     private final static int ANIMATION_DURATION = 24;
 
-    private final Animation explosive =
-            new Animation("icoop/explosive", 2, 1, 1, this , 16, 16,
-                                       ANIMATION_DURATION / 2, true);
-    private final Animation explosion =
-            new Animation("icoop/explosion", 7, 1, 1, this , 32, 32,
-                                       ANIMATION_DURATION / 7, false);
-    private final ExplosiveInteractionHandler handler = new ExplosiveInteractionHandler();
+    private final Animation explosive;
+    private final Animation explosion;
+    private final ExplosiveInteractionHandler handler;
 
     private int timer;
     private boolean isActivated = false;
@@ -43,11 +39,36 @@ public class Explosive extends ICoopCollectable implements Interactor {
         super(area, orientation, position, ICoopItem.BOMB);
 
         this.timer = timer;
+
+        this.explosive =
+                new Animation(
+                        "icoop/explosive", 2,
+                        1, 1,
+                        this,
+                        16, 16,
+                        ANIMATION_DURATION / 2, true
+                );
+
+        this.explosion =
+                new Animation(
+                        "icoop/explosion", 7,
+                        2, 2,
+                        this,
+                        32, 32,
+                        ANIMATION_DURATION / 7, false
+                );
+        explosion.setAnchor(new Vector(-0.5f, -0.5f));
+
+        this.handler = new ExplosiveInteractionHandler();
     }
 
-    public boolean isActivated() { return isActivated; }
+    public boolean isActivated() {
+        return isActivated;
+    }
 
-    public boolean isExploded() { return isExploded; }
+    public boolean isExploded() {
+        return isExploded;
+    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -80,7 +101,9 @@ public class Explosive extends ICoopCollectable implements Interactor {
         }
     }
 
-    public void activate() { isActivated = true;}
+    public void activate() {
+        isActivated = true;
+    }
 
     private void explode() {
         timer = 0;
@@ -104,10 +127,14 @@ public class Explosive extends ICoopCollectable implements Interactor {
     }
 
     @Override
-    public boolean wantsCellInteraction() { return true; }
+    public boolean wantsCellInteraction() {
+        return true;
+    }
 
     @Override
-    public boolean wantsViewInteraction() { return true; }
+    public boolean wantsViewInteraction() {
+        return true;
+    }
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
@@ -115,13 +142,14 @@ public class Explosive extends ICoopCollectable implements Interactor {
     }
 
     @Override
-    public boolean takeCellSpace() { return false; }
+    public boolean isCellInteractable() {
+        return !isActivated || !isExploded;
+    }
 
     @Override
-    public boolean isCellInteractable() { return !isActivated || !isExploded; }
-
-    @Override
-    public boolean isViewInteractable() { return !isActivated; }
+    public boolean isViewInteractable() {
+        return !isActivated;
+    }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
@@ -130,7 +158,8 @@ public class Explosive extends ICoopCollectable implements Interactor {
 
     private class ExplosiveInteractionHandler implements ICoopInteractionVisitor {
         @Override
-        public void interactWith(Interactable other, boolean isCellInteraction) {}
+        public void interactWith(Interactable other, boolean isCellInteraction) {
+        }
 
         @Override
         public void interactWith(Rock rock, boolean isCellInteraction) {

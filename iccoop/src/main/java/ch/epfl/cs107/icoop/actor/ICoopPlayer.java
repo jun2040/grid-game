@@ -30,7 +30,7 @@ import java.util.*;
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor, Inventory.Holder {
     private static final int MAX_LIFE = 10;
     private static final int GRACE_PERIOD = 24;
-    private static final int MOVE_DURATION = 4;
+    private static final int MOVE_DURATION = 8;
     private static final int ANIMATION_DURATION = 4;
     private static final int SWORD_ANIMATION_DURATION = 2;
     private static final int STAFF_ANIMATION_DURATION = 2;
@@ -56,7 +56,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private boolean isInGracePeriod = false;
     private int gracePeriodTimer = 0;
     private PlayerState currentState;
-
 
     //private String prefix;
     /**
@@ -86,7 +85,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         // Initialize sprite & idleAnimation
         final Orientation[] orders = new Orientation[] { DOWN, RIGHT, UP, LEFT };
-        final Orientation[] attackOrders = new Orientation[] { DOWN, UP, RIGHT, LEFT};
         final String prefix = "icoop/" + spriteName;
         final Vector anchor = new Vector(0, 0);
 
@@ -97,19 +95,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 16, 32, true
         );
 
+        final Orientation[] attackAnimOrders = new Orientation[] { DOWN, UP, RIGHT, LEFT };
         final Vector swordAttackAnimAnchor = new Vector(-.5f, 0);
-        this.swordAttackAnimation = new OrientedAnimation(
-                prefix + ".sword",
+        this.swordAttackAnimation = new OrientedAnimation(prefix + ".sword",
                 SWORD_ANIMATION_DURATION , this ,
-                swordAttackAnimAnchor, attackOrders ,
-                4, 2, 2, 32, 32);
+                swordAttackAnimAnchor, attackAnimOrders, 4, 2, 2, 32, 32);
 
         final Vector staffAttackAnimAnchor = new Vector(-.5f, -.20f);
         String name = spriteName.equals("player") ? "player.staff_water" : "player2.staff_water";
-        this.staffAttackAnimation = new OrientedAnimation(
-                "icoop/" + name, STAFF_ANIMATION_DURATION , this ,
-                staffAttackAnimAnchor, orders ,
-                4, 2, 2, 32, 32);
+        this.staffAttackAnimation = new OrientedAnimation("icoop/" + name, STAFF_ANIMATION_DURATION , this ,
+                staffAttackAnimAnchor, attackAnimOrders, 4, 2, 2, 32, 32);
 
         this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
 
