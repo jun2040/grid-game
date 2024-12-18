@@ -1,19 +1,28 @@
 package ch.epfl.cs107.icoop.handler;
 
 import ch.epfl.cs107.icoop.actor.Door;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class TeleportController {
-    private String targetDestination = null;
+    private TeleportHandler teleportHandler;
 
-    public void setTargetDestination(String targetDestination) {
-        this.targetDestination = targetDestination;
+    public void setTeleport(TeleportHandler teleportHandler) {
+        this.teleportHandler = teleportHandler;
     }
 
     public String getTargetDestination() {
-        return targetDestination;
+        return teleportHandler.getDestinationAreaName();
+    }
+
+    public DiscreteCoordinates getTeleportPosition(int id) {
+        return teleportHandler.getTargetCoords()[id];
     }
 
     public boolean isTeleportRequested() {
-        return targetDestination != null;
+        return teleportHandler != null;
+    }
+
+    public void resetTeleport() {
+        teleportHandler = null;
     }
 }

@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.handler.TeleportHandler;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.Area;
@@ -12,7 +13,7 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.*;
 
-public class Door extends AreaEntity implements Interactable, Logic {
+public class Door extends AreaEntity implements Interactable, Logic, TeleportHandler {
     private String destinationAreaName;
     private DiscreteCoordinates[] targetCoords;
     private List<DiscreteCoordinates> positions;
@@ -73,10 +74,12 @@ public class Door extends AreaEntity implements Interactable, Logic {
         isOpen = false;
     }
 
+    @Override
     public String getDestinationAreaName() {
         return destinationAreaName;
     }
 
+    @Override
     public DiscreteCoordinates[] getTargetCoords() {
         return targetCoords;
     }
