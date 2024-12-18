@@ -95,15 +95,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 16, 32, true
         );
 
+        final Orientation[] attackAnimOrders = new Orientation[] { DOWN, UP, RIGHT, LEFT };
         final Vector swordAttackAnimAnchor = new Vector(-.5f, 0);
         this.swordAttackAnimation = new OrientedAnimation(prefix + ".sword",
                 SWORD_ANIMATION_DURATION , this ,
-                swordAttackAnimAnchor, orders , 4, 2, 2, 32, 32);
+                swordAttackAnimAnchor, attackAnimOrders, 4, 2, 2, 32, 32);
 
         final Vector staffAttackAnimAnchor = new Vector(-.5f, -.20f);
         String name = spriteName.equals("player") ? "player.staff_water" : "player2.staff_water";
         this.staffAttackAnimation = new OrientedAnimation("icoop/" + name, STAFF_ANIMATION_DURATION , this ,
-                staffAttackAnimAnchor, orders , 4, 2, 2, 32, 32);
+                staffAttackAnimAnchor, attackAnimOrders, 4, 2, 2, 32, 32);
 
         this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
 
