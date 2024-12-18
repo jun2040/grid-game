@@ -20,6 +20,7 @@ public class Spawn extends ICoopArea {
 
     private DialogHandler dialogHandler;
     private boolean isDirty = false;
+    private boolean isDoorOpened = false;
 
     @Override
     public void update(float deltaTime) {
@@ -66,4 +67,14 @@ public class Spawn extends ICoopArea {
 
     // FIXME: Consider using constructor initialization if the handler does not need to be set again
     public void setDialogHandler(DialogHandler dialogHandler) { this.dialogHandler = dialogHandler; }
+
+    @Override
+    public boolean isOn() {
+        return isDoorOpened;
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isDoorOpened;
+    }
 }

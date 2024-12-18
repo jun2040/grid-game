@@ -112,4 +112,14 @@ public class OrbWay extends ICoopArea {
 
     @Override
     public String getTitle() { return "OrbWay"; }
+
+    @Override
+    public boolean isOn() {
+        return true;
+    }
+
+    @Override
+    public boolean isOff() {
+        return false;
+    }
 }

@@ -5,6 +5,7 @@ import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
@@ -26,6 +27,9 @@ public class Maze extends ICoopArea {
             new DiscreteCoordinates(10, 17), new DiscreteCoordinates(5, 14)
     };
 
+    private Logic fireStaff;
+    private Logic waterStaff;
+
     @Override
     protected void createArea() {
         registerActor(new Background(this));
@@ -37,8 +41,14 @@ public class Maze extends ICoopArea {
         for (DiscreteCoordinates coord : grenadierSpawn)
             registerActor(new Grenadier(this, RIGHT, coord));
 
-        registerActor(new Staff(this, new DiscreteCoordinates(13, 2), ElementType.FIRE, "staff_fire"));
-        registerActor(new Staff(this, new DiscreteCoordinates(8, 2), ElementType.WATER, "staff_water"));
+        Staff fireStaff = new Staff(this, new DiscreteCoordinates(13, 2), ElementType.FIRE, "staff_fire");
+        Staff waterStaff = new Staff(this, new DiscreteCoordinates(8, 2), ElementType.WATER, "staff_water");
+
+        this.fireStaff = fireStaff;
+        this.waterStaff = waterStaff;
+
+        registerActor(fireStaff);
+        registerActor(waterStaff);
 
         registerActor(new Door(
                 this, UP, "Arena", true,
@@ -61,5 +71,15 @@ public class Maze extends ICoopArea {
     @Override
     public String getTitle() {
         return "Maze";
+    }
+
+    @Override
+    public boolean isOn() {
+        return new And(fireStaff, waterStaff).isOn();
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isOn();
     }
 }
