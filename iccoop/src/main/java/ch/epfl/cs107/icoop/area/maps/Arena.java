@@ -31,7 +31,7 @@ public class Arena extends ICoopArea {
 
         Key fireKey = new Key(this, UP, new DiscreteCoordinates(9, 16), ElementType.FIRE);
         Key waterKey = new Key(this, UP, new DiscreteCoordinates(9, 4), ElementType.WATER);
-        Teleporter teleporter = new Teleporter(this, UP, "Spawn", Spawn.ARRIVAL_POINTS, new DiscreteCoordinates(10, 10));
+        Teleporter teleporter = new Teleporter(this, UP, "Spawn", Spawn.SPAWN_POINTS, new DiscreteCoordinates(10, 10));
 
         this.fireKey = fireKey;
         this.waterKey = waterKey;
