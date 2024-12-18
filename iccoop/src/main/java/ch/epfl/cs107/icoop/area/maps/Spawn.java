@@ -14,13 +14,12 @@ import static ch.epfl.cs107.play.math.Orientation.*;
 
 public class Spawn extends ICoopArea {
     public static DiscreteCoordinates[] SPAWN_POINTS =
-            new DiscreteCoordinates[] { new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6) };
+            new DiscreteCoordinates[]{new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6)};
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
-            new DiscreteCoordinates[] { new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6) };
+            new DiscreteCoordinates[]{new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6)};
 
     private DialogHandler dialogHandler;
     private boolean isDirty = false;
-    private boolean isDoorOpened = false;
 
     @Override
     public void update(float deltaTime) {
@@ -42,7 +41,7 @@ public class Spawn extends ICoopArea {
                 OrbWay.ARRIVAL_POINTS,
                 new DiscreteCoordinates(19, 15),
                 new DiscreteCoordinates(19, 16)
-                ));
+        ));
         registerActor(new Door(
                 this, UP, "Maze", true,
                 Maze.ARRIVAL_POINTS,
@@ -57,24 +56,22 @@ public class Spawn extends ICoopArea {
     }
 
     @Override
-    public boolean isViewCentered() { return true; }
-
-    @Override
-    public DiscreteCoordinates getPlayerSpawnPosition(int id) { return SPAWN_POINTS[id];}
-
-    @Override
-    public String getTitle() { return "Spawn"; }
-
-    // FIXME: Consider using constructor initialization if the handler does not need to be set again
-    public void setDialogHandler(DialogHandler dialogHandler) { this.dialogHandler = dialogHandler; }
-
-    @Override
-    public boolean isOn() {
-        return isDoorOpened;
+    public boolean isViewCentered() {
+        return true;
     }
 
     @Override
-    public boolean isOff() {
-        return !isDoorOpened;
+    public DiscreteCoordinates getPlayerSpawnPosition(int id) {
+        return SPAWN_POINTS[id];
+    }
+
+    @Override
+    public String getTitle() {
+        return "Spawn";
+    }
+
+    // FIXME: Consider using constructor initialization if the handler does not need to be set again
+    public void setDialogHandler(DialogHandler dialogHandler) {
+        this.dialogHandler = dialogHandler;
     }
 }

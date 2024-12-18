@@ -11,6 +11,7 @@ public abstract class ICoopArea extends Area implements Logic {
     private float cameraScaleFactor = DEFAULT_SCALE_FACTOR;
 
     private ICoopBehavior areaBehavior;
+    private boolean completed = false;
 
     protected abstract void createArea();
 
@@ -36,5 +37,19 @@ public abstract class ICoopArea extends Area implements Logic {
 
     public void setCameraScaleFactor(float cameraScaleFactor) {
         this.cameraScaleFactor = cameraScaleFactor;
+    }
+
+    public void complete() {
+        completed = true;
+    }
+
+    @Override
+    public boolean isOn() {
+        return completed;
+    }
+
+    @Override
+    public boolean isOff() {
+        return !completed;
     }
 }

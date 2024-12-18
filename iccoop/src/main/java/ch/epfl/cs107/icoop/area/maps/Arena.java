@@ -40,6 +40,14 @@ public class Arena extends ICoopArea {
     }
 
     @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if (new And(fireKey, waterKey).isOn())
+            complete();
+    }
+
+    @Override
     public boolean isViewCentered() {
         return true;
     }
@@ -52,15 +60,5 @@ public class Arena extends ICoopArea {
     @Override
     public String getTitle() {
         return "Arena";
-    }
-
-    @Override
-    public boolean isOn() {
-        return new And(fireKey, waterKey).isOn();
-    }
-
-    @Override
-    public boolean isOff() {
-        return !isOn();
     }
 }

@@ -19,6 +19,8 @@ import ch.epfl.cs107.play.io.FileSystem;
 import static ch.epfl.cs107.play.math.Orientation.*;
 
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.And;
+import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
@@ -33,6 +35,11 @@ public class ICoop extends AreaGame implements DialogHandler {
     private Dialog dialog = null;
     private TeleportController teleportController = new TeleportController();
 
+    private Spawn spawn;
+    private OrbWay orbWay;
+    private Maze maze;
+    private Arena arena;
+
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             createAreas();
@@ -44,13 +51,17 @@ public class ICoop extends AreaGame implements DialogHandler {
     }
 
     private void createAreas() {
-        Spawn spawn = new Spawn();
+        spawn = new Spawn();
+        orbWay = new OrbWay(this);
+        maze = new Maze();
+        arena = new Arena();
+
         spawn.setDialogHandler(this);
 
         addArea(spawn);
-        addArea(new OrbWay(this));
-        addArea(new Maze());
-        addArea(new Arena());
+        addArea(orbWay);
+        addArea(maze);
+        addArea(arena);
     }
 
     /**
@@ -127,6 +138,9 @@ public class ICoop extends AreaGame implements DialogHandler {
 
         if (player1.isDead() || player2.isDead())
             resetArea();
+
+        if (new And(maze, arena).isOn())
+            spawn.complete();
     }
 
     public void resetGame() {

@@ -69,17 +69,15 @@ public class Maze extends ICoopArea {
     }
 
     @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if (new And(fireStaff, waterStaff).isOn())
+            complete();
+    }
+
+    @Override
     public String getTitle() {
         return "Maze";
-    }
-
-    @Override
-    public boolean isOn() {
-        return new And(fireStaff, waterStaff).isOn();
-    }
-
-    @Override
-    public boolean isOff() {
-        return !isOn();
     }
 }

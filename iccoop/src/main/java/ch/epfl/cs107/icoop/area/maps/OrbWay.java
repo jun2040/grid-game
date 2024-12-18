@@ -96,7 +96,7 @@ public class OrbWay extends ICoopArea {
         registerActor(new Heart(this, LEFT, new DiscreteCoordinates(5, 13), 1));
         registerActor(new Heart(this, LEFT, new DiscreteCoordinates(10, 11), 1));
 
-
+        complete();
     }
 
     private void addElementalWall(ElementalWall elementalWall, PressurePlate pressurePlate) {
@@ -112,14 +112,4 @@ public class OrbWay extends ICoopArea {
 
     @Override
     public String getTitle() { return "OrbWay"; }
-
-    @Override
-    public boolean isOn() {
-        return true;
-    }
-
-    @Override
-    public boolean isOff() {
-        return false;
-    }
 }
