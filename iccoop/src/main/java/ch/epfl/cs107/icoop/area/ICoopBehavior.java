@@ -108,7 +108,7 @@ public class ICoopBehavior extends AreaBehavior {
             }
 
             if (element != null && entity instanceof ElementalEntity)
-                return element.equals(((ElementalEntity) entity).element());
+                return element.equals(((ElementalEntity) entity).element()) || element.equals(ElementType.NONE.getName());
             else
                 return type.isWalkable && !(this.takeCellSpace());
         }

@@ -6,7 +6,8 @@ public enum ICoopItem implements InventoryItem {
     BOMB("bomb", "explosive", true),
     SWORD("sword", "sword.icon", false),
     // FIXME: Handle staff icon for different element
-    STAFF("staff", "staff_water.icon", false)
+    STAFF_WATER("staff", "staff_water.icon", false),
+    STAFF_FIRE("staff", "staff_fire.icon", false)
     ;
 
     private final String name;

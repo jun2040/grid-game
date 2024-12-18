@@ -21,7 +21,13 @@ public interface ICoopInteractionVisitor extends AreaInteractionVisitor {
     default void interactWith(ElementalWall elementalWall, boolean isCellInteraction) {}
     default void interactWith(ElementalItem elementalItem, boolean isCellInteraction) {}
     default void interactWith(Orb orb, boolean isCellInteraction) {}
+    default void interactWith(Staff staff, boolean isCellInteraction) {}
+    //default void interactWith(StaffTeleporter teleporter, boolean isCellInteraction) {}
     default void interactWith(Heart heart, boolean isCellInteraction) {}
+    default void interactWith(Key key, boolean isCellInteraction){}
+    default void interactWith(Chest chest, boolean isCellInteraction){}
+    default void interactWith(Grass grass, boolean isCellInteraction){}
+    default void interactWith(Coin coin, boolean isCellInteraction){}
     default void interactWith(PressurePlate pressurePlate, boolean isCellInteraction) {}
     default void interactWith(Enemy enemy, boolean isCellInteraction) {}
 }

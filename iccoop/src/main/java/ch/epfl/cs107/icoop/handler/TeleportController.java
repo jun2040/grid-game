@@ -2,6 +2,7 @@ package ch.epfl.cs107.icoop.handler;
 
 import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Orientation;
 
 public class TeleportController {
     private TeleportHandler teleportHandler;
@@ -12,6 +13,10 @@ public class TeleportController {
 
     public String getTargetDestination() {
         return teleportHandler.getDestinationAreaName();
+    }
+
+    public Orientation getTargetOrientation() {
+        return teleportHandler.getDestinationOrientation();
     }
 
     public DiscreteCoordinates getTeleportPosition(int id) {

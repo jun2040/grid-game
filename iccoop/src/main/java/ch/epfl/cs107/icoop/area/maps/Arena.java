@@ -8,6 +8,7 @@ import ch.epfl.cs107.icoop.handler.Context;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
@@ -16,6 +17,7 @@ import static ch.epfl.cs107.play.math.Orientation.*;
 public class Arena extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(4, 5), new DiscreteCoordinates(14, 15) };
+    public static Orientation SPAWN_ORIENTATION = Orientation.DOWN;
 
     private Logic fireKey;
     private Logic waterKey;
@@ -55,6 +57,10 @@ public class Arena extends ICoopArea {
     @Override
     public boolean isViewCentered() {
         return true;
+    }
+
+    public Orientation getSpawnOrientation(){
+        return SPAWN_ORIENTATION;
     }
 
     @Override

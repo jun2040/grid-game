@@ -1,54 +1,39 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.play.areagame.actor.AreaEntity;
+import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
-import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
+import ch.epfl.cs107.play.math.Vector;
+import ch.epfl.cs107.play.signal.logic.Logic;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Projectile extends MovableAreaEntity implements Interactor, Unstoppable {
-    private static int MOVE_DURATION = 10;
+public class Container extends AreaEntity implements ElementalEntity, Interactable, Interactor, Logic {
+    private ElementType elementType;
 
-    private final int speed;
-    private int range;
 
     /**
-     * Default MovableAreaEntity constructor
+     * Default AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity. Not null
-     * @param position    (Coordinate): Initial position of the entity. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
-    public Projectile(Area area, Orientation orientation, DiscreteCoordinates position, int speed, int range) {
+    public Container(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType) {
         super(area, orientation, position);
+        this.elementType = elementType;
 
-        this.speed = speed;
-        this.range = range;
     }
 
     @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-
-        move(MOVE_DURATION / speed);
-        range--;
-
-        // TODO: Destroy projectile when it reaches map border / static props
-        if (range < 0)
-            destroy();
-    }
-
-    public void destroy() {
-        unregister();
-    }
-
-    private void unregister() {
-        getOwnerArea().unregisterActor(this);
+    public String element() {
+        return elementType.getName();
     }
 
     @Override
@@ -58,36 +43,51 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return List.of();
+        return Collections.singletonList(getCurrentMainCellCoordinates().jump(new Vector(0, -1)));
     }
 
     @Override
     public boolean wantsCellInteraction() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        return false;
-    }
-
-    @Override
-    public boolean takeCellSpace() {
-        return false;
-    }
-
-    @Override
-    public boolean isCellInteractable() {
         return true;
     }
 
     @Override
-    public boolean isViewInteractable() {
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+
+    }
+
+    @Override
+    public boolean takeCellSpace() {
+        return true;
+    }
+
+    @Override
+    public boolean isCellInteractable() {
         return false;
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return true;
     }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
+    }
+
+    @Override
+    public boolean isOn() {
+        return false;
+    }
+
+    @Override
+    public boolean isOff() {
+        return false;
     }
 }

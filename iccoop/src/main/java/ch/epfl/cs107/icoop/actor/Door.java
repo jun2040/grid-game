@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.actor;
 
+import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.icoop.handler.TeleportHandler;
@@ -92,6 +93,11 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
     @Override
     public String getDestinationAreaName() {
         return destinationAreaName;
+    }
+
+    @Override
+    public Orientation getDestinationOrientation() {
+        return ((ICoopArea)getOwnerArea()).getSpawnOrientation();
     }
 
     @Override

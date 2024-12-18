@@ -7,6 +7,7 @@ import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
@@ -15,6 +16,7 @@ import static ch.epfl.cs107.icoop.actor.ElementType.*;
 public class OrbWay extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5) };
+    public static Orientation SPAWN_ORIENTATION = RIGHT;
 
     public OrbWay(Context context) {
         super(context);
@@ -70,21 +72,21 @@ public class OrbWay extends ICoopArea {
         for (int i = 0; i < 5; ++i) {
             addElementalWall(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 10 + i),
-                    true, "fire_wall", "feu"
+                    true, "fire_wall", FIRE
             ), bluePressurePlate);
             addElementalWall(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 4 + i),
-                    true, "water_wall", "eau"
+                    true, "water_wall", WATER
             ), redPressurePlate);
         }
 
         registerActor(new ElementalWall(
                 this, LEFT, new DiscreteCoordinates(7, 12),
-                true, "water_wall", "eau"
+                true, "water_wall", WATER
         ));
         registerActor(new ElementalWall(
                 this, LEFT, new DiscreteCoordinates(7, 6),
-                true, "fire_wall", "feu"
+                true, "fire_wall", FIRE
         ));
 
         /*
@@ -105,6 +107,10 @@ public class OrbWay extends ICoopArea {
 
     @Override
     public boolean isViewCentered() { return true; }
+
+    public Orientation getSpawnOrientation(){
+        return SPAWN_ORIENTATION;
+    }
 
     @Override
     public DiscreteCoordinates getPlayerSpawnPosition(int id) { return ARRIVAL_POINTS[id]; }

@@ -20,6 +20,7 @@ import ch.epfl.cs107.play.io.FileSystem;
 import static ch.epfl.cs107.play.math.Orientation.*;
 
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -40,6 +41,9 @@ public class ICoop extends AreaGame implements DialogHandler {
     private OrbWay orbWay;
     private Maze maze;
     private Arena arena;
+
+    public final static float DEFAULT_SCALE_FACTOR = 13.f;
+    private boolean paused = false;
 
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
@@ -124,24 +128,43 @@ public class ICoop extends AreaGame implements DialogHandler {
         if (dialog != null && keyboard.get(KeyBindings.NEXT_DIALOG).isPressed()) {
             dialog.update(deltaTime);
 
-            if (dialog.isCompleted())
+            if (dialog.isCompleted()){
                 dialog = null;
+                ((ICoopArea) getCurrentArea()).setIsDirty(Logic.FALSE);
+            }
+
         }
 
-        if (keyboard.get(KeyBindings.RESET_GAME).isDown())
+        if (keyboard.get(KeyBindings.RESET_GAME).isPressed())
             resetGame();
 
-        if (keyboard.get(KeyBindings.RESET_AREA).isDown())
+        if (keyboard.get(KeyBindings.RESET_AREA).isPressed())
             resetArea();
 
         if (teleportController.isTeleportRequested())
             teleport();
 
-        if (player1.isDead() || player2.isDead())
+        if (player1.isDead() || player2.isDead()){
             resetArea();
+            player1.resetHealth();
+            player2.resetHealth();
+        }
 
         if (new And(maze, arena).isOn())
             spawn.complete();
+
+        if (keyboard.get(Keyboard.ESCAPE).isPressed()) {
+            ICoopArea area = (ICoopArea) getCurrentArea();
+            if (!paused) {
+                area.setIsDirty(Logic.TRUE);
+                paused = true;
+            } else {
+                area.setIsDirty(Logic.FALSE);
+                paused = false;
+            }
+        }
+
+        calculateCameraScaleFactor();
     }
 
     public void resetGame() {
@@ -156,5 +179,27 @@ public class ICoop extends AreaGame implements DialogHandler {
     @Override
     public void publish(Dialog dialog) {
         this.dialog = dialog;
+        ((ICoopArea)getCurrentArea()).setIsDirty(Logic.TRUE);
+    }
+
+    public void calculateCameraScaleFactor() {
+        if(!((ICoopArea)getCurrentArea()).isViewCentered()){
+            ((ICoopArea)getCurrentArea()).setCameraScaleFactor(
+                    (float) Math.max(
+                            DEFAULT_SCALE_FACTOR, DEFAULT_SCALE_FACTOR * 0.75
+                                    + distance(
+                                    player1.getPosition(),
+                                    player2.getPosition()
+                            ) / 1.5
+                    )
+            );
+        }
+
+    }
+
+    public double distance(Vector position_playerA, Vector position_playerB){
+        double deltaX = position_playerB.x - position_playerA.x;
+        double deltaY = position_playerB.y - position_playerA.y;
+        return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 }

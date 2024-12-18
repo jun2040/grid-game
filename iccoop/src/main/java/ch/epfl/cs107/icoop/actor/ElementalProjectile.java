@@ -48,6 +48,10 @@ public class ElementalProjectile extends Projectile {
         animation.draw(canvas);
     }
 
+    private void unregister() {
+        getOwnerArea().unregisterActor(this);
+    }
+
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(handler, isCellInteraction);
@@ -68,8 +72,11 @@ public class ElementalProjectile extends Projectile {
 
         @Override
         public void interactWith(Rock rock, boolean isCellInteraction) {
-            if (isCellInteraction)
+            if(isCellInteraction){
                 rock.destroy();
+                unregister();
+            }
+
         }
     }
 }

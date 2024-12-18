@@ -110,8 +110,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         this.inventory = new ICoopInventory();
         this.inventory.addPocketItem(ICoopItem.SWORD, 1);
-        this.inventory.addPocketItem(ICoopItem.STAFF, 1);
-        this.inventory.addPocketItem(ICoopItem.BOMB, 5);
+        //this.inventory.addPocketItem(ICoopItem.STAFF, 1);
+        //this.inventory.addPocketItem(ICoopItem.BOMB, 5);
 
         this.currentItem = ICoopItem.SWORD;
 
@@ -161,7 +161,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 case SWORD:
                     currentState = PlayerState.ATTACK;
                     break;
-                case STAFF:
+                case STAFF_WATER:
+                case STAFF_FIRE:
                     // FIXME: Another sketchy casting
                     if (((ICoopArea) getOwnerArea()).isCellFree(getFieldOfViewCells().getFirst())) {
                         getOwnerArea().registerActor(
@@ -238,7 +239,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 } else {
                     swordAttackAnimation.update(deltaTime);
                 }
-            } else if (currentItem.equals(ICoopItem.STAFF)) {
+            } else if (currentItem.equals(ICoopItem.STAFF_WATER)||currentItem.equals(ICoopItem.STAFF_FIRE)) {
                 if (staffAttackAnimation.isCompleted()) {
                     staffAttackAnimation.reset();
                     currentState = PlayerState.IDLE;
@@ -251,13 +252,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public void draw(Canvas canvas) {
-        if (currentState == PlayerState.IDLE) {
-            this.idleAnimation.draw(canvas);
-        } if (currentState == PlayerState.ATTACK) {
-            if (currentItem.equals(ICoopItem.SWORD))
-                this.swordAttackAnimation.draw(canvas);
-            else if (currentItem.equals(ICoopItem.STAFF))
-                this.staffAttackAnimation.draw(canvas);
+        if(gracePeriodTimer % 4 == 0) {
+            if (currentState == PlayerState.IDLE) {
+                this.idleAnimation.draw(canvas);
+            } if (currentState == PlayerState.ATTACK) {
+                if (currentItem.equals(ICoopItem.SWORD))
+                    this.swordAttackAnimation.draw(canvas);
+                else if (currentItem.equals(ICoopItem.STAFF_WATER)||currentItem.equals(ICoopItem.STAFF_FIRE))
+                    this.staffAttackAnimation.draw(canvas);
+            }
+
         }
         this.health.draw(canvas);
         this.gui.draw(canvas);
@@ -279,6 +283,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public void centerCamera() { getOwnerArea().setViewCandidate(this); }
 
     public int getId() { return this.id; }
+
+    public void resetHealth(){
+        health.resetHealth();
+    }
 
     public boolean isDead() { return this.health.getIntensity() <= 0.0f; }
 
@@ -419,6 +427,46 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         public void interactWith(Enemy enemy, boolean isCellInteraction) {
             if (!isCellInteraction && currentState == PlayerState.ATTACK && currentItem.equals(ICoopItem.SWORD))
                 enemy.hit(DamageType.PHYSICAL);
+        }
+        @Override
+        public void interactWith(Chest chest, boolean isCellInteraction){
+            Keyboard keyboard = getOwnerArea().getKeyboard();
+            if (keyboard.get(keybinds.useItem()).isDown() && !chest.isOpen()) {
+                chest.open();
+                chest.giftItem(inventory);
+            }
+        }
+
+        @Override
+        public void interactWith(Grass grass, boolean isCellInteraction){
+            Keyboard keyboard = getOwnerArea().getKeyboard();
+            if (keyboard.get(keybinds.useItem()).isDown() && !grass.isDestroyed()) {
+                grass.destroy();
+            }
+        }
+
+        @Override
+        public void interactWith(Coin coin, boolean isCellInteraction){
+            if(isCellInteraction){
+                coin.collect();
+            }
+        }
+
+        @Override
+        public void interactWith(Staff staff, boolean isCellInteraction){
+            if(isCellInteraction){
+                staff.collect();
+                if(staff.element().equals(ElementType.WATER.getName()))
+                    inventory.addPocketItem(ICoopItem.STAFF_WATER, 1);
+                else
+                    inventory.addPocketItem(ICoopItem.STAFF_FIRE, 1);
+            }
+
+        }
+
+        @Override
+        public void interactWith(Key key, boolean isCellInteraction) {
+            key.collect();
         }
     }
 

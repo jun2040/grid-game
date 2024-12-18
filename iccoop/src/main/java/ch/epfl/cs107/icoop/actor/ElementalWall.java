@@ -21,7 +21,8 @@ import java.util.List;
 // FIXME: Verify the use of Logic interface
 public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor, Logic, WallActivateEventListener {
     private final Sprite[] wallSprites;
-    private final String elementDamage; // TODO: Replace with enum
+    private final ElementType elementType;
+    private ElementType currentElementType;// TODO: Replace with enum
 
     private boolean isActive;
 
@@ -38,7 +39,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
             DiscreteCoordinates position,
             boolean isActive,
             String spriteName,
-            String elementDamage
+            ElementType elementType
     ) {
         super(area, orientation, position);
 
@@ -48,8 +49,9 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
                 spriteName, 4, 1, 1,
                 this, Vector.ZERO, 256, 256
         );
+        this.elementType = elementType;
+        this.currentElementType = elementType;
 
-        this.elementDamage = elementDamage;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
      */
     @Override
     public String element() {
-        return elementDamage;
+        return currentElementType.getName();
     }
 
     /*
@@ -93,7 +95,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
     public List<DiscreteCoordinates> getFieldOfViewCells() { return Collections.emptyList(); }
 
     @Override
-    public boolean takeCellSpace() { return false; }
+    public boolean takeCellSpace() { return true; } //TODO should it not be true?
 
     @Override
     public boolean isCellInteractable() { return true; }
@@ -113,11 +115,13 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
     @Override
     public void activate() {
         isActive = true;
+        currentElementType = elementType;
     }
 
     @Override
     public void deactivate() {
         isActive = false;
+        currentElementType = ElementType.NONE;
     }
 
     // TODO: Consider a Destructable interface for further abstraction

@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.actor;
 
+import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
@@ -54,6 +55,11 @@ public class DialogDoor extends Door implements Interactor {
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(interactionHandler, isCellInteraction);
+    }
+
+    @Override
+    public Orientation getDestinationOrientation() {
+        return null;
     }
 
     private class DialogDoorInteractionHandler implements ICoopInteractionVisitor {
