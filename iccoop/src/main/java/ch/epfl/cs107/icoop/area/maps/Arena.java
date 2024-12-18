@@ -4,6 +4,7 @@ import ch.epfl.cs107.icoop.actor.ElementType;
 import ch.epfl.cs107.icoop.actor.Key;
 import ch.epfl.cs107.icoop.actor.Teleporter;
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.handler.Context;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -18,6 +19,10 @@ public class Arena extends ICoopArea {
 
     private Logic fireKey;
     private Logic waterKey;
+
+    public Arena(Context context) {
+        super(context);
+    }
 
     @Override
     protected void createArea() {

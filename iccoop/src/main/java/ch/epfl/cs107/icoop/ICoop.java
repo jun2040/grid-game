@@ -9,6 +9,7 @@ import ch.epfl.cs107.icoop.area.maps.Arena;
 import ch.epfl.cs107.icoop.area.maps.Maze;
 import ch.epfl.cs107.icoop.area.maps.OrbWay;
 import ch.epfl.cs107.icoop.area.maps.Spawn;
+import ch.epfl.cs107.icoop.handler.Context;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.handler.TeleportController;
 import ch.epfl.cs107.play.areagame.AreaGame;
@@ -51,12 +52,12 @@ public class ICoop extends AreaGame implements DialogHandler {
     }
 
     private void createAreas() {
-        spawn = new Spawn();
-        orbWay = new OrbWay(this);
-        maze = new Maze();
-        arena = new Arena();
+        Context context = new Context(this);
 
-        spawn.setDialogHandler(this);
+        spawn = new Spawn(context);
+        orbWay = new OrbWay(context);
+        maze = new Maze(context);
+        arena = new Arena(context);
 
         addArea(spawn);
         addArea(orbWay);

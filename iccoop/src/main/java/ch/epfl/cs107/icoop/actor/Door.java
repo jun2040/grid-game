@@ -1,11 +1,13 @@
 package ch.epfl.cs107.icoop.actor;
 
+import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.icoop.handler.TeleportHandler;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -46,6 +48,15 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
     public Door(
             Area area,
             Orientation orientation,
+            boolean isOpen,
+            DiscreteCoordinates mainPosition
+    ) {
+        this(area, orientation, "", isOpen, null, mainPosition);
+    }
+
+    public Door(
+            Area area,
+            Orientation orientation,
             String destinationAreaName,
             boolean isOpen,
             DiscreteCoordinates[] targetCoords,
@@ -66,12 +77,16 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
         super.draw(canvas);
     }
 
-    protected void open() {
+    public void open() {
         isOpen = true;
     }
 
-    protected void close() {
+    public void close() {
         isOpen = false;
+    }
+
+    public boolean teleportable() {
+        return !destinationAreaName.isEmpty();
     }
 
     @Override

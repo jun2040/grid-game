@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.area;
 
+import ch.epfl.cs107.icoop.handler.Context;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -13,9 +14,15 @@ public abstract class ICoopArea extends Area implements Logic {
     private ICoopBehavior areaBehavior;
     private boolean completed = false;
 
+    private final Context context;
+
     protected abstract void createArea();
 
     public abstract DiscreteCoordinates getPlayerSpawnPosition(int id);
+
+    public ICoopArea(Context context) {
+        this.context = context;
+    }
 
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
@@ -25,6 +32,10 @@ public abstract class ICoopArea extends Area implements Logic {
             return true;
         }
         return false;
+    }
+
+    protected Context getContext() {
+        return context;
     }
 
     @Override

@@ -357,7 +357,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(Door door, boolean isCellInteraction) {
-            if (isCellInteraction && door.isOn())
+            if (isCellInteraction && door.teleportable() && door.isOn())
                 teleportController.setTeleport(door);
         }
 

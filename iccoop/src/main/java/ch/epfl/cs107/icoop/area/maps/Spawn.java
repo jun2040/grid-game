@@ -2,6 +2,7 @@ package ch.epfl.cs107.icoop.area.maps;
 
 import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.handler.Context;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.engine.actor.Background;
@@ -18,17 +19,25 @@ public class Spawn extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[]{new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6)};
 
-    private DialogHandler dialogHandler;
     private boolean isDirty = false;
+
+    private DialogDoor manorDoor;
+
+    public Spawn(Context context) {
+        super(context);
+    }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (dialogHandler != null && !isDirty) {
-            dialogHandler.publish(new Dialog("welcome"));
+        if (!isDirty) {
+            getContext().getDialogHandler().publish(new Dialog("welcome"));
             isDirty = true;
         }
+
+        if (isOn())
+            manorDoor.open();
     }
 
     @Override
@@ -49,6 +58,15 @@ public class Spawn extends ICoopArea {
                 new DiscreteCoordinates(5, 0)
         ));
 
+        manorDoor = new DialogDoor(
+                this, DOWN, false,
+                new DiscreteCoordinates(6, 11),
+                getContext().getDialogHandler(),
+                "victory", "key_required"
+        );
+
+        registerActor(manorDoor);
+
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(9, 9)));
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(11, 9)));
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(10, 10)));
@@ -68,10 +86,5 @@ public class Spawn extends ICoopArea {
     @Override
     public String getTitle() {
         return "Spawn";
-    }
-
-    // FIXME: Consider using constructor initialization if the handler does not need to be set again
-    public void setDialogHandler(DialogHandler dialogHandler) {
-        this.dialogHandler = dialogHandler;
     }
 }

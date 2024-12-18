@@ -2,6 +2,7 @@ package ch.epfl.cs107.icoop.area.maps;
 
 import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.icoop.area.ICoopArea;
+import ch.epfl.cs107.icoop.handler.Context;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
@@ -15,10 +16,8 @@ public class OrbWay extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5) };
 
-    DialogHandler dialogHandler;
-
-    public OrbWay(DialogHandler dialogHandler) {
-        this.dialogHandler = dialogHandler;
+    public OrbWay(Context context) {
+        super(context);
     }
 
     protected void createArea() {
@@ -50,8 +49,8 @@ public class OrbWay extends ICoopArea {
         Orb fireOrb = new Orb(this, new DiscreteCoordinates(17, 12), FIRE);
         Orb waterOrb = new Orb(this, new DiscreteCoordinates(17, 6), WATER);
 
-        fireOrb.setDialogHandler(dialogHandler);
-        waterOrb.setDialogHandler(dialogHandler);
+        fireOrb.setDialogHandler(getContext().getDialogHandler());
+        waterOrb.setDialogHandler(getContext().getDialogHandler());
 
         registerActor(fireOrb);
         registerActor(waterOrb);
