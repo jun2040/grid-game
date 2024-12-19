@@ -67,7 +67,7 @@ public class Maze extends ICoopArea {
         registerActor(redPressurePlate);
         registerActor(bluePressurePlate);
 
-        registerActor(new Explosive(this, UP, new DiscreteCoordinates(6, 25), 100));
+        registerActor(new Explosive(this, UP, new DiscreteCoordinates(6, 25), 3));
 
         registerActor(new ElementalWall(
                 this, DOWN, new DiscreteCoordinates(8, 20),

@@ -59,7 +59,8 @@ public class Spawn extends ICoopArea {
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(7, 7)));
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(9, 7)));
         registerActor(new Rock(this, LEFT, new DiscreteCoordinates(8, 8)));
-        registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(8, 7), 100));
+
+        registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(8, 7), 3));
 
         registerActor(new Chest(this, UP, new DiscreteCoordinates(13, 16), false, getContext().getDialogHandler()));
 

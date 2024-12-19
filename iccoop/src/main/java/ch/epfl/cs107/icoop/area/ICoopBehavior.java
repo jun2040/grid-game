@@ -118,9 +118,6 @@ public class ICoopBehavior extends AreaBehavior {
             if (entity instanceof Unstoppable)
                 return true;
 
-            // FIXME: Very rudimentary implementation of elemental category role
-            // FIXME: Allows player to phase through another player
-            // FIXME: Doesn't allow players to pass through elemental items of other element type
             String element = null;
             for (Interactable e : entities) {
                 if (e instanceof ElementalEntity)

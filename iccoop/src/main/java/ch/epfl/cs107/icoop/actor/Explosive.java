@@ -2,7 +2,7 @@ package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.icoop.handler.ICoopItem;
-import ch.epfl.cs107.play.areagame.actor.AreaEntity;
+import ch.epfl.cs107.icoop.utility.Timer;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.area.Area;
@@ -14,7 +14,6 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Explosive extends ICoopCollectable implements Interactor {
@@ -24,7 +23,7 @@ public class Explosive extends ICoopCollectable implements Interactor {
     private final Animation explosion;
     private final ExplosiveInteractionHandler handler;
 
-    private int timer;
+    private Timer timer;
     private boolean isActivated = false;
     private boolean isExploded = false;
 
@@ -34,16 +33,16 @@ public class Explosive extends ICoopCollectable implements Interactor {
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-     * @param timer       (int) : latency timer before explosion. Not null
+     * @param fuseTime    (int) : latency timer before explosion. Not null
      */
     public Explosive(Area area,
                      Orientation orientation,
                      DiscreteCoordinates position,
-                     int timer
+                     float fuseTime
     ) {
         super(area, orientation, position, ICoopItem.BOMB);
 
-        this.timer = timer;
+        this.timer = new Timer(fuseTime);
 
         this.explosive =
                 new Animation(
@@ -104,13 +103,13 @@ public class Explosive extends ICoopCollectable implements Interactor {
             return;
         }
 
-        if (this.timer == 0) {
+        if (timer.isCompleted()) {
             explode();
             explosion.update(deltaTime);
         }
 
-        if (isActivated && this.timer > 0) {
-            this.timer--;
+        if (isActivated && !timer.isCompleted()) {
+            timer.update(deltaTime);
             explosive.update(deltaTime);
         }
     }
@@ -126,7 +125,6 @@ public class Explosive extends ICoopCollectable implements Interactor {
      * explodes bomb
      */
     private void explode() {
-        timer = 0;
         isExploded = true;
     }
 

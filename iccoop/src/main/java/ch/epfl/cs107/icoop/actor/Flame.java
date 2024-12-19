@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.window.Canvas;
 public class Flame extends Projectile {
     private final Animation animation;
 
-    private final FlameProjectileInteractionHandler interactionHandler = new FlameProjectileInteractionHandler();
+    private final FlameProjectileInteractionHandler interactionHandler;
 
     /**
      * Default MovableAreaEntity constructor
@@ -30,6 +30,8 @@ public class Flame extends Projectile {
                 7, 1, 1,
                 this, 16, 16,
                 4, true);
+
+        interactionHandler = new FlameProjectileInteractionHandler();
     }
 
     @Override

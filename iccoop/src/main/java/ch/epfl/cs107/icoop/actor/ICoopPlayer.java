@@ -70,7 +70,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
      * @param element            (String) : element name associated to each player. Not null
      * @param keybinds           (Keybinds): different Keybinds used by each seperate player. Not null
      * @param teleportController (TeleportController) : class used to dictate teleportation behavior with interacting with doors. Not null
-     * @param id
+     * @param id                 (int) : Unique ID
      */
     public ICoopPlayer(
             Area area,
@@ -211,11 +211,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
      * @return true if placing a bomb was a success
      */
     private boolean placeExplosive() {
-        Explosive explosive = new Explosive(getOwnerArea(), LEFT, getFieldOfViewCells().getFirst(), 100);
+        Explosive explosive = new Explosive(getOwnerArea(), LEFT, getFieldOfViewCells().getFirst(), 3);
 
-        // FIXME: Bombs can be placed in the same tile since they are walkable & does not take cell space
-        if (getOwnerArea().canEnterAreaCells(explosive, getFieldOfViewCells())) {
-            // FIXME: Prevent activation of bomb immediately after placing
+        if (((ICoopArea) getOwnerArea()).isCellFree(getFieldOfViewCells().getFirst())) {
             getOwnerArea().registerActor(explosive);
             return true;
         }
@@ -467,18 +465,15 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         @Override
         public void interactWith(Explosive explosive, boolean isCellInteraction) {
             if (isCellInteraction) {
-                // FIXME: Flatten out if-statements for readability + branching minimization
-                if (!explosive.isActivated() && !explosive.isExploded()) {
-                    if (!explosive.isCollected())
-                        inventory.addPocketItem(ICoopItem.BOMB, 1);
+                if (!explosive.isActivated() && !explosive.isExploded() && !explosive.isCollected()) {
+                    inventory.addPocketItem(ICoopItem.BOMB, 1);
 
                     explosive.collect();
                 }
             } else {
                 Keyboard keyboard = getOwnerArea().getKeyboard();
-                if (keyboard.get(keybinds.useItem()).isPressed() && !explosive.isActivated()) {
+                if (keyboard.get(keybinds.useItem()).isPressed() && !explosive.isActivated())
                     explosive.activate();
-                }
             }
         }
 
