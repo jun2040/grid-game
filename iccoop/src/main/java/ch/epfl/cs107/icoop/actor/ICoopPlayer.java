@@ -159,15 +159,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                     break;
                 case STAFF_WATER:
                 case STAFF_FIRE:
-                    // FIXME: Another sketchy casting
-                    if (((ICoopArea) getOwnerArea()).isCellFree(getFieldOfViewCells().getFirst())) {
                         getOwnerArea().registerActor(
                                 new ElementalProjectile(
                                         getOwnerArea(), getOrientation(),
                                         getFieldOfViewCells().getFirst(),
                                         5, 50, ElementType.fromString(element)
                                 ));
-                    }
                     currentState = PlayerState.ATTACK;
                     break;
                 default:
