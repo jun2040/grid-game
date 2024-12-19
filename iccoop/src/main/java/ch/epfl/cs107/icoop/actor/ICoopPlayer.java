@@ -393,7 +393,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 }
             } else {
                 Keyboard keyboard = getOwnerArea().getKeyboard();
-                if (keyboard.get(keybinds.useItem()).isDown() && !explosive.isActivated()) {
+                if (keyboard.get(keybinds.useItem()).isPressed() && !explosive.isActivated()) {
                     explosive.activate();
                 }
             }
