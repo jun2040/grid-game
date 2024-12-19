@@ -23,6 +23,7 @@ public class Spawn extends ICoopArea {
             new DiscreteCoordinates[]{new DiscreteCoordinates(10, 0), new DiscreteCoordinates(9, 0)};
 
     public static final Orientation SPAWN_ORIENTATION = DOWN;
+    public static final Orientation TOP_RIGHT_ORIENTATION = LEFT;
     private boolean isDirty = false;
 
     private DialogDoor manorDoor;
@@ -106,7 +107,7 @@ public class Spawn extends ICoopArea {
 
     @Override
     public Orientation getSpawnOrientation() {
-        return null;
+        return OrbWay.SPAWN_ORIENTATION;
     }
 
     @Override

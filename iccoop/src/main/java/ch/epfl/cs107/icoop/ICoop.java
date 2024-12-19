@@ -82,10 +82,10 @@ public class ICoop extends AreaGame implements DialogHandler {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
 
         if (player1 == null)
-            player1 = new ICoopPlayer(area, UP, area.getPlayerSpawnPosition(0), "player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS, teleportController, 0);
+            player1 = new ICoopPlayer(area, DOWN, area.getPlayerSpawnPosition(0), "player", "feu", KeyBindings.RED_PLAYER_KEY_BINDINGS, teleportController, 0);
 
         if (player2 == null)
-            player2 = new ICoopPlayer(area, UP, area.getPlayerSpawnPosition(1), "player2", "eau", KeyBindings.BLUE_PLAYER_KEY_BINDINGS, teleportController, 1);
+            player2 = new ICoopPlayer(area, DOWN, area.getPlayerSpawnPosition(1), "player2", "eau", KeyBindings.BLUE_PLAYER_KEY_BINDINGS, teleportController, 1);
 
         player1.enterArea(area, area.getPlayerSpawnPosition(0));
         player2.enterArea(area, area.getPlayerSpawnPosition(1));
@@ -109,6 +109,9 @@ public class ICoop extends AreaGame implements DialogHandler {
 
         player1.enterArea(area, teleportController.getTeleportPosition(0));
         player2.enterArea(area, teleportController.getTeleportPosition(1));
+
+        player1.setOrienation(teleportController.getTargetOrientation());
+        player2.setOrienation(teleportController.getTargetOrientation());
 
         CenterOfMass centerOfMass = new CenterOfMass(player1, player2);
         area.setViewCandidate(centerOfMass);

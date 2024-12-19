@@ -109,7 +109,7 @@ public class OrbWay extends ICoopArea {
     public boolean isViewCentered() { return true; }
 
     public Orientation getSpawnOrientation(){
-        return SPAWN_ORIENTATION;
+        return Spawn.TOP_RIGHT_ORIENTATION;
     }
 
     @Override

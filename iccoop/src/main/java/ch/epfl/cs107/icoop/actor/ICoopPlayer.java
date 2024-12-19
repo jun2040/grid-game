@@ -137,6 +137,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.currentState = PlayerState.IDLE;
     }
 
+    public void setOrienation(Orientation orientation){
+        orientate(orientation);
+    }
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
