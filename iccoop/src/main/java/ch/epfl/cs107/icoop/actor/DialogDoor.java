@@ -68,7 +68,7 @@ public class DialogDoor extends Door implements Interactor {
 
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
-            if (isCellInteraction) {
+            if (isCellInteraction && !player.isDisplacementOccurs()) {
                 if (isOn())
                     dialogHandler.publish(openedDialog);
                 else
