@@ -102,8 +102,4 @@ public class Orb extends ElementalItem {
             return NONE;
         }
     }
-
-    public void destroy() {
-        getOwnerArea().unregisterActor(this);
-    }
 }
