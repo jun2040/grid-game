@@ -70,6 +70,8 @@ public class Spawn extends ICoopArea {
                 new DiscreteCoordinates(11, 3)
         ));
 
+        registerActor(new Grenadier(this, DOWN, new DiscreteCoordinates(4, 7)));
+
 
         manorDoor = new DialogDoor(
                 this, DOWN, false,

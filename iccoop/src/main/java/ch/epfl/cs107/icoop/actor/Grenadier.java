@@ -18,17 +18,17 @@ import static ch.epfl.cs107.play.math.Orientation.*;
 public class Grenadier extends Enemy {
     private static final int ANIMATION_DURATION = 24;
 
-    private final OrientedAnimation idleAnimation;
-    private final OrientedAnimation protectingAnimation;
-
-    private final GrenadierInteractionHandler handler;
-
-    private GrenadierState currentState;
+    private final OrientedAnimation defaultAnimation;
+    private final OrientedAnimation protectAnimation;
 
     private final Timer idleTimer;
+    private final Timer walkTimer;
     private final Timer protectTimer;
 
+    private GrenadierState currentState;
     private ICoopPlayer target = null;
+
+    private final GrenadierInteractionHandler interactionHandler;
 
     /**
      * Default MovableAreaEntity constructor
@@ -43,35 +43,46 @@ public class Grenadier extends Enemy {
         final Vector anchor = new Vector(-0.5f, 0);
         final Orientation[] orders = {DOWN, RIGHT, UP, LEFT};
 
-        this.idleAnimation = new OrientedAnimation("icoop/bombFoe", ANIMATION_DURATION / 3,
-                this, anchor, orders, 4, 2, 2, 32, 32,
-                true);
-        this.protectingAnimation = new OrientedAnimation("icoop/bombFoe.protecting", ANIMATION_DURATION / 3,
-                this, anchor, orders, 4, 2, 2, 32, 32,
-                false);
+        this.defaultAnimation = new OrientedAnimation(
+                "icoop/bombFoe", ANIMATION_DURATION / 3,
+                this, anchor, orders, 4,
+                2, 2,
+                32, 32,
+                true
+        );
+
+        this.protectAnimation = new OrientedAnimation(
+                "icoop/bombFoe.protecting", ANIMATION_DURATION / 3,
+                this, anchor, orders, 4,
+                2, 2, 32, 32,
+                false
+        );
 
         this.currentState = GrenadierState.IDLE;
 
         this.idleTimer = new Timer();
+        this.walkTimer = new Timer();
         this.protectTimer = new Timer();
 
-        this.handler = new GrenadierInteractionHandler();
+        this.interactionHandler = new GrenadierInteractionHandler();
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if (!isDead()) {
-            switch (currentState) {
-                case IDLE:
-                case ATTACK:
-                    idleAnimation.draw(canvas);
-                    break;
-                case PROTECT:
-                    protectingAnimation.draw(canvas);
-                    break;
-            }
-        } else {
+        if (isDead()) {
             deathAnimation.draw(canvas);
+            return;
+        }
+
+        switch (currentState) {
+            case WALK:
+            case IDLE:
+            case ATTACK:
+                defaultAnimation.draw(canvas);
+                break;
+            case PROTECT:
+                protectAnimation.draw(canvas);
+                break;
         }
     }
 
@@ -79,44 +90,91 @@ public class Grenadier extends Enemy {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        idleTimer.update(deltaTime);
-
-        if (!idleTimer.isCompleted())
-            return;
-
         switch (currentState) {
             case IDLE:
-                moveRandom(2);
-
-                boolean goIdle = RandomGenerator.getInstance().nextDouble() < 0.1;
-
-                if (goIdle)
-                    idleTimer.setTimer(RandomGenerator.getInstance().nextInt(48));
-
+                idle(deltaTime);
+                break;
+            case WALK:
+                walk(deltaTime);
                 break;
             case ATTACK:
-                moveToTarget();
-
-                Vector displacement = target.getPosition().sub(getPosition());
-
-                if (displacement.getLength() < 2) {
-                    placeExplosive();
-                    currentState = GrenadierState.PROTECT;
-                    protectTimer.setTimer(RandomGenerator.getInstance().nextInt(75, 200));
-                }
-
+                attack(deltaTime);
                 break;
             case PROTECT:
-                moveRandom(1);
-
-                protectTimer.update(deltaTime);
-
-                if (protectTimer.isCompleted())
-                    idleTimer.setTimer(RandomGenerator.getInstance().nextInt(48));
-
+                protect(deltaTime);
                 break;
         }
     }
+
+    /***** ACTIONS *****/
+
+    private void idle(float deltaTime) {
+        idleTimer.update(deltaTime);
+
+        if (idleTimer.isCompleted())
+            gotoWalkState();
+    }
+
+    private void walk(float deltaTime) {
+        defaultAnimation.update(deltaTime);
+
+        walkTimer.update(deltaTime);
+
+        moveRandom(2);
+
+        if (walkTimer.isCompleted())
+            gotoIdleState();
+    }
+
+    private void attack(float deltaTime) {
+        defaultAnimation.update(deltaTime);
+
+        moveToTarget();
+
+        Vector displacement = target.getPosition().sub(getPosition());
+
+        if (displacement.getLength() < 2) {
+            placeExplosive();
+            gotoProtectState();
+        }
+    }
+
+    private void protect(float deltaTime) {
+        if (!protectAnimation.isCompleted())
+            protectAnimation.update(deltaTime);
+
+        moveRandom(1);
+
+        protectTimer.update(deltaTime);
+
+        if (protectTimer.isCompleted())
+            gotoIdleState();
+    }
+
+    /***** STATE HANDLERS *****/
+
+    private void gotoIdleState() {
+        defaultAnimation.reset();
+        currentState = GrenadierState.IDLE;
+        idleTimer.setTimer(generateRandomTime(5));
+    }
+
+    private void gotoWalkState() {
+        currentState = GrenadierState.WALK;
+        walkTimer.setTimer(generateRandomTime(2, 3));
+    }
+
+    private void gotoAttackState() {
+        currentState = GrenadierState.ATTACK;
+    }
+
+    private void gotoProtectState() {
+        protectAnimation.reset();
+        currentState = GrenadierState.PROTECT;
+        protectTimer.setTimer(generateRandomTime(3, 5));
+    }
+
+    /***** BEHAVIOR *****/
 
     private void moveRandom(int speedFactor) {
         if (isDisplacementOccurs())
@@ -140,23 +198,22 @@ public class Grenadier extends Enemy {
         if (v.getLength() <= 1.5f)
             return;
 
-        /*
-         * Use values over Orientation.fromVector method to prevent null pointer exception
-         */
+        // Use values over Orientation.fromVector method to prevent null pointer exception
         Orientation horizontal = v.x > 0 ? RIGHT : LEFT;
         Orientation vertical = v.y > 0 ? UP : DOWN;
 
-        orientate(Math.abs(v.x) > Math.abs(v.y) ? horizontal : vertical);
+        boolean axis = Math.abs(v.x) > Math.abs(v.y);
+        orientate(axis ? horizontal : vertical);
 
         boolean isMoved = move(ANIMATION_DURATION / 3);
 
         if (!isMoved) {
-            orientate(Math.abs(v.x) > Math.abs(v.y) ? vertical : horizontal);
+            orientate(axis ? vertical : horizontal);
             move(ANIMATION_DURATION / 3);
         }
     }
 
-    private boolean placeExplosive() {
+    private void placeExplosive() {
         Explosive explosive = new Explosive(getOwnerArea(), LEFT, getFieldOfViewCells().getFirst(), 100);
 
         // FIXME: Bombs can be placed in the same tile since they are walkable & does not take cell space
@@ -164,11 +221,20 @@ public class Grenadier extends Enemy {
             // FIXME: Prevent activation of bomb immediately after placing
             getOwnerArea().registerActor(explosive);
             explosive.activate();
-            return true;
         }
-
-        return false;
     }
+
+    /***** RANDOM GENERATOR *****/
+
+    private float generateRandomTime(float max) {
+        return RandomGenerator.getInstance().nextFloat(0, max);
+    }
+
+    private float generateRandomTime(float min, float max) {
+        return RandomGenerator.getInstance().nextFloat(min, max);
+    }
+
+    /***** IMPLEMENTATIONS *****/
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
@@ -201,15 +267,20 @@ public class Grenadier extends Enemy {
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
-        other.acceptInteraction(handler, isCellInteraction);
+        other.acceptInteraction(interactionHandler, isCellInteraction);
     }
+
+    /***** STATES *****/
 
     private enum GrenadierState {
         IDLE,
+        WALK,
         PROTECT,
         ATTACK,
         ;
     }
+
+    /***** INTERACTION HANDLERS *****/
 
     private class GrenadierInteractionHandler implements ICoopInteractionVisitor {
         @Override
@@ -221,7 +292,8 @@ public class Grenadier extends Enemy {
             if (currentState == GrenadierState.PROTECT)
                 return;
 
-            currentState = GrenadierState.ATTACK;
+            gotoAttackState();
+
             target = player;
         }
     }
