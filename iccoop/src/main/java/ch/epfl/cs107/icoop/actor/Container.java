@@ -14,9 +14,7 @@ import ch.epfl.cs107.play.signal.logic.Logic;
 import java.util.Collections;
 import java.util.List;
 
-public class Container extends AreaEntity implements ElementalEntity, Interactable, Interactor, Logic {
-    private ElementType elementType;
-
+public class Container extends AreaEntity implements Interactable, Interactor, Logic {
 
     /**
      * Default AreaEntity constructor
@@ -25,15 +23,9 @@ public class Container extends AreaEntity implements ElementalEntity, Interactab
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
-    public Container(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType) {
+    public Container(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-        this.elementType = elementType;
 
-    }
-
-    @Override
-    public String element() {
-        return elementType.getName();
     }
 
     @Override
