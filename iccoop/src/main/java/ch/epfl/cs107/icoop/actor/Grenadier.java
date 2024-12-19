@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.utility.Timer;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.engine.actor.OrientedAnimation;
@@ -23,31 +24,36 @@ public class Grenadier extends Enemy {
     private final GrenadierInteractionHandler handler;
 
     private GrenadierState currentState;
-    private int idleTimer = 0;
-    private int protectTimer = 0;
+
+    private final Timer idleTimer;
+    private final Timer protectTimer;
+
     private ICoopPlayer target = null;
 
     /**
      * Default MovableAreaEntity constructor
      *
-     * @param area           (Area): Owner area. Not null
-     * @param orientation    (Orientation): Initial orientation of the entity. Not null
-     * @param position       (Coordinate): Initial position of the entity. Not null
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     * @param position    (Coordinate): Initial position of the entity. Not null
      */
     public Grenadier(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 1, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.WATER)));
 
         final Vector anchor = new Vector(-0.5f, 0);
-        final Orientation[] orders = {DOWN , RIGHT , UP, LEFT};
+        final Orientation[] orders = {DOWN, RIGHT, UP, LEFT};
 
         this.idleAnimation = new OrientedAnimation("icoop/bombFoe", ANIMATION_DURATION / 3,
-                this , anchor , orders , 4, 2, 2, 32, 32,
+                this, anchor, orders, 4, 2, 2, 32, 32,
                 true);
         this.protectingAnimation = new OrientedAnimation("icoop/bombFoe.protecting", ANIMATION_DURATION / 3,
                 this, anchor, orders, 4, 2, 2, 32, 32,
                 false);
 
         this.currentState = GrenadierState.IDLE;
+
+        this.idleTimer = new Timer();
+        this.protectTimer = new Timer();
 
         this.handler = new GrenadierInteractionHandler();
     }
@@ -73,43 +79,42 @@ public class Grenadier extends Enemy {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (idleTimer > 0) {
-            idleTimer--;
-        } else {
-            switch (currentState) {
-                case IDLE:
-                    moveRandom(2);
+        idleTimer.update(deltaTime);
 
-                    boolean goIdle = RandomGenerator.getInstance().nextDouble() < 0.1;
+        if (!idleTimer.isCompleted())
+            return;
 
-                    if (goIdle)
-                        idleTimer = RandomGenerator.getInstance().nextInt(48);
+        switch (currentState) {
+            case IDLE:
+                moveRandom(2);
 
-                    break;
-                case ATTACK:
-                    moveToTarget();
+                boolean goIdle = RandomGenerator.getInstance().nextDouble() < 0.1;
 
-                    Vector displacement = target.getPosition().sub(getPosition());
+                if (goIdle)
+                    idleTimer.setTimer(RandomGenerator.getInstance().nextInt(48));
 
-                    if (displacement.getLength() < 2) {
-                        placeExplosive();
-                        currentState = GrenadierState.PROTECT;
-                        protectTimer = RandomGenerator.getInstance().nextInt(75, 200);
-                    }
+                break;
+            case ATTACK:
+                moveToTarget();
 
-                    break;
-                case PROTECT:
-                    moveRandom(1);
+                Vector displacement = target.getPosition().sub(getPosition());
 
-                    if (protectTimer > 0) {
-                        protectTimer--;
-                    } else {
-                        currentState = GrenadierState.IDLE;
-                        idleTimer = RandomGenerator.getInstance().nextInt(48);
-                    }
+                if (displacement.getLength() < 2) {
+                    placeExplosive();
+                    currentState = GrenadierState.PROTECT;
+                    protectTimer.setTimer(RandomGenerator.getInstance().nextInt(75, 200));
+                }
 
-                    break;
-            }
+                break;
+            case PROTECT:
+                moveRandom(1);
+
+                protectTimer.update(deltaTime);
+
+                if (protectTimer.isCompleted())
+                    idleTimer.setTimer(RandomGenerator.getInstance().nextInt(48));
+
+                break;
         }
     }
 
@@ -202,13 +207,14 @@ public class Grenadier extends Enemy {
     private enum GrenadierState {
         IDLE,
         PROTECT,
-        ATTACK
+        ATTACK,
         ;
     }
 
     private class GrenadierInteractionHandler implements ICoopInteractionVisitor {
         @Override
-        public void interactWith(Interactable other, boolean isCellInteraction) {}
+        public void interactWith(Interactable other, boolean isCellInteraction) {
+        }
 
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {

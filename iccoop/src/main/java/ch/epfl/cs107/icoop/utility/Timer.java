@@ -19,6 +19,10 @@ public class Timer {
         return timer <= 0;
     }
 
+    public float getTime() {
+        return timer;
+    }
+
     public void setTimer(float time) {
         this.timer = time;
     }

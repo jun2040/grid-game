@@ -3,6 +3,7 @@ package ch.epfl.cs107.icoop.actor;
 import ch.epfl.cs107.icoop.KeyBindings.PlayerKeyBindings;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.*;
+import ch.epfl.cs107.icoop.utility.Timer;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
@@ -21,21 +22,21 @@ import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import java.util.*;
-
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A ICoopPlayer is a player for the ICoop game.
  */
 public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor, Inventory.Holder {
     private static final int MAX_LIFE = 10;
-    private static final int GRACE_PERIOD = 24;
     private static final int MOVE_DURATION = 8;
     private static final int ANIMATION_DURATION = 4;
     private static final int SWORD_ANIMATION_DURATION = 2;
     private static final int STAFF_ANIMATION_DURATION = 2;
 
-    //private final TextGraphics message;
+    private static final float GRACE_PERIOD = 2.0f;
+
     private final int id;
     private final String element;
     private final OrientedAnimation idleAnimation;
@@ -53,8 +54,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private final TeleportController teleportController;
 
     private DamageType immunityType;
-    private boolean isInGracePeriod = false;
-    private int gracePeriodTimer = 0;
+    private final Timer gracePeriodTimer;
     private PlayerState currentState;
 
     //private String prefix;
@@ -78,10 +78,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         // Initialize player properties
         super(area, orientation, position);
         this.element = element;
-
-        /*message = new TextGraphics(Integer.toString((int) hp), 0.4f, Color.BLUE);
-        message.setParent(this);
-        message.setAnchor(new Vector(-0.3f, 0.1f));*/
 
         // Initialize sprite & idleAnimation
         final Orientation[] orders = new Orientation[] { DOWN, RIGHT, UP, LEFT };
@@ -110,10 +106,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         this.inventory = new ICoopInventory();
         this.inventory.addPocketItem(ICoopItem.SWORD, 1);
-        //this.inventory.addPocketItem(ICoopItem.STAFF, 1);
-        //this.inventory.addPocketItem(ICoopItem.BOMB, 5);
 
         this.currentItem = ICoopItem.SWORD;
+
+        this.gracePeriodTimer = new Timer();
 
         // FIXME: Temporary placeholder for determining flipped flag
         this.gui = new ICoopPlayerStatusGUI(this, id % 2 == 0);
@@ -144,12 +140,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         moveIfPressed(RIGHT, keyboard.get(keybinds.right()));
         moveIfPressed(DOWN, keyboard.get(keybinds.down()));
 
-        if (isInGracePeriod && gracePeriodTimer >= 0) {
-            gracePeriodTimer--;
-        } else if (gracePeriodTimer < 0) {
-            isInGracePeriod = false;
-            gracePeriodTimer = 0;
-        }
+        gracePeriodTimer.update(deltaTime);
 
         if (keyboard.get(keybinds.useItem()).isPressed()) {
             boolean success = false;
@@ -223,14 +214,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     private void updateAnimation(float deltaTime) {
         if (currentState == PlayerState.IDLE) {
-            if (isDisplacementOccurs()) {
-                if (isInGracePeriod && gracePeriodTimer % 3 != 0)
-                    return;
-
+            if (isDisplacementOccurs())
                 idleAnimation.update(deltaTime);
-            } else {
+            else
                 idleAnimation.reset();
-            }
         } else if (currentState == PlayerState.ATTACK) {
             if (currentItem.equals(ICoopItem.SWORD)) {
                 if (swordAttackAnimation.isCompleted()) {
@@ -252,19 +239,35 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public void draw(Canvas canvas) {
-        if(gracePeriodTimer % 4 == 0) {
-            if (currentState == PlayerState.IDLE) {
-                this.idleAnimation.draw(canvas);
-            } if (currentState == PlayerState.ATTACK) {
-                if (currentItem.equals(ICoopItem.SWORD))
-                    this.swordAttackAnimation.draw(canvas);
-                else if (currentItem.equals(ICoopItem.STAFF_WATER)||currentItem.equals(ICoopItem.STAFF_FIRE))
-                    this.staffAttackAnimation.draw(canvas);
-            }
-
+        if (gracePeriodTimer.isCompleted()) {
+            drawPlayerAnimation(canvas);
+        } else {
+            int frame = (int) (gracePeriodTimer.getTime() * 10);
+            if (frame % 2 == 0)
+                drawPlayerAnimation(canvas);
         }
+
         this.health.draw(canvas);
         this.gui.draw(canvas);
+    }
+
+    public void drawPlayerAnimation(Canvas canvas) {
+        switch (currentState) {
+            case IDLE:
+                this.idleAnimation.draw(canvas);
+                break;
+            case ATTACK:
+                switch (currentItem) {
+                    case SWORD:
+                        this.swordAttackAnimation.draw(canvas);
+                        break;
+                    case STAFF_WATER:
+                    case STAFF_FIRE:
+                        this.staffAttackAnimation.draw(canvas);
+                        break;
+                }
+                break;
+        }
     }
 
     public void enterArea(ICoopArea area, DiscreteCoordinates position) {
@@ -291,13 +294,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public boolean isDead() { return this.health.getIntensity() <= 0.0f; }
 
     public void hit(DamageType damageType) {
-        if (damageType.equals(immunityType) || isInGracePeriod)
+        if (damageType.equals(immunityType) || !gracePeriodTimer.isCompleted())
             return;
 
         health.decrease(damageType.damage);
 
-        gracePeriodTimer = GRACE_PERIOD;
-        isInGracePeriod = true;
+        gracePeriodTimer.setTimer(GRACE_PERIOD);
     }
 
     public void heal(int restorationFactor) {
@@ -331,11 +333,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
     @Override
     public boolean isViewInteractable() { return true; }
-
-    @Override
-    public boolean isDisplacementOccurs() {
-        return super.isDisplacementOccurs();
-    }
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
