@@ -27,6 +27,9 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
      *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param destinationAreaName (String): Destination area's name. Not null
+     * @param isOpen    (boolean): True when open for teleportation
+     * @param targetCoords  (DiscreteCoordinates): Destination area player spawning coordinates
      * @param mainPosition (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
     public Door(
@@ -46,6 +49,15 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
         this.positions.add(mainPosition);
     }
 
+    /**
+     * Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param isOpen    (boolean): True when open for teleportation
+     * @param mainPosition (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+    */
+
     public Door(
             Area area,
             Orientation orientation,
@@ -55,6 +67,19 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
         this(area, orientation, "", isOpen, null, mainPosition);
     }
 
+    /**
+     *
+     *
+     * Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param destinationAreaName (String): Destination area's name. Not null
+     * @param isOpen    (boolean): True when open for teleportation
+     * @param targetCoords  (DiscreteCoordinates): Destination area player spawning coordinates
+     * @param mainPosition (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param otherPositions (DiscreteCoordinate): Other Initial positions of the entity in the Area. Not null
+     */
     public Door(
             Area area,
             Orientation orientation,
@@ -77,15 +102,24 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
     public void draw(Canvas canvas) {
         super.draw(canvas);
     }
-
+    /**
+     * opens the Door by setting isOpen true
+     */
     public void open() {
         isOpen = true;
     }
 
+    /**
+     * closes the Door by setting isOpen false
+     */
     public void close() {
         isOpen = false;
     }
 
+    /**
+     *
+     * @return boolean checks for suitable destination area
+     */
     public boolean teleportable() {
         return !destinationAreaName.isEmpty();
     }

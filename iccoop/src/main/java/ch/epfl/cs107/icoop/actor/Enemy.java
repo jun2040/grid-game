@@ -17,8 +17,13 @@ import java.util.List;
 public abstract class Enemy extends MovableAreaEntity implements Interactable, Interactor {
     private static final int ANIMATION_DURATION = 24;
     private static final int GRACE_PERIOD = 10;
-
+    /**
+     * An integer indicating the health the entity had when created, which is by design the maximum
+     */
     private int maxHealthPoint;
+    /**
+     * An integer indicating the health the entity had when created, which is by design the maximum
+     */
     private int healthPoint;
 
     protected final Animation deathAnimation;
@@ -35,6 +40,8 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
+     * @param maxHealthPoint (int) : maximal number of health points. Not Null
+     * @param immunityType (List<IcoppPlayer.DamageType>): List used to grant immunity from certain types of damages. Not null
      */
     public Enemy(
             Area area,
@@ -57,6 +64,14 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         this.immunityType.addAll(immunityType);
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *
+     * Description : loop checking if the enemy is dead, recovering or if its animation is complete,
+     *                 in order to make the appropriate responses
+     */
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -78,10 +93,16 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         }
     }
 
+    /**
+     * will set the enemy as dead
+     */
     private void die() {
         isDead = true;
     }
 
+    /**
+     * if not in immunity, will deduct life points
+     */
     public void hit(ICoopPlayer.DamageType damageType) {
         if (isInGracePeriod || isDead)
             return;
@@ -96,7 +117,9 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         gracePeriodTimer = GRACE_PERIOD;
         isInGracePeriod = true;
     }
-
+    /**
+     * will check if the enemy is dead
+     */
     public boolean isDead() {
         return isDead;
     }

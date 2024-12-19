@@ -53,6 +53,12 @@ public class HellSkull extends Enemy {
             deathAnimation.draw(canvas);
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *
+     * Description : launches new flame at sudo random interavals
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -67,6 +73,9 @@ public class HellSkull extends Enemy {
         }
     }
 
+    /**
+     * Creates a new flame actor to be shot in a direction, from the cell right in front of the skull
+     */
     private void launchFlames() {
         DiscreteCoordinates target = getFieldOfViewCells().getFirst();
 
@@ -90,6 +99,9 @@ public class HellSkull extends Enemy {
         other.acceptInteraction(handler, isCellInteraction);
     }
 
+    /**
+     * Description: Damages player when in the same cell (implicit collision)
+     * */
     private class HellSkullInteractionHandler implements ICoopInteractionVisitor {
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {}

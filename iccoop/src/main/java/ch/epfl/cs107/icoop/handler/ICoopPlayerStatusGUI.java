@@ -19,15 +19,31 @@ public class ICoopPlayerStatusGUI implements Graphics {
 
     private ICoopItem item = null;
 
+    /**
+     *
+     * @param player (ICoopPlayer) : player for which gui is drawn
+     * @param flipped (boolean) : choice of right and left hand side gui (true is left)
+     */
     public ICoopPlayerStatusGUI(ICoopPlayer player, boolean flipped) {
         this.player = player;
         this.flipped = flipped;
     }
 
+    /**
+     *
+     * @param item, sets current gui item to this item (enables its displaying)
+     */
     public void setCurrentItem(ICoopItem item) {
         this.item = item;
     }
 
+    /**
+     *
+     * @param canvas target, not null
+     *               Description : will calculate position of player gui interface,
+     *               including flipped for right and left hand side gui
+     *               displays the gui
+     */
     @Override
     public void draw(Canvas canvas) {
         // Compute width, height and anchor

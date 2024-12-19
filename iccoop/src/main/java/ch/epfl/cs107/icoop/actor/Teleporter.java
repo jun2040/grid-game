@@ -17,6 +17,15 @@ public class Teleporter extends Door {
     private final Queue<Key> keys;
     private final Sprite sprite;
 
+    /**
+     * Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param destinationAreaName (String): Destination area's name. Not null
+     * @param targetCoords  (DiscreteCoordinates): Destination area player spawning coordinates
+     * @param mainPosition (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     */
     public Teleporter(Area area, Orientation orientation, String destinationAreaName, DiscreteCoordinates[] targetCoords, DiscreteCoordinates mainPosition) {
         super(area, orientation, destinationAreaName, false, targetCoords, mainPosition);
 
@@ -31,6 +40,11 @@ public class Teleporter extends Door {
             sprite.draw(canvas);
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *   Description : will use Queue system to register when keys are collected, activing this teleporter
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

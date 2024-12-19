@@ -38,15 +38,25 @@ public class Explosive extends ICoopCollectable implements Interactor {
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param timer         (int) : latency timer before explosion. Not null
      */
-    public Explosive(Area area, Orientation orientation, DiscreteCoordinates position, int timer) {
+    public Explosive(Area area,
+                     Orientation orientation,
+                     DiscreteCoordinates position,
+                     int timer
+    ) {
         super(area, orientation, position, ICoopItem.BOMB);
 
         this.timer = timer;
     }
-
+    /**
+     * checks if bomb is activated
+     */
     public boolean isActivated() { return isActivated; }
 
+    /**
+     * checks if bomb has exploded
+     */
     public boolean isExploded() { return isExploded; }
 
     @Override
@@ -59,7 +69,9 @@ public class Explosive extends ICoopCollectable implements Interactor {
         if (!isExploded)
             explosive.draw(canvas);
     }
-
+    /**
+     * will activate timer, explode when timer <= 0, unregister bomb once exploded
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -80,8 +92,14 @@ public class Explosive extends ICoopCollectable implements Interactor {
         }
     }
 
+    /**
+     * activates bomb
+     */
     public void activate() { isActivated = true;}
 
+    /**
+     * explodes bomb
+     */
     private void explode() {
         timer = 0;
         isExploded = true;

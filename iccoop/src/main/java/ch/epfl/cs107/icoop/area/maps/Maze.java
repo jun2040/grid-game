@@ -16,7 +16,9 @@ public class Maze extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(2, 39), new DiscreteCoordinates(3, 39) };
     public static Orientation SPAWN_ORIENTATION = DOWN;
-
+    /**
+     * discrete coordinates arrays for easy iterations
+     */
     private static final DiscreteCoordinates[] hellSkullSpawn = new DiscreteCoordinates[] {
             new DiscreteCoordinates(12, 33), new DiscreteCoordinates(12, 31),
             new DiscreteCoordinates(12, 29), new DiscreteCoordinates(12, 27),
@@ -37,6 +39,10 @@ public class Maze extends ICoopArea {
     private Logic fireStaff;
     private Logic waterStaff;
 
+    /**
+     *
+     * @param context, allows the setting of hte dialog handler
+     */
     public Maze(Context context) {
         super(context);
     }
@@ -125,16 +131,27 @@ public class Maze extends ICoopArea {
     public DiscreteCoordinates getPlayerSpawnPosition(int id) {
         return ARRIVAL_POINTS[id];
     }
-
+    /**
+     * associates door with pressure plate for activation/deactiation
+     */
     private void addElementalWall(ElementalWall elementalWall, PressurePlate pressurePlate) {
         pressurePlate.linkWall(elementalWall);
         registerActor(elementalWall);
     }
-
+    /**
+     *
+     * @return orientation of the arriving player
+     */
     public Orientation getSpawnOrientation(){
         return SPAWN_ORIENTATION;
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *                  checks if both staffs were collected, then calls complete();
+     *                  assigning this area to be complete to proceed to the next
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

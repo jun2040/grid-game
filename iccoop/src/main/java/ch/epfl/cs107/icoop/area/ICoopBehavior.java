@@ -11,6 +11,15 @@ import ch.epfl.cs107.play.window.Window;
 import static ch.epfl.cs107.play.math.Orientation.*;
 
 public class ICoopBehavior extends AreaBehavior {
+    /**
+     *
+     * @param window (Window): display context. Not null
+     * @param title (String): area title
+     * @param area (Area) : current area to be worked on
+     *
+     *             Description: will use the color grading on the behavior maps to
+     *             automatically spawn corresponding entities/obstacles
+     */
     public ICoopBehavior(Window window, String title, Area area) {
         super(window, title);
 
@@ -35,11 +44,20 @@ public class ICoopBehavior extends AreaBehavior {
         }
     }
 
+    /**
+     *
+     * @param coordinates
+     * @return true if the cell is empty
+     */
     public boolean isCellFree(DiscreteCoordinates coordinates) {
         ICoopCell cell = (ICoopCell) getCell(coordinates.x, coordinates.y);
         return !cell.takeCellSpace();
     }
 
+    /**
+     * enum facilitating differenciating between the fixed number of different cell types
+     * enables dynamique spawning of certain entities
+     */
     public enum ICoopCellType {
         //https://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
         NULL(0, false , false),
@@ -71,6 +89,12 @@ public class ICoopBehavior extends AreaBehavior {
         }
     }
 
+    /**
+     * links ICoopCellType to the icoopcell to reinforce the linked property and encapsulation
+     * of cells (which are intrisically dependent of each other)
+     *
+     * will check if an incoming entity can enter the cell, especially if it is elemntal
+     */
     public class ICoopCell extends Cell {
         /// Type of the cell following the enum
         private final ICoopCellType type;

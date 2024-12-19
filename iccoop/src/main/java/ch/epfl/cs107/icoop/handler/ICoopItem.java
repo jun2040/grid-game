@@ -14,6 +14,13 @@ public enum ICoopItem implements InventoryItem {
     private final int pocketId;
     private final String spriteName;
     private boolean consumable;
+
+    /**
+     *
+     * @param name (String): Name of item
+     * @param spriteName (String): name used for the item sprite
+     * @param consumable (boolean) : defines if it disappears up when player uses it
+     */
     ICoopItem(String name, String spriteName, boolean consumable) {
         this.name = name;
         this.pocketId = 0;
@@ -31,13 +38,27 @@ public enum ICoopItem implements InventoryItem {
         return name;
     }
 
+    /**
+     *
+     * @return name used for sprite
+     */
     public String getSpriteName() {
         return "icoop/" + spriteName;
     }
 
+    /**
+     *
+     * @return true if item disappears when used
+     */
     public boolean isConsumable() {
         return consumable;
     }
+
+    /**
+     *
+     * @param item
+     * @return returns inventory index of the current item
+     */
 
     public static int getIndex(ICoopItem item) {
         int index = 0;

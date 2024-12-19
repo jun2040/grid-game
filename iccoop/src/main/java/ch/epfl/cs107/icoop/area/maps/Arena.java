@@ -22,6 +22,10 @@ public class Arena extends ICoopArea {
     private Logic fireKey;
     private Logic waterKey;
 
+    /**
+     *
+     * @param context, allows the setting of hte dialog handler
+     */
     public Arena(Context context) {
         super(context);
     }
@@ -46,6 +50,12 @@ public class Arena extends ICoopArea {
         registerActor(teleporter);
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *                  checks if both keys were collected, then calls complete();
+     *                  assigning this area to be complete to proceed to the next
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -59,6 +69,10 @@ public class Arena extends ICoopArea {
         return true;
     }
 
+    /**
+     *
+     * @return orientation of the arriving player
+     */
     public Orientation getSpawnOrientation(){
         return SPAWN_ORIENTATION;
     }

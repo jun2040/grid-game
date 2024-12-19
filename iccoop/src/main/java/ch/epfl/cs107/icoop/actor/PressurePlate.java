@@ -53,14 +53,25 @@ public class PressurePlate extends AreaEntity implements Logic {
         deactivate();
     }
 
+    /**
+     * activates the pressure plate ( so animation and desired outcomes will be impacted)
+     */
     public void activate() {
         isPressed = true;
     }
 
+    /**
+     * deactivates the pressure plate ( so animation and desired outcomes will be impacted)
+     */
     public void deactivate() {
         isPressed = false;
     }
 
+    /**
+     *
+     * @param elementalWall, will associate the target wall with this pressure plate to make them intertwined
+     *                       and allow the pressure plate to control the wall
+     */
     public void linkWall(ElementalWall elementalWall) {
         wallActivateEvent.addEventListener(elementalWall);
     }

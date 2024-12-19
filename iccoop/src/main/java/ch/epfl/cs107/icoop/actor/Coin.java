@@ -15,6 +15,14 @@ public class Coin extends ICoopCollectable{
     private Animation coinSprite;
     private final static int ANIMATION_DURATION = 6;
 
+    /**
+     *  Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     *
+     */
     public Coin(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
         this.coinSprite =  new Animation(

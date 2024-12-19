@@ -33,8 +33,8 @@ public class Chest extends Container implements Interactable, Interactor, Logic 
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-     * @param dialog
-     * @param isOpen
+     * @param dialog      (DialogHandler): Mediates the dialog creation. Sends to ICoop. Not null
+     * @param isOpen      (Logic): True when the chest is opened. Not null
      */
     public Chest(Area area, Orientation orientation, DiscreteCoordinates position, Logic isOpen, DialogHandler dialog) {
         super(area, orientation, position);
@@ -51,6 +51,11 @@ public class Chest extends Container implements Interactable, Interactor, Logic 
         spriteOpening.draw(canvas);
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     * updates animation if opened. Once complete pushes new dialog to DialogHandler
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -67,13 +72,25 @@ public class Chest extends Container implements Interactable, Interactor, Logic 
         return super.getCurrentMainCellCoordinates();
     }
 
+    /**
+     *
+     * @return opened state
+     */
     public boolean isOpen(){
         return isOpen.isOn();
     }
 
+    /**
+     * opens chest, sets TRUE
+     */
     public void open(){
         isOpen = Logic.TRUE;
     }
+
+    /**
+     *
+     * @param inventory player inventory, to which the contained collectible(s) is/are added
+     */
     public void giftItem(ICoopInventory inventory){
         for(ICoopItem item : items){
             inventory.addPocketItem(item, 5);

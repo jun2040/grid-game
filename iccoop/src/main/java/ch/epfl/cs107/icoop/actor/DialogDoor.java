@@ -21,6 +21,18 @@ public class DialogDoor extends Door implements Interactor {
 
     private final DialogDoorInteractionHandler interactionHandler;
 
+    /**
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param isOpen      (boolean): Initial open/closed status of door. Not null
+     * @param mainPosition  (DiscreteCoordinates): Occupied main cell of door. Not null
+     * @param dialogHandler (DialogHandler): Dialog manager interface, for pushing dialogs. Not null
+     * @param openedDialogPath  (String): Ressource path String. Not null
+     * @param closedDialogPath  (String): Ressource path String. Not null
+     * @param destinationAreaName   (String): Door destination area name.  Not null
+     * @param targetCoords  (DiscreteCoordinates): Destination spawning coordinates. Not null
+     */
     public DialogDoor(
             Area area,
             Orientation orientation,
@@ -70,10 +82,21 @@ public class DialogDoor extends Door implements Interactor {
         return null;
     }
 
+    /**
+     * DialogInteractionHandler: activates event when foreign actor interacts with it
+     */
     private class DialogDoorInteractionHandler implements ICoopInteractionVisitor {
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {}
 
+        /**
+         *
+         * @param player
+         * @param isCellInteraction
+         *
+         * Description: creates new dialogs when first entering cell, then pushes them to Dialog Handler.
+         *              destruction then creation necessary to prevent soft lock form dialog reopening.
+         */
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
             if(player.isDisplacementOccurs()){

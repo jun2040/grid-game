@@ -53,17 +53,31 @@ public class Grass extends Obstacle{
         }
     }
 
+    /**
+     * Destroys grass bush
+     */
     public void destroy() {
         isDestroyed = true;
     }
+
+    /**
+     * drops coin based on a sudo random probability generator
+     */
     private void dropCoin(){
         if (Math.random()< 0.5){
             getOwnerArea().registerActor(new Coin(getOwnerArea(), Orientation.UP, this.getCurrentMainCellCoordinates()));
         }
     }
 
+    /**
+     * unregisters actor from area
+     */
     private void unregister() { getOwnerArea().unregisterActor(this); }
 
+    /**
+     *
+     * @return whether it has been destroyed
+     */
     public boolean isDestroyed(){
         return isDestroyed;
     }

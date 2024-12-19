@@ -17,6 +17,15 @@ public class Heart extends ICoopCollectable {
     private final int restorationFactor;
     private final Animation animation;
 
+    /**
+     /**
+     *  Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param restorationFactor (int) : Amount by which the player's health will be restored by
+     */
     public Heart(Area area, Orientation orientation, DiscreteCoordinates position, int restorationFactor) {
         super(area, orientation, position);
 
@@ -38,6 +47,10 @@ public class Heart extends ICoopCollectable {
         animation.update(deltaTime);
     }
 
+    /**
+     *
+     * @return the amount by which the player's health is restored
+     */
     public int getRestorationFactor() {
         return restorationFactor;
     }

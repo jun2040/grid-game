@@ -14,6 +14,14 @@ import java.util.List;
 public abstract class ElementalItem extends ICoopCollectable implements ElementalEntity, Logic {
     private final ElementType elementType;
 
+    /**
+     *  Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param elementType (ElementType): Elemental type of item. Can be NULL
+     */
     public ElementalItem(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType) {
         super(area, orientation, position);
 

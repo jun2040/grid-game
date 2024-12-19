@@ -15,6 +15,16 @@ public class Key extends ElementalItem {
     private final Sprite sprite;
 
     // TODO: Consider defaulting the orientation to UP for items
+
+    /**
+     *
+     *  Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param elementType (ElementType) : Elemental type of the key, can only be picked up by same elemental types. Not Null
+     */
     public Key(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType) {
         super(area, orientation, position, elementType);
 

@@ -69,6 +69,13 @@ public class Grenadier extends Enemy {
         }
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *
+     * Description : Finite state machine for 3 states: attack, idle, protect (guard)
+     *                  will behave appropriately to each state
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -113,6 +120,12 @@ public class Grenadier extends Enemy {
         }
     }
 
+    /**
+     *
+     * @param speedFactor speed of grenadier
+     *
+     *           Description : generates sudo random number dictating its subsequent movement
+     */
     private void moveRandom(int speedFactor) {
         if (isDisplacementOccurs())
             return;
@@ -126,6 +139,9 @@ public class Grenadier extends Enemy {
         move(ANIMATION_DURATION / speedFactor);
     }
 
+    /**
+     * Description : Homing target locking system to guide grenadier to player
+     */
     private void moveToTarget() {
         if (isDisplacementOccurs())
             return;
@@ -151,6 +167,11 @@ public class Grenadier extends Enemy {
         }
     }
 
+    /**
+     *
+     * @return if bomb is placed
+     * Description : grenadier will try to place a bomb against the player
+     */
     private boolean placeExplosive() {
         Explosive explosive = new Explosive(getOwnerArea(), LEFT, getFieldOfViewCells().getFirst(), 100);
 
@@ -199,6 +220,9 @@ public class Grenadier extends Enemy {
         other.acceptInteraction(handler, isCellInteraction);
     }
 
+    /**
+     * enum of finite state machine for grenadier
+     */
     private enum GrenadierState {
         IDLE,
         PROTECT,

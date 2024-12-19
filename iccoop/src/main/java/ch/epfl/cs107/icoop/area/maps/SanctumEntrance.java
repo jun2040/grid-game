@@ -10,10 +10,15 @@ import ch.epfl.cs107.play.math.Orientation;
 import static ch.epfl.cs107.play.math.Orientation.DOWN;
 
 public class SanctumEntrance extends ICoopArea {
+
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[] { new DiscreteCoordinates(9, 0), new DiscreteCoordinates(10, 0) };
     public static final Orientation SPAWN_ORIENTATION = Orientation.UP;
 
+    /**
+     *
+     * @param context, allows the setting of hte dialog handler
+     */
     public SanctumEntrance(Context context) {
         super(context);
     }

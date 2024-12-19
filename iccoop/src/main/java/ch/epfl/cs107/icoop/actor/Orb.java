@@ -25,6 +25,13 @@ public class Orb extends ElementalItem {
     private final Animation animation;
     private DialogHandler dialogHandler;
 
+    /**
+     *
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param elementType   (ElementType): defines the orb elemental type
+     */
     public Orb(Area area, DiscreteCoordinates position, ElementType elementType) {
         super(area, UP, position, elementType);
 
@@ -57,15 +64,25 @@ public class Orb extends ElementalItem {
         ((ICoopInteractionVisitor) v).interactWith((ElementalItem) this, isCellInteraction);
     }
 
+    /**
+     * will push the dialog, to be called when orb is collected
+     */
     public void triggerDialog() {
         if (dialogHandler != null)
             dialogHandler.publish(new Dialog(orbType.getDialogPath()));
     }
 
+    /**
+     *
+     * @param dialogHandler sets dialog handler
+     */
     public void setDialogHandler(DialogHandler dialogHandler) {
         this.dialogHandler = dialogHandler;
     }
 
+    /**
+     * Combines elemnt type with orb type to associate the dialog message and the sprite used with the element type
+     */
     private enum OrbType {
         FIRE(ElementType.FIRE, "orb_fire_msg", 64),
         WATER(ElementType.WATER, "orb_water_msg", 0),

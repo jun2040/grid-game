@@ -55,6 +55,9 @@ public class ICoop extends AreaGame implements DialogHandler {
         return false;
     }
 
+    /**
+     * generate and add to existing area list the wished areas
+     */
     private void createAreas() {
         Context context = new Context(this);
 
@@ -77,6 +80,8 @@ public class ICoop extends AreaGame implements DialogHandler {
     /**
      * Start area
      * @param areaKey (String) String key of area
+     *
+     *     registers the new players to the current area and set the center of mass between them for the camera
      */
     private void setupArea(String areaKey) {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
@@ -100,6 +105,9 @@ public class ICoop extends AreaGame implements DialogHandler {
         return "ICoop";
     }
 
+    /**
+     * register players to new area once teleported, in the correct orienation
+     */
     // TODO: Remove repetition in teleport and setupArea
     public void teleport() {
         player1.leaveArea();
@@ -119,6 +127,9 @@ public class ICoop extends AreaGame implements DialogHandler {
         teleportController.resetTeleport();
     }
 
+    /**
+     * draw the dialog on top of the current area, only when it is assigned
+     */
     @Override
     public void draw() {
         super.draw();
@@ -129,6 +140,15 @@ public class ICoop extends AreaGame implements DialogHandler {
             ((ICoopArea) getCurrentArea()).setIsDirty(Logic.FALSE);
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *                  check for keyboard strokes to pause, reset game, reset area
+     *                  check if players died
+     *                  update dialog if existent and not completed
+     *                  update the camera scale factor
+     *                  complete spawn once maze and area are generated
+     */
     // TODO: Pause when dialog opens
     @Override
     public void update(float deltaTime) {
@@ -178,21 +198,35 @@ public class ICoop extends AreaGame implements DialogHandler {
         calculateCameraScaleFactor();
     }
 
+    /**
+     * hard resets game (as if new boot up)
+     */
     public void resetGame() {
         begin(getWindow(), getFileSystem());
     }
 
+    /**
+     * soft reset area, as when entering it
+     */
     public void resetArea() {
         getCurrentArea().begin(getWindow(), getFileSystem());
         setupArea(getCurrentArea().getTitle());
     }
 
+    /**
+     *
+     * @param dialog
+     * publish the incoming dialog and stop the updating of the current area
+     */
     @Override
     public void publish(Dialog dialog) {
         this.dialog = dialog;
         ((ICoopArea)getCurrentArea()).setIsDirty(Logic.TRUE);
     }
 
+    /**
+     * calculate camera scale factor depending on the default value, the player's distanc to each other
+     */
     public void calculateCameraScaleFactor() {
         if(!((ICoopArea)getCurrentArea()).isViewCentered()){
             ((ICoopArea)getCurrentArea()).setCameraScaleFactor(
@@ -208,6 +242,13 @@ public class ICoop extends AreaGame implements DialogHandler {
 
     }
 
+    /**
+     *
+     * @param position_playerA
+     * @param position_playerB
+     * @return double
+     * calculates distance between 2 vectors (in this case the distance between players
+     */
     public double distance(Vector position_playerA, Vector position_playerB){
         double deltaX = position_playerB.x - position_playerA.x;
         double deltaY = position_playerB.y - position_playerA.y;

@@ -64,6 +64,11 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
+     * @param spriteName (String) : sprite name used to get sprite. Not null
+     * @param element      (String) : element name associated to each player. Not null
+     * @param keybinds      (Keybinds): different Keybinds used by each seperate player. Not null
+     * @param teleportController (TeleportController) : class used to dictate teleportation behavior with interacting with doors. Not null
+     * @param id
      */
     public ICoopPlayer(
             Area area,
@@ -137,10 +142,21 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.currentState = PlayerState.IDLE;
     }
 
+    /**
+     *
+     * @param orientation, sets orientation of player, used when entering areas
+     */
     public void setOrienation(Orientation orientation){
         orientate(orientation);
     }
 
+    /**
+     *
+     * @param deltaTime elapsed time since last update, in seconds, non-negative
+     *
+     *  Description : checks key inputs to move, invulnerability to damage,
+     *                  key inputs for use of items in inventory, with each inventory item having a different function
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -200,6 +216,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         updateAnimation(deltaTime);
     }
 
+    /**
+     *
+     * @return true if placing a bomb was a success
+     */
     private boolean placeExplosive() {
         Explosive explosive = new Explosive(getOwnerArea(), LEFT, getFieldOfViewCells().getFirst(), 100);
 
@@ -213,6 +233,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         return false;
     }
 
+    /**
+     * switches to next current usable item
+     */
     private void getNextItem() {
         ICoopItem[] items = ICoopItem.values();
         int index = ICoopItem.getIndex(currentItem);
@@ -229,6 +252,13 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         gui.setCurrentItem(currentItem);
     }
 
+    /**
+     *
+     * @param deltaTime
+     * Description : Updates animation depending on the state of the player
+     *              2 states : idle, attack
+     *
+     */
     private void updateAnimation(float deltaTime) {
         if (currentState == PlayerState.IDLE) {
             if (isDisplacementOccurs()) {
@@ -258,6 +288,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
     }
 
+    /**
+     *
+     * @param canvas target, not null
+     *    Description : will draw the current player state animation
+     */
+
     @Override
     public void draw(Canvas canvas) {
         if(gracePeriodTimer % 4 == 0) {
@@ -275,6 +311,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         this.gui.draw(canvas);
     }
 
+    /**
+     *
+     * @param area
+     * @param position
+     * Description : will register actor to a new area and reset its position and motion
+     */
     public void enterArea(ICoopArea area, DiscreteCoordinates position) {
         area.registerActor(this);
 
@@ -284,20 +326,41 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         resetMotion();
     }
 
+    /**
+     * leaves area through unregistering
+     */
     public void leaveArea() {
         getOwnerArea().unregisterActor(this);
     }
 
+    /**
+     * centers camera on player
+     */
     public void centerCamera() { getOwnerArea().setViewCandidate(this); }
 
+    /**
+     *
+     * @return player id
+     */
     public int getId() { return this.id; }
-
+    /**
+     * fully fills health bar
+     */
     public void resetHealth(){
         health.resetHealth();
     }
 
+    /**
+     *
+     * @return boolean true if player's health is <= 0
+     */
     public boolean isDead() { return this.health.getIntensity() <= 0.0f; }
 
+    /**
+     *
+     * @param damageType, is used when damage is dealt to player from a foe
+     *                    will decrease its health bar
+     */
     public void hit(DamageType damageType) {
         if (damageType.equals(immunityType) || isInGracePeriod)
             return;
@@ -308,6 +371,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         isInGracePeriod = true;
     }
 
+    /**
+     *
+     * @param restorationFactor will heal the player by the restoration factor
+     */
     public void heal(int restorationFactor) {
         health.increase(restorationFactor);
     }
@@ -354,7 +421,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
-
+    /**
+     * will move the player in the orienation given by the keybinds
+     */
     private void moveIfPressed(Orientation orientation, Button b) {
         if (b.isDown()) {
             if (!isDisplacementOccurs()) {
@@ -364,6 +433,10 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
     }
 
+    /**
+     *
+     * @param damageType sets immunity to this damage type
+     */
     private void setImmunityType(DamageType damageType) {
         this.immunityType = damageType;
     }
@@ -483,6 +556,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
     }
 
+    /**
+     * enum associates damage type to the damage dealt, and its name
+     */
     public enum DamageType {
         PHYSICAL(2, "physical"),
         EXPLOSIVE(5, "explosive"),

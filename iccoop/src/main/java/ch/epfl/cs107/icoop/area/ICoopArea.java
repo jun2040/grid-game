@@ -22,11 +22,20 @@ public abstract class ICoopArea extends Area implements Logic {
 
     public abstract DiscreteCoordinates getPlayerSpawnPosition(int id);
     public abstract Orientation getSpawnOrientation();
-
+    /**
+     *
+     * @param context, allows the setting of hte dialog handler
+     */
     public ICoopArea(Context context) {
         this.context = context;
     }
 
+    /**
+     *
+     * @param window (Window): display context. Not null
+     * @param fileSystem (FileSystem): given file system. Not null
+     * @return true if successfully started area
+     */
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             this.areaBehavior = new ICoopBehavior(window, getTitle(), this);
@@ -37,6 +46,10 @@ public abstract class ICoopArea extends Area implements Logic {
         return false;
     }
 
+    /**
+     *
+     * @return the Context object of this Icooparea
+     */
     protected Context getContext() {
         return context;
     }

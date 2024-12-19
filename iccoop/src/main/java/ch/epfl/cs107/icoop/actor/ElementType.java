@@ -6,7 +6,15 @@ public enum ElementType {
     NONE("")
     ;
 
+    /**
+     *
+     */
     private final String name;
+
+    /**
+     *
+     * @param name (String) : enum element name. can be Null
+     */
     ElementType(String name) {
         this.name = name;
     }
@@ -15,6 +23,13 @@ public enum ElementType {
         return name;
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     *
+     * Description : will return enum type for respective element name (String)
+     */
     public static ElementType fromString(String name) {
         for (ElementType type : ElementType.values()) {
             if (type.name.equals(name))

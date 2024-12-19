@@ -27,11 +27,15 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
     private boolean isActive;
 
     /**
+     *
      * Default AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param isActive    (boolean) : Inital state of the wall if on or off. Not Null
+     * @param spriteName  (String) : Name of the ressource used for the sprite. Not Null
+     * @param elementType   (ElementType): Elemental Type of the wall. Not Null
      */
     public ElementalWall(
             Area area,

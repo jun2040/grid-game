@@ -18,6 +18,10 @@ public class OrbWay extends ICoopArea {
             new DiscreteCoordinates[] { new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5) };
     public static Orientation SPAWN_ORIENTATION = RIGHT;
 
+    /**
+     *
+     * @param context, allows the setting of hte dialog handler
+     */
     public OrbWay(Context context) {
         super(context);
     }
@@ -99,7 +103,9 @@ public class OrbWay extends ICoopArea {
 
         complete();
     }
-
+    /**
+     * associates door with pressure plate for activation/deactiation
+     */
     private void addElementalWall(ElementalWall elementalWall, PressurePlate pressurePlate) {
         pressurePlate.linkWall(elementalWall);
         registerActor(elementalWall);
@@ -108,6 +114,10 @@ public class OrbWay extends ICoopArea {
     @Override
     public boolean isViewCentered() { return true; }
 
+    /**
+     *
+     * @return orientation of the arriving player
+     */
     public Orientation getSpawnOrientation(){
         return Spawn.TOP_RIGHT_ORIENTATION;
     }

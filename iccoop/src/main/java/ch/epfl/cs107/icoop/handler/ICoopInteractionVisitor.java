@@ -14,6 +14,14 @@ public interface ICoopInteractionVisitor extends AreaInteractionVisitor {
     @Override
     void interactWith(Interactable other, boolean isCellInteraction);
 
+    /**
+     *
+     * @param door
+     * @param isCellInteraction
+     *
+     * Description : sets default interctwith methods for each ojbect, creating encapsulation for each interaction
+     */
+
     default void interactWith(Door door, boolean isCellInteraction) {}
     default void interactWith(Rock rock, boolean isCellInteraction) {}
     default void interactWith(Explosive explosive, boolean isCellInteraction) {}

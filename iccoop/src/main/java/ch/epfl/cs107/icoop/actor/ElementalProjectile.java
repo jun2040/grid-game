@@ -22,8 +22,8 @@ public class ElementalProjectile extends Projectile {
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
-     * @param speed
-     * @param range
+     * @param speed       (int): Initial speed of the entity. Not null
+     * @param range       (int): Total range of entity. Not null
      */
     public ElementalProjectile(Area area, Orientation orientation, DiscreteCoordinates position, int speed, int range, ElementType elementType) {
         super(area, orientation, position, speed, range);
@@ -48,6 +48,9 @@ public class ElementalProjectile extends Projectile {
         animation.draw(canvas);
     }
 
+    /**
+     * unregisters actor from area
+     */
     private void unregister() {
         getOwnerArea().unregisterActor(this);
     }
@@ -57,10 +60,21 @@ public class ElementalProjectile extends Projectile {
         other.acceptInteraction(handler, isCellInteraction);
     }
 
+    /**
+     * ElementalProjectileInteractionHandler: activates event when foreign actor interacts with it
+     */
     private class ElementalProjectileInteractionHandler implements ICoopInteractionVisitor {
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {}
 
+        /**
+         *
+         * @param enemy
+         * @param isCellInteraction
+         *
+         * Description : While the enemy is still alive and interacts with the projectile,
+         *               it will receive damage based on the enemy's elemental type.
+         */
         @Override
         public void interactWith(Enemy enemy, boolean isCellInteraction) {
             if (isCellInteraction && !enemy.isDead()) {
@@ -70,6 +84,13 @@ public class ElementalProjectile extends Projectile {
             }
         }
 
+        /**
+         *
+         * @param rock
+         * @param isCellInteraction
+         *
+         * Description : Destroys rock with which it comes into contact with
+         */
         @Override
         public void interactWith(Rock rock, boolean isCellInteraction) {
             if(isCellInteraction){

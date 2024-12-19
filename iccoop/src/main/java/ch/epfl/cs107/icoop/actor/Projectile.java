@@ -23,6 +23,8 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
+     * @param speed       (int): Initial speed of the entity. Not null
+     * @param range       (int): Total range of entity. Not null
      */
     public Projectile(Area area, Orientation orientation, DiscreteCoordinates position, int speed, int range) {
         super(area, orientation, position);
@@ -43,10 +45,16 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
             destroy();
     }
 
+    /**
+     * calls unregister
+     */
     public void destroy() {
         unregister();
     }
 
+    /**
+     * unregisters the projectile from the current area
+     */
     private void unregister() {
         getOwnerArea().unregisterActor(this);
     }

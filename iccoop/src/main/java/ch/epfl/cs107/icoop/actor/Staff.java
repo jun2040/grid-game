@@ -22,6 +22,15 @@ public class Staff extends ElementalItem {
 
     private final Animation animation;
 
+    /**
+     *
+     * Default AreaEntity constructor
+     *
+     * @param area        (Area): Owner area. Not null
+     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param elementType (ElementType): Elemental type of item. Can be NULL
+     * @param spriteName (String) : sprite name used to get sprite. Not null
+     */
     public Staff(Area area, DiscreteCoordinates position, ElementType elementType, String spriteName) {
         super(area, UP, position, elementType);
 

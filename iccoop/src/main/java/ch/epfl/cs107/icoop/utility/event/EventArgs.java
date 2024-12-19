@@ -7,5 +7,8 @@ https://github.com/dotnet/runtime/blob/1d1bf92fcf43aa6981804dc53c5174445069c9e4/
 public class EventArgs {
     public static EventArgs EMPTY = new EventArgs();
 
+    /**
+     * event arguments which are passed on, ensuring all and only necessary information is given
+     */
     public EventArgs() {}
 }

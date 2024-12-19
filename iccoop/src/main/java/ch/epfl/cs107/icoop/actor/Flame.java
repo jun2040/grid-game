@@ -20,8 +20,8 @@ public class Flame extends Projectile {
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
-     * @param speed
-     * @param range
+     * @param speed       (int): Initial speed of the entity. Not null
+     * @param range       (int): Total range of entity. Not null
      */
     public Flame(Area area, Orientation orientation, DiscreteCoordinates position, int speed, int range) {
         super(area, orientation, position, speed, range);
@@ -44,6 +44,10 @@ public class Flame extends Projectile {
         other.acceptInteraction(handler, isCellInteraction);
     }
 
+    /**
+     * FlameProjectileInteractionHandler : deals damage to the player stepping into it,
+     *                                      activates bombs on contact
+     */
     private class FlameProjectileInteractionHandler implements ICoopInteractionVisitor {
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {
