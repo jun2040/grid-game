@@ -71,7 +71,6 @@ public class Spawn extends ICoopArea {
                 new DiscreteCoordinates(11, 3)
         ));
 
-
         manorDoor = new DialogDoor(
                 this, DOWN, false,
                 new DiscreteCoordinates(6, 11),
@@ -87,6 +86,8 @@ public class Spawn extends ICoopArea {
         registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(8, 7), 100));
 
         registerActor(new Chest(this, UP, new DiscreteCoordinates(13, 16), Logic.FALSE, getContext().getDialogHandler()));
+
+        registerActor(new Grenadier(this, DOWN, new DiscreteCoordinates(7, 7)));
 
         for(int i = 0; i < 8; i++)
         {

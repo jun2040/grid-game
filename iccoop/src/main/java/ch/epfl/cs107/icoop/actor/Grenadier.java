@@ -90,6 +90,8 @@ public class Grenadier extends Enemy {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        System.out.println(currentState);
+
         switch (currentState) {
             case IDLE:
                 idle(deltaTime);
@@ -237,6 +239,12 @@ public class Grenadier extends Enemy {
     /***** IMPLEMENTATIONS *****/
 
     @Override
+    public void hit(ICoopPlayer.DamageType damageType) {
+        if (!currentState.equals(GrenadierState.PROTECT))
+            super.hit(damageType);
+    }
+
+    @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
@@ -261,8 +269,13 @@ public class Grenadier extends Enemy {
     }
 
     @Override
+    public boolean isCellInteractable() {
+        return !currentState.equals(GrenadierState.PROTECT);
+    }
+
+    @Override
     public boolean wantsViewInteraction() {
-        return currentState == GrenadierState.IDLE || currentState == GrenadierState.ATTACK;
+        return !currentState.equals(GrenadierState.PROTECT);
     }
 
     @Override
