@@ -60,7 +60,7 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+        return List.of();
     }
 
     @Override
