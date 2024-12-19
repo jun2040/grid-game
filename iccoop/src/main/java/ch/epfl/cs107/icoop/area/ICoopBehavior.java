@@ -1,9 +1,6 @@
 package ch.epfl.cs107.icoop.area;
 
-import ch.epfl.cs107.icoop.actor.ElementalEntity;
-import ch.epfl.cs107.icoop.actor.Obstacle;
-import ch.epfl.cs107.icoop.actor.Rock;
-import ch.epfl.cs107.icoop.actor.Unstoppable;
+import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
