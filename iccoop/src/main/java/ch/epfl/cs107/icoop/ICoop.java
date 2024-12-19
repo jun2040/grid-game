@@ -120,8 +120,10 @@ public class ICoop extends AreaGame implements DialogHandler {
     public void draw() {
         super.draw();
 
-        if (dialog != null)
+        if (dialog != null && !dialog.isCompleted())
             dialog.draw(getWindow());
+        else
+            ((ICoopArea) getCurrentArea()).setIsDirty(Logic.FALSE);
     }
 
     // TODO: Pause when dialog opens

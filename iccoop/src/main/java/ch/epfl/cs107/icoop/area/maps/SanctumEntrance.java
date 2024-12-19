@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.math.Orientation;
 
 public class SanctumEntrance extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
-            new DiscreteCoordinates[] { new DiscreteCoordinates(1, 5), new DiscreteCoordinates(2, 5) };
+            new DiscreteCoordinates[] { new DiscreteCoordinates(9, 0), new DiscreteCoordinates(10, 0) };
     public SanctumEntrance(Context context) {
         super(context);
     }

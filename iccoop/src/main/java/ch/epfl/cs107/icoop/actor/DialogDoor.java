@@ -14,8 +14,10 @@ import java.util.List;
 
 public class DialogDoor extends Door implements Interactor {
     private final DialogHandler dialogHandler;
-    private final Dialog openedDialog;
-    private final Dialog closedDialog;
+    private Dialog openedDialog;
+    private Dialog closedDialog;
+    private final String openedDialogString;
+    private final String closedDialogString;
 
     private final DialogDoorInteractionHandler interactionHandler;
 
@@ -34,8 +36,11 @@ public class DialogDoor extends Door implements Interactor {
         super(area, orientation,destinationAreaName, isOpen, targetCoords, mainPosition);
 
         this.dialogHandler = dialogHandler;
-        this.openedDialog = new Dialog(openedDialogPath);
-        this.closedDialog = new Dialog(closedDialogPath);
+        this.openedDialogString = openedDialogPath;
+        this.closedDialogString = closedDialogPath;
+
+        openedDialog = new Dialog(openedDialogString);
+        closedDialog = new Dialog(closedDialogString);
 
         this.interactionHandler = new DialogDoorInteractionHandler();
     }
@@ -71,7 +76,12 @@ public class DialogDoor extends Door implements Interactor {
 
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
+            if(player.isDisplacementOccurs()){
+                openedDialog = new Dialog(openedDialogString);
+                closedDialog = new Dialog(closedDialogString);
+            }
             if (isCellInteraction && !player.isDisplacementOccurs()) {
+
                 if (isOn())
                     dialogHandler.publish(openedDialog);
                 else

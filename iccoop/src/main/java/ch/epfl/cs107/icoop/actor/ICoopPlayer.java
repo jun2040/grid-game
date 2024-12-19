@@ -57,7 +57,6 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private int gracePeriodTimer = 0;
     private PlayerState currentState;
 
-
     //private String prefix;
     /**
      * Default MovableAreaEntity constructor
@@ -108,7 +107,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         String name = spriteName.equals("player") ? "player.staff_water" : "player2.staff_water";
         this.staffAttackAnimation = new OrientedAnimation(
                 "icoop/" + name, STAFF_ANIMATION_DURATION , this ,
-                staffAttackAnimAnchor, orders ,
+                staffAttackAnimAnchor, attackOrders ,
                 4, 2, 2, 32, 32);
 
         this.health = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
