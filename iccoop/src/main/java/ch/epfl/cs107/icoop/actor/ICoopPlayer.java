@@ -428,7 +428,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     /**
-     * will move the player in the orienation given by the keybinds
+     * Moves the player in the orientation given by the keybinds.
      */
     private void moveIfPressed(Orientation orientation, Button b) {
         if (b.isDown()) {
@@ -440,7 +440,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     /**
-     * @param damageType sets immunity to this damage type
+     * Sets immunity to a specific damage type.
+     *
+     * @param damageType the damage type to be set as immune.
      */
     private void setImmunityType(DamageType damageType) {
         this.immunityType = damageType;
@@ -560,7 +562,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     /**
-     * enum associates damage type to the damage dealt, and its name
+     * Enum representing different damage types and their properties.
      */
     public enum DamageType {
         PHYSICAL(2, "physical"),
@@ -577,6 +579,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             this.damageName = damageName;
         }
 
+        /**
+         * Converts a string to a corresponding DamageType.
+         *
+         * @param damageName (String): The name of the damage type.
+         * @return (DamageType): The corresponding damage type.
+         */
         public static DamageType toType(String damageName) {
             for (DamageType damageType : DamageType.values()) {
                 if (damageType.damageName.equals(damageName))
@@ -587,6 +595,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         }
     }
 
+    /**
+     * Enum representing the possible states of the player.
+     */
     private enum PlayerState {
         IDLE,
         ATTACK;
