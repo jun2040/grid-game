@@ -63,14 +63,6 @@ public class Spawn extends ICoopArea {
                 new DiscreteCoordinates(5, 0)
         ));
 
-        //bypass to be removed
-        registerActor(new Door(
-                this, UP, "SanctumEntrance", true,
-                TEMP_ARRIVAL_POINTS,
-                new DiscreteCoordinates(11, 4),
-                new DiscreteCoordinates(11, 3)
-        ));
-
         manorDoor = new DialogDoor(
                 this, DOWN, false,
                 new DiscreteCoordinates(6, 11),
