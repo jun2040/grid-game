@@ -37,8 +37,10 @@ public abstract class Projectile extends MovableAreaEntity implements Interactor
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        move(MOVE_DURATION / speed);
-        range--;
+        if (!isDisplacementOccurs()) {
+            move(MOVE_DURATION / speed);
+            range--;
+        }
 
         // TODO: Destroy projectile when it reaches map border / static props
         if (range < 0)

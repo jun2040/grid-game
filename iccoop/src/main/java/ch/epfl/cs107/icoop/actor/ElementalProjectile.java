@@ -14,6 +14,8 @@ public class ElementalProjectile extends Projectile {
     private final Animation animation;
     private final ElementType elementType;
 
+    private int hitCount;
+
     private final ElementalProjectileInteractionHandler handler;
 
     /**
@@ -30,7 +32,7 @@ public class ElementalProjectile extends Projectile {
 
         // FIXME: Encapsulate in enum;
         String name = "icoop/" + (elementType.getName().equals("feu") ? "magicFireProjectile" : "magicWaterProjectile");
-        this.animation = new Animation(name , 4, 1, 1, this , 32, 32,
+        this.animation = new Animation(name, 4, 1, 1, this, 32, 32,
                 ANIMATION_DURATION / 4, true);
         this.elementType = elementType;
         this.handler = new ElementalProjectileInteractionHandler();
@@ -48,13 +50,6 @@ public class ElementalProjectile extends Projectile {
         animation.draw(canvas);
     }
 
-    /**
-     * unregisters actor from area
-     */
-    private void unregister() {
-        getOwnerArea().unregisterActor(this);
-    }
-
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(handler, isCellInteraction);
@@ -65,7 +60,8 @@ public class ElementalProjectile extends Projectile {
      */
     private class ElementalProjectileInteractionHandler implements ICoopInteractionVisitor {
         @Override
-        public void interactWith(Interactable other, boolean isCellInteraction) {}
+        public void interactWith(Interactable other, boolean isCellInteraction) {
+        }
 
         /**
          *
@@ -93,11 +89,21 @@ public class ElementalProjectile extends Projectile {
          */
         @Override
         public void interactWith(Rock rock, boolean isCellInteraction) {
-            if(isCellInteraction){
-                rock.destroy();
-                unregister();
-            }
+            if (isCellInteraction) {
+                if (hitCount >= 3) {
+                    destroy();
+                    return;
+                }
 
+                rock.destroy();
+                hitCount++;
+            }
+        }
+
+        @Override
+        public void interactWith(Obstacle obstacle, boolean isCellInteraction) {
+            if (isCellInteraction)
+                destroy();
         }
     }
 }
