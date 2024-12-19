@@ -26,9 +26,12 @@ public class DialogDoor extends Door implements Interactor {
             DiscreteCoordinates mainPosition,
             DialogHandler dialogHandler,
             String openedDialogPath,
-            String closedDialogPath
+            String closedDialogPath,
+            String destinationAreaName,
+            DiscreteCoordinates[] targetCoords
+
     ) {
-        super(area, orientation, isOpen, mainPosition);
+        super(area, orientation,destinationAreaName, isOpen, targetCoords, mainPosition);
 
         this.dialogHandler = dialogHandler;
         this.openedDialog = new Dialog(openedDialogPath);
