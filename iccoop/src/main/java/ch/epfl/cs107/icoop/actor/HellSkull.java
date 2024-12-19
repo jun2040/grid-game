@@ -2,6 +2,7 @@ package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.utility.Timer;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.area.Area;
@@ -23,7 +24,7 @@ public class HellSkull extends Enemy {
     private final OrientedAnimation animation;
     private final HellSkullInteractionHandler handler = new HellSkullInteractionHandler();
 
-    private float flameSpawnTimer;
+    private final Timer flameSpawnTimer;
 
     /**
      * Default MovableAreaEntity constructor
@@ -42,7 +43,7 @@ public class HellSkull extends Enemy {
                 new Vector(-0.5f, -0.5f), orders ,
                 3, 2, 2, 32, 32, true);
 
-        this.flameSpawnTimer = RandomGenerator.getInstance().nextFloat(0.5f, 2.0f);
+        this.flameSpawnTimer = new Timer(RandomGenerator.getInstance().nextFloat(0.5f, 2.0f));
     }
 
     @Override
@@ -59,11 +60,11 @@ public class HellSkull extends Enemy {
 
         animation.update(deltaTime);
 
-        if (flameSpawnTimer >= 0.0f) {
-            flameSpawnTimer -= deltaTime;
-        } else {
+        flameSpawnTimer.update(deltaTime);
+
+        if (flameSpawnTimer.isCompleted()) {
             launchFlames();
-            flameSpawnTimer =  RandomGenerator.getInstance().nextFloat(0.5f, 2.0f);
+            flameSpawnTimer.setTimer(RandomGenerator.getInstance().nextFloat(0.5f, 2.0f));
         }
     }
 
