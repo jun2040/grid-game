@@ -338,6 +338,11 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     public boolean isViewInteractable() { return true; }
 
     @Override
+    public boolean isDisplacementOccurs() {
+        return super.isDisplacementOccurs();
+    }
+
+    @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(handler, isCellInteraction);
     }
