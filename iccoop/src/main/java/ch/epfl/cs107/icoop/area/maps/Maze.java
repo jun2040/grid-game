@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.And;
 import ch.epfl.cs107.play.signal.logic.Logic;
+import ch.epfl.cs107.play.signal.logic.Not;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
 
@@ -68,27 +69,27 @@ public class Maze extends ICoopArea {
 
         registerActor(new Explosive(this, UP, new DiscreteCoordinates(6, 25), 100));
 
-        addElementalWall(new ElementalWall(
+        registerActor(new ElementalWall(
                 this, DOWN, new DiscreteCoordinates(8, 20),
-                true/*Logic.TRUE*/, "fire_wall", ElementType.FIRE
-        ), redPressurePlate);
+                new Not(redPressurePlate), "fire_wall", ElementType.FIRE
+        ));
 
         for (int i = 0; i < 2; ++i) {
-            addElementalWall(new ElementalWall(
+            registerActor(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(7, 35 + i),
-                    true/*Logic.TRUE*/, "fire_wall", ElementType.FIRE
-            ), bluePressurePlate);
+                    new Not(bluePressurePlate), "fire_wall", ElementType.FIRE
+            ));
             registerActor(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(4, 35 + i),
-                    true/*Logic.TRUE*/, "water_wall", ElementType.WATER
+                    Logic.TRUE, "water_wall", ElementType.WATER
             ));
             registerActor(new ElementalWall(
                     this, DOWN, new DiscreteCoordinates(2 + i, 34),
-                    true/*Logic.TRUE*/, "fire_wall", ElementType.FIRE
+                    Logic.TRUE, "fire_wall", ElementType.FIRE
             ));
             registerActor(new ElementalWall(
                     this, DOWN, new DiscreteCoordinates(5 + i, 24),
-                    true/*Logic.TRUE*/, "water_wall", ElementType.WATER
+                    Logic.TRUE, "water_wall", ElementType.WATER
             ));
         }
 
@@ -110,40 +111,15 @@ public class Maze extends ICoopArea {
 
         registerActor(new ElementalWall(
                 this, DOWN, new DiscreteCoordinates(13, 4),
-                true/*Logic.TRUE*/, "fire_wall", ElementType.FIRE
+                Logic.TRUE, "fire_wall", ElementType.FIRE
         ));
         registerActor(new ElementalWall(
                 this, DOWN, new DiscreteCoordinates(8, 4),
-                true/*Logic.TRUE*/, "water_wall", ElementType.WATER
+                Logic.TRUE, "water_wall", ElementType.WATER
         ));
 
         registerActor(new Rock(this, UP, new DiscreteCoordinates(15, 7)));
         registerActor(new Rock(this, UP, new DiscreteCoordinates(15, 6)));
-    }
-
-    @Override
-    public boolean isViewCentered() {
-        return false;
-    }
-
-    @Override
-    public DiscreteCoordinates getPlayerSpawnPosition(int id) {
-        return ARRIVAL_POINTS[id];
-    }
-
-    /**
-     * associates door with pressure plate for activation/deactiation
-     */
-    private void addElementalWall(ElementalWall elementalWall, PressurePlate pressurePlate) {
-        pressurePlate.linkWall(elementalWall);
-        registerActor(elementalWall);
-    }
-
-    /**
-     * @return orientation of the arriving player
-     */
-    public Orientation getSpawnOrientation() {
-        return SPAWN_ORIENTATION;
     }
 
     /**
@@ -157,6 +133,18 @@ public class Maze extends ICoopArea {
 
         if (new And(fireStaff, waterStaff).isOn())
             complete();
+    }
+
+    @Override
+    public DiscreteCoordinates getPlayerSpawnPosition(int id) {
+        return ARRIVAL_POINTS[id];
+    }
+
+    /**
+     * @return orientation of the arriving player
+     */
+    public Orientation getSpawnOrientation() {
+        return SPAWN_ORIENTATION;
     }
 
     @Override

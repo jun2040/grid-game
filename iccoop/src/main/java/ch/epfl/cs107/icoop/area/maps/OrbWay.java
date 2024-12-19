@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
+import ch.epfl.cs107.play.signal.logic.Not;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
 import static ch.epfl.cs107.icoop.actor.ElementType.*;
@@ -73,23 +74,23 @@ public class OrbWay extends ICoopArea {
          * Create & register elemental walls
          */
         for (int i = 0; i < 5; ++i) {
-            addElementalWall(new ElementalWall(
+            registerActor(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 10 + i),
-                    true, "fire_wall", FIRE
-            ), bluePressurePlate);
-            addElementalWall(new ElementalWall(
+                    new Not(bluePressurePlate), "fire_wall", FIRE
+            ));
+            registerActor(new ElementalWall(
                     this, LEFT, new DiscreteCoordinates(12, 4 + i),
-                    true, "water_wall", WATER
-            ), redPressurePlate);
+                    new Not(redPressurePlate), "water_wall", WATER
+            ));
         }
 
         registerActor(new ElementalWall(
                 this, LEFT, new DiscreteCoordinates(7, 12),
-                true, "water_wall", WATER
+                Logic.TRUE, "water_wall", WATER
         ));
         registerActor(new ElementalWall(
                 this, LEFT, new DiscreteCoordinates(7, 6),
-                true, "fire_wall", FIRE
+                Logic.TRUE, "fire_wall", FIRE
         ));
 
         /*
@@ -101,14 +102,6 @@ public class OrbWay extends ICoopArea {
         registerActor(new Heart(this, LEFT, new DiscreteCoordinates(10, 11), 1));
 
         complete();
-    }
-
-    /**
-     * associates door with pressure plate for activation/deactiation
-     */
-    private void addElementalWall(ElementalWall elementalWall, PressurePlate pressurePlate) {
-        pressurePlate.linkWall(elementalWall);
-        registerActor(elementalWall);
     }
 
     @Override

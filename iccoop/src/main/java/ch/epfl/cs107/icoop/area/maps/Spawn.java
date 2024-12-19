@@ -3,14 +3,11 @@ package ch.epfl.cs107.icoop.area.maps;
 import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.Context;
-import ch.epfl.cs107.icoop.handler.DialogHandler;
-import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
-import ch.epfl.cs107.play.signal.logic.Logic;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
 
@@ -30,19 +27,6 @@ public class Spawn extends ICoopArea {
 
     public Spawn(Context context) {
         super(context);
-    }
-
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-
-        if (!isDirty) {
-            getContext().getDialogHandler().publish(new Dialog("welcome"));
-            isDirty = true;
-        }
-
-        if (isOn())
-            manorDoor.open();
     }
 
     @Override
@@ -83,6 +67,19 @@ public class Spawn extends ICoopArea {
             registerActor(new Grass(this, UP, new DiscreteCoordinates(12, 8+i)));
             registerActor(new Grass(this, UP, new DiscreteCoordinates(14, 8+i)));
         }
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if (!isDirty) {
+            getContext().getDialogHandler().publish(new Dialog("welcome"));
+            isDirty = true;
+        }
+
+        if (isOn())
+            manorDoor.open();
     }
 
     @Override
