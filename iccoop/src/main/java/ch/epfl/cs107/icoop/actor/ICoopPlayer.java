@@ -413,9 +413,8 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(Orb orb, boolean isCellInteraction) {
-            if (isCellInteraction && orb.element().equals(element)) {
-                if (!orb.isCollected())
-                    orb.triggerDialog();
+            if (isCellInteraction && orb.element().equals(element) && !orb.isCollected()) {
+                orb.triggerDialog();
                 setImmunityType(DamageType.toType(orb.element()));
             }
         }
