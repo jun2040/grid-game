@@ -513,7 +513,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         @Override
         public void interactWith(PressurePlate pressurePlate, boolean isCellInteraction) {
             if (isCellInteraction)
-                pressurePlate.activate();
+                pressurePlate.press();
         }
 
         @Override

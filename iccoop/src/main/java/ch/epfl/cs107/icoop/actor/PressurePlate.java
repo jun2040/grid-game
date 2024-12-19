@@ -1,9 +1,6 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
-import ch.epfl.cs107.icoop.utility.event.EventArgs;
-import ch.epfl.cs107.icoop.utility.event.WallActivateEvent;
-import ch.epfl.cs107.icoop.utility.event.WallActivateEventArgs;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
@@ -20,8 +17,8 @@ import java.util.List;
 
 public class PressurePlate extends AreaEntity implements Logic {
     private boolean isPressed = false;
+    private boolean isActive = false;
 
-    private final WallActivateEvent wallActivateEvent = new WallActivateEvent();
     private final Sprite plateSprite;
 
     /**
@@ -45,34 +42,23 @@ public class PressurePlate extends AreaEntity implements Logic {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (isPressed)
-            wallActivateEvent.emit(new WallActivateEventArgs(false));
-        else
-            wallActivateEvent.emit(new WallActivateEventArgs(true));
+        isActive = isPressed;
 
-        deactivate();
+        depress();
     }
 
     /**
      * activates the pressure plate ( so animation and desired outcomes will be impacted)
      */
-    public void activate() {
+    public void press() {
         isPressed = true;
     }
 
     /**
      * deactivates the pressure plate ( so animation and desired outcomes will be impacted)
      */
-    public void deactivate() {
+    public void depress() {
         isPressed = false;
-    }
-
-    /**
-     * @param elementalWall, will associate the target wall with this pressure plate to make them intertwined
-     *                       and allow the pressure plate to control the wall
-     */
-    public void linkWall(ElementalWall elementalWall) {
-        wallActivateEvent.addEventListener(elementalWall);
     }
 
     @Override
@@ -102,11 +88,11 @@ public class PressurePlate extends AreaEntity implements Logic {
 
     @Override
     public boolean isOn() {
-        return isPressed;
+        return isActive;
     }
 
     @Override
     public boolean isOff() {
-        return !isPressed;
+        return !isActive;
     }
 }

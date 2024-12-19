@@ -1,7 +1,6 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
-import ch.epfl.cs107.icoop.utility.event.WallActivateEventListener;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -18,12 +17,12 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor, Logic, WallActivateEventListener {
+public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor, Logic {
     private final Sprite[] wallSprites;
     private final ElementType elementType;
     private ElementType currentElementType;
 
-    private boolean isActive;
+    private final Logic isActive;
 
     /**
      * Default AreaEntity constructor
@@ -31,7 +30,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-     * @param isActive    (boolean) : Inital state of the wall if on or off. Not Null
+     * @param isActive    (Logic) : Inital state of the wall if on or off. Not Null
      * @param spriteName  (String) : Name of the ressource used for the sprite. Not Null
      * @param elementType (ElementType): Elemental Type of the wall. Not Null
      */
@@ -39,13 +38,13 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
             Area area,
             Orientation orientation,
             DiscreteCoordinates position,
-            boolean isActive,
+            Logic isActive,
             String spriteName,
             ElementType elementType
     ) {
         super(area, orientation, position);
 
-        this.isActive = isActive; // TODO: Activate only when this attribute is true
+        this.isActive = isActive;
 
         this.wallSprites = RPGSprite.extractSprites(
                 spriteName, 4, 1, 1,
@@ -53,18 +52,22 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
         );
         this.elementType = elementType;
         this.currentElementType = elementType;
-
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if (isActive)
+        if (isActive.isOn())
             wallSprites[getOrientation().ordinal()].draw(canvas);
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        if (isActive.isOn())
+            currentElementType = elementType;
+        else
+            currentElementType = ElementType.NONE;
     }
 
     /*
@@ -102,13 +105,13 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return Collections.emptyList();
+        return List.of();
     }
 
     @Override
     public boolean takeCellSpace() {
         return true;
-    } //TODO should it not be true?
+    }
 
     @Override
     public boolean isCellInteractable() {
@@ -125,21 +128,6 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
 
-    /*
-     * Listener implementation
-     */
-    @Override
-    public void activate() {
-        isActive = true;
-        currentElementType = elementType;
-    }
-
-    @Override
-    public void deactivate() {
-        isActive = false;
-        currentElementType = ElementType.NONE;
-    }
-
     public void destroy() {
         unregister();
     }
@@ -150,11 +138,11 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
 
     @Override
     public boolean isOn() {
-        return isActive;
+        return isActive.isOn();
     }
 
     @Override
     public boolean isOff() {
-        return !isActive;
+        return isActive.isOff();
     }
 }
