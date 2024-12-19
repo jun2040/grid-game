@@ -56,6 +56,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     private DamageType immunityType;
     private final Timer gracePeriodTimer;
     private PlayerState currentState;
+    private boolean canFire = true;
 
     //private String prefix;
     /**
@@ -147,6 +148,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         gracePeriodTimer.update(deltaTime);
 
+        if (staffAttackAnimation.isCompleted())
+            canFire = true;
+
         if (keyboard.get(keybinds.useItem()).isPressed()) {
             boolean success = false;
 
@@ -159,12 +163,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                     break;
                 case STAFF_WATER:
                 case STAFF_FIRE:
+                    if (canFire) {
                         getOwnerArea().registerActor(
                                 new ElementalProjectile(
                                         getOwnerArea(), getOrientation(),
                                         getFieldOfViewCells().getFirst(),
                                         5, 50, ElementType.fromString(element)
                                 ));
+                        canFire = false;
+                    }
+
                     currentState = PlayerState.ATTACK;
                     break;
                 default:
