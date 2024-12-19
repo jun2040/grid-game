@@ -9,7 +9,6 @@ import ch.epfl.cs107.play.math.Orientation;
 
 public class Sanctum extends ICoopArea {
     /**
-     *
      * @param context, allows the setting of hte dialog handler
      */
     public Sanctum(Context context) {

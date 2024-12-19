@@ -3,16 +3,11 @@ package ch.epfl.cs107.icoop.actor;
 public enum ElementType {
     FIRE("feu"),
     WATER("eau"),
-    NONE("")
-    ;
+    NONE("");
 
-    /**
-     *
-     */
     private final String name;
 
     /**
-     *
      * @param name (String) : enum element name. can be Null
      */
     ElementType(String name) {
@@ -24,11 +19,8 @@ public enum ElementType {
     }
 
     /**
-     *
      * @param name
-     * @return
-     *
-     * Description : will return enum type for respective element name (String)
+     * @return Description : will return enum type for respective element name (String)
      */
     public static ElementType fromString(String name) {
         for (ElementType type : ElementType.values()) {

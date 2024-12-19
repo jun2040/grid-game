@@ -34,7 +34,7 @@ public class Explosive extends ICoopCollectable implements Interactor {
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-     * @param timer         (int) : latency timer before explosion. Not null
+     * @param timer       (int) : latency timer before explosion. Not null
      */
     public Explosive(Area area,
                      Orientation orientation,
@@ -66,15 +66,20 @@ public class Explosive extends ICoopCollectable implements Interactor {
 
         this.handler = new ExplosiveInteractionHandler();
     }
+
     /**
      * checks if bomb is activated
      */
-    public boolean isActivated() { return isActivated; }
+    public boolean isActivated() {
+        return isActivated;
+    }
 
     /**
      * checks if bomb has exploded
      */
-    public boolean isExploded() { return isExploded; }
+    public boolean isExploded() {
+        return isExploded;
+    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -86,6 +91,7 @@ public class Explosive extends ICoopCollectable implements Interactor {
         if (!isExploded)
             explosive.draw(canvas);
     }
+
     /**
      * will activate timer, explode when timer <= 0, unregister bomb once exploded
      */
@@ -112,7 +118,9 @@ public class Explosive extends ICoopCollectable implements Interactor {
     /**
      * activates bomb
      */
-    public void activate() { isActivated = true;}
+    public void activate() {
+        isActivated = true;
+    }
 
     /**
      * explodes bomb
@@ -120,11 +128,6 @@ public class Explosive extends ICoopCollectable implements Interactor {
     private void explode() {
         timer = 0;
         isExploded = true;
-    }
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override

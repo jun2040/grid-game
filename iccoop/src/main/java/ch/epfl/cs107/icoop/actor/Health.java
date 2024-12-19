@@ -20,7 +20,6 @@ import java.util.List;
  * Health also implements Logic, which allows to know if the entity lost all of its health points or not.
  */
 public class Health implements Graphics, Logic {
-
     /**
      * A positionable to the parent entity to draw the health bar on top of
      */
@@ -90,21 +89,20 @@ public class Health implements Graphics, Logic {
      */
     @Override
     public void draw(Canvas canvas) {
-        // draws the grey outline
+        // Draws the grey outline
         canvas.drawShape(new Polygon(List.of(
                 new Vector(0.1f, 0),
                 new Vector(0.9f, 0),
                 new Vector(0.9f, 0.15f),
                 new Vector(0.1f, 0.15f)
         )), parent.getTransform().transformed(transform), Color.GRAY, Color.BLACK, 0.1f, 1, 0);
-        // draws the green / red bar
+        // Draws the green / red bar
         canvas.drawShape(new Polygon(List.of(
                 new Vector(0.1f, 0),
                 new Vector(0.8f * healthPoints / maxHealth + 0.1f, 0),
-                new Vector(0.8f*  healthPoints / maxHealth + 0.1f, 0.15f),
+                new Vector(0.8f * healthPoints / maxHealth + 0.1f, 0.15f),
                 new Vector(0.1f, 0.15f)
         )), parent.getTransform().transformed(transform), isFriendly ? Color.GREEN : Color.RED, null, 0, 0.5f, 0);
-
     }
 
     /**

@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Projectile extends MovableAreaEntity implements Interactor, Unstoppable {
-    private static int MOVE_DURATION = 10;
+    private final static int MOVE_DURATION = 10;
 
     private final int speed;
     private int range;

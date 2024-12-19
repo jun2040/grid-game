@@ -25,14 +25,20 @@ public class Rock extends Obstacle {
 
         this.sprite = new Sprite("rock.1", 1, 1, this);
     }
+
     /**
      * calls unregister
      */
-    public void destroy() { unregister(); }
+    public void destroy() {
+        unregister();
+    }
+
     /**
      * unregisters the projectile from the current area
      */
-    private void unregister() { getOwnerArea().unregisterActor(this); }
+    private void unregister() {
+        getOwnerArea().unregisterActor(this);
+    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -41,6 +47,6 @@ public class Rock extends Obstacle {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-        ((ICoopInteractionVisitor) v).interactWith(this,isCellInteraction);
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
 }

@@ -4,7 +4,6 @@ import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.icoop.utility.Timer;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
-import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.engine.actor.OrientedAnimation;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -22,28 +21,31 @@ public class HellSkull extends Enemy {
     private static final int ANIMATION_DURATION = 12;
 
     private final OrientedAnimation animation;
-    private final HellSkullInteractionHandler handler = new HellSkullInteractionHandler();
 
     private final Timer flameSpawnTimer;
+
+    private final HellSkullInteractionHandler interactionHandler;
 
     /**
      * Default MovableAreaEntity constructor
      *
-     * @param area           (Area): Owner area. Not null
-     * @param orientation    (Orientation): Initial orientation of the entity. Not null
-     * @param position       (Coordinate): Initial position of the entity. Not null
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     * @param position    (Coordinate): Initial position of the entity. Not null
      */
     public HellSkull(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 1, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.FIRE, ICoopPlayer.DamageType.EXPLOSIVE)));
 
-        Orientation[] orders = new Orientation []{ Orientation.UP,
-                Orientation.LEFT , Orientation.DOWN , Orientation.RIGHT};
+        Orientation[] orders = new Orientation[]{Orientation.UP,
+                Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT};
         this.animation = new OrientedAnimation("icoop/flameskull",
-                ANIMATION_DURATION / 3, this ,
-                new Vector(-0.5f, -0.5f), orders ,
+                ANIMATION_DURATION / 3, this,
+                new Vector(-0.5f, -0.5f), orders,
                 3, 2, 2, 32, 32, true);
 
         this.flameSpawnTimer = new Timer(RandomGenerator.getInstance().nextFloat(0.5f, 2.0f));
+
+        this.interactionHandler = new HellSkullInteractionHandler();
     }
 
     @Override
@@ -55,10 +57,9 @@ public class HellSkull extends Enemy {
     }
 
     /**
-     *
      * @param deltaTime elapsed time since last update, in seconds, non-negative
-     *
-     * Description : launches new flame at sudo random interavals
+     *                  <p>
+     *                  Description : launches new flame at sudo random interavals
      */
     @Override
     public void update(float deltaTime) {
@@ -97,15 +98,16 @@ public class HellSkull extends Enemy {
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
-        other.acceptInteraction(handler, isCellInteraction);
+        other.acceptInteraction(interactionHandler, isCellInteraction);
     }
 
     /**
      * Description: Damages player when in the same cell (implicit collision)
-     * */
+     */
     private class HellSkullInteractionHandler implements ICoopInteractionVisitor {
         @Override
-        public void interactWith(Interactable other, boolean isCellInteraction) {}
+        public void interactWith(Interactable other, boolean isCellInteraction) {
+        }
 
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {

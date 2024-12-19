@@ -30,7 +30,9 @@ public class Obstacle extends AreaEntity implements Interactable {
     }
 
     @Override
-    public void draw(Canvas canvas) { sprite.draw(canvas); }
+    public void draw(Canvas canvas) {
+        sprite.draw(canvas);
+    }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
@@ -38,13 +40,19 @@ public class Obstacle extends AreaEntity implements Interactable {
     }
 
     @Override
-    public boolean takeCellSpace() { return true; }
+    public boolean takeCellSpace() {
+        return true;
+    }
 
     @Override
-    public boolean isCellInteractable() { return true; }
+    public boolean isCellInteractable() {
+        return true;
+    }
 
     @Override
-    public boolean isViewInteractable() { return true; }
+    public boolean isViewInteractable() {
+        return true;
+    }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {

@@ -23,24 +23,23 @@ public class Staff extends ElementalItem {
     private final Animation animation;
 
     /**
-     *
      * Default AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      * @param elementType (ElementType): Elemental type of item. Can be NULL
-     * @param spriteName (String) : sprite name used to get sprite. Not null
+     * @param spriteName  (String) : sprite name used to get sprite. Not null
      */
     public Staff(Area area, DiscreteCoordinates position, ElementType elementType, String spriteName) {
-        super(area, UP, position, elementType);
+        super(area, position, elementType);
 
         final Sprite[] sprites = new Sprite[8];
         for (int i = 0; i < 8; i++) {
-            sprites[i] = new RPGSprite("icoop/" + spriteName, 2, 2, this , new RegionOfInterest(i *
+            sprites[i] = new RPGSprite("icoop/" + spriteName, 2, 2, this, new RegionOfInterest(i *
                     32, 0, 32, 32), new Vector(-0.5f, 0));
         }
 
-        this.animation = new Animation(ANIMATION_DURATION / ANIMATION_FRAMES , sprites);
+        this.animation = new Animation(ANIMATION_DURATION / ANIMATION_FRAMES, sprites);
 
     }
 

@@ -16,7 +16,7 @@ public class ElementalProjectile extends Projectile {
 
     private int hitCount;
 
-    private final ElementalProjectileInteractionHandler handler;
+    private final ElementalProjectileInteractionHandler interactionHandler;
 
     /**
      * Default MovableAreaEntity constructor
@@ -27,15 +27,23 @@ public class ElementalProjectile extends Projectile {
      * @param speed       (int): Initial speed of the entity. Not null
      * @param range       (int): Total range of entity. Not null
      */
-    public ElementalProjectile(Area area, Orientation orientation, DiscreteCoordinates position, int speed, int range, ElementType elementType) {
+    public ElementalProjectile(
+            Area area,
+            Orientation orientation,
+            DiscreteCoordinates position,
+            int speed,
+            int range,
+            ElementType elementType
+    ) {
         super(area, orientation, position, speed, range);
 
-        // FIXME: Encapsulate in enum;
         String name = "icoop/" + (elementType.getName().equals("feu") ? "magicFireProjectile" : "magicWaterProjectile");
         this.animation = new Animation(name, 4, 1, 1, this, 32, 32,
                 ANIMATION_DURATION / 4, true);
+
         this.elementType = elementType;
-        this.handler = new ElementalProjectileInteractionHandler();
+
+        this.interactionHandler = new ElementalProjectileInteractionHandler();
     }
 
     @Override
@@ -52,7 +60,7 @@ public class ElementalProjectile extends Projectile {
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
-        other.acceptInteraction(handler, isCellInteraction);
+        other.acceptInteraction(interactionHandler, isCellInteraction);
     }
 
     /**
@@ -64,28 +72,21 @@ public class ElementalProjectile extends Projectile {
         }
 
         /**
-         *
          * @param enemy
-         * @param isCellInteraction
-         *
-         * Description : While the enemy is still alive and interacts with the projectile,
-         *               it will receive damage based on the enemy's elemental type.
+         * @param isCellInteraction Description : While the enemy is still alive and interacts with the projectile,
+         *                          it will receive damage based on the enemy's elemental type.
          */
         @Override
         public void interactWith(Enemy enemy, boolean isCellInteraction) {
             if (isCellInteraction && !enemy.isDead()) {
-                // FIXME: Only damage the enemy with the same element (reversed right now)
                 enemy.hit(ICoopPlayer.DamageType.toType(elementType.getName()));
                 destroy();
             }
         }
 
         /**
-         *
          * @param rock
-         * @param isCellInteraction
-         *
-         * Description : Destroys rock with which it comes into contact with
+         * @param isCellInteraction Description : Destroys rock with which it comes into contact with
          */
         @Override
         public void interactWith(Rock rock, boolean isCellInteraction) {
@@ -100,6 +101,10 @@ public class ElementalProjectile extends Projectile {
             }
         }
 
+        /**
+         * @param obstacle
+         * @param isCellInteraction Description : Destroy projectile when colliding with obstacle
+         */
         @Override
         public void interactWith(Obstacle obstacle, boolean isCellInteraction) {
             if (isCellInteraction)

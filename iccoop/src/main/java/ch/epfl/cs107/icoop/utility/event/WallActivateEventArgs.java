@@ -4,7 +4,6 @@ public class WallActivateEventArgs extends EventArgs {
     private boolean isActivated;
 
     /**
-     *
      * @param isActivated the argument in this case is the activation of the door
      */
     public WallActivateEventArgs(boolean isActivated) {

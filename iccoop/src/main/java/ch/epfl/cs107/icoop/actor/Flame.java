@@ -9,10 +9,9 @@ import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class Flame extends Projectile {
-    private Animation animation =
-            new Animation("icoop/fire", 7, 1, 1, this , 16, 16, 4, true);
+    private final Animation animation;
 
-    private FlameProjectileInteractionHandler handler = new FlameProjectileInteractionHandler();
+    private final FlameProjectileInteractionHandler interactionHandler = new FlameProjectileInteractionHandler();
 
     /**
      * Default MovableAreaEntity constructor
@@ -25,6 +24,12 @@ public class Flame extends Projectile {
      */
     public Flame(Area area, Orientation orientation, DiscreteCoordinates position, int speed, int range) {
         super(area, orientation, position, speed, range);
+
+        this.animation = new Animation(
+                "icoop/fire",
+                7, 1, 1,
+                this, 16, 16,
+                4, true);
     }
 
     @Override
@@ -41,12 +46,12 @@ public class Flame extends Projectile {
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
-        other.acceptInteraction(handler, isCellInteraction);
+        other.acceptInteraction(interactionHandler, isCellInteraction);
     }
 
     /**
      * FlameProjectileInteractionHandler : deals damage to the player stepping into it,
-     *                                      activates bombs on contact
+     * activates bombs on contact
      */
     private class FlameProjectileInteractionHandler implements ICoopInteractionVisitor {
         @Override

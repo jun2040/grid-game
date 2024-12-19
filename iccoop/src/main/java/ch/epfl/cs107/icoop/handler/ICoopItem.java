@@ -5,19 +5,16 @@ import ch.epfl.cs107.play.areagame.handler.InventoryItem;
 public enum ICoopItem implements InventoryItem {
     BOMB("bomb", "explosive", true),
     SWORD("sword", "sword.icon", false),
-    // FIXME: Handle staff icon for different element
     STAFF_WATER("staff", "staff_water.icon", false),
-    STAFF_FIRE("staff", "staff_fire.icon", false)
-    ;
+    STAFF_FIRE("staff", "staff_fire.icon", false);
 
     private final String name;
     private final int pocketId;
     private final String spriteName;
-    private boolean consumable;
+    private final boolean consumable;
 
     /**
-     *
-     * @param name (String): Name of item
+     * @param name       (String): Name of item
      * @param spriteName (String): name used for the item sprite
      * @param consumable (boolean) : defines if it disappears up when player uses it
      */
@@ -39,7 +36,6 @@ public enum ICoopItem implements InventoryItem {
     }
 
     /**
-     *
      * @return name used for sprite
      */
     public String getSpriteName() {
@@ -47,7 +43,6 @@ public enum ICoopItem implements InventoryItem {
     }
 
     /**
-     *
      * @return true if item disappears when used
      */
     public boolean isConsumable() {
@@ -55,7 +50,6 @@ public enum ICoopItem implements InventoryItem {
     }
 
     /**
-     *
      * @param item
      * @return returns inventory index of the current item
      */

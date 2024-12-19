@@ -18,16 +18,14 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Collections;
 import java.util.List;
 
-// FIXME: Verify the use of Logic interface
 public class ElementalWall extends AreaEntity implements ElementalEntity, Interactable, Interactor, Logic, WallActivateEventListener {
     private final Sprite[] wallSprites;
     private final ElementType elementType;
-    private ElementType currentElementType;// TODO: Replace with enum
+    private ElementType currentElementType;
 
     private boolean isActive;
 
     /**
-     *
      * Default AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
@@ -35,7 +33,7 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      * @param isActive    (boolean) : Inital state of the wall if on or off. Not Null
      * @param spriteName  (String) : Name of the ressource used for the sprite. Not Null
-     * @param elementType   (ElementType): Elemental Type of the wall. Not Null
+     * @param elementType (ElementType): Elemental Type of the wall. Not Null
      */
     public ElementalWall(
             Area area,
@@ -81,31 +79,46 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
      * Interactor implementation
      */
     @Override
-    public boolean wantsCellInteraction() { return true; }
+    public boolean wantsCellInteraction() {
+        return true;
+    }
 
     @Override
-    public boolean wantsViewInteraction() { return false; }
+    public boolean wantsViewInteraction() {
+        return false;
+    }
 
     @Override
-    public void interactWith(Interactable other, boolean isCellInteraction) { }
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+    }
 
     /*
      * Interactable implementation
      */
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() { return Collections.singletonList(getCurrentMainCellCoordinates()); }
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
 
     @Override
-    public List<DiscreteCoordinates> getFieldOfViewCells() { return Collections.emptyList(); }
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return Collections.emptyList();
+    }
 
     @Override
-    public boolean takeCellSpace() { return true; } //TODO should it not be true?
+    public boolean takeCellSpace() {
+        return true;
+    } //TODO should it not be true?
 
     @Override
-    public boolean isCellInteractable() { return true; }
+    public boolean isCellInteractable() {
+        return true;
+    }
 
     @Override
-    public boolean isViewInteractable() { return true; }
+    public boolean isViewInteractable() {
+        return true;
+    }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
@@ -115,7 +128,6 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
     /*
      * Listener implementation
      */
-
     @Override
     public void activate() {
         isActive = true;
@@ -128,12 +140,10 @@ public class ElementalWall extends AreaEntity implements ElementalEntity, Intera
         currentElementType = ElementType.NONE;
     }
 
-    // TODO: Consider a Destructable interface for further abstraction
     public void destroy() {
         unregister();
     }
 
-    // TODO: Consider extending AreaEntity to include this method
     private void unregister() {
         getOwnerArea().unregisterActor(this);
     }

@@ -27,8 +27,8 @@ public class PressurePlate extends AreaEntity implements Logic {
     /**
      * Default AreaEntity constructor
      *
-     * @param area        (Area): Owner area. Not null
-     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param area     (Area): Owner area. Not null
+     * @param position (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
     public PressurePlate(Area area, DiscreteCoordinates position) {
         super(area, DOWN, position);
@@ -68,7 +68,6 @@ public class PressurePlate extends AreaEntity implements Logic {
     }
 
     /**
-     *
      * @param elementalWall, will associate the target wall with this pressure plate to make them intertwined
      *                       and allow the pressure plate to control the wall
      */

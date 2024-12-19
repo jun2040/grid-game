@@ -12,13 +12,12 @@ import static ch.epfl.cs107.play.math.Orientation.*;
 
 public class ICoopBehavior extends AreaBehavior {
     /**
-     *
      * @param window (Window): display context. Not null
-     * @param title (String): area title
-     * @param area (Area) : current area to be worked on
-     *
-     *             Description: will use the color grading on the behavior maps to
-     *             automatically spawn corresponding entities/obstacles
+     * @param title  (String): area title
+     * @param area   (Area) : current area to be worked on
+     *               <p>
+     *               Description: will use the color grading on the behavior maps to
+     *               automatically spawn corresponding entities/obstacles
      */
     public ICoopBehavior(Window window, String title, Area area) {
         super(window, title);
@@ -45,7 +44,6 @@ public class ICoopBehavior extends AreaBehavior {
     }
 
     /**
-     *
      * @param coordinates
      * @return true if the cell is empty
      */
@@ -60,15 +58,14 @@ public class ICoopBehavior extends AreaBehavior {
      */
     public enum ICoopCellType {
         //https://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
-        NULL(0, false , false),
-        WALL(-16777216, false , false),
-        IMPASSABLE (-8750470, false , true),
-        INTERACT(-256, true , true),
-        DOOR(-195580, true , true),
-        WALKABLE(-1, true , true),
-        ROCK(-16777204, true , true),
-        OBSTACLE (-16723187, true , true)
-        ;
+        NULL(0, false, false),
+        WALL(-16777216, false, false),
+        IMPASSABLE(-8750470, false, true),
+        INTERACT(-256, true, true),
+        DOOR(-195580, true, true),
+        WALKABLE(-1, true, true),
+        ROCK(-16777204, true, true),
+        OBSTACLE(-16723187, true, true);
 
         final int type;
         final boolean isWalkable;
@@ -92,7 +89,7 @@ public class ICoopBehavior extends AreaBehavior {
     /**
      * links ICoopCellType to the icoopcell to reinforce the linked property and encapsulation
      * of cells (which are intrisically dependent of each other)
-     *
+     * <p>
      * will check if an incoming entity can enter the cell, especially if it is elemntal
      */
     public class ICoopCell extends Cell {
@@ -112,7 +109,9 @@ public class ICoopBehavior extends AreaBehavior {
         }
 
         @Override
-        protected boolean canLeave(Interactable entity) { return true; }
+        protected boolean canLeave(Interactable entity) {
+            return true;
+        }
 
         @Override
         protected boolean canEnter(Interactable entity) {
@@ -136,18 +135,23 @@ public class ICoopBehavior extends AreaBehavior {
 
         @Override
         public boolean takeCellSpace() {
-            for(Interactable entity : entities)
+            for (Interactable entity : entities)
                 return entity.takeCellSpace();
 
             return false;
         }
 
         @Override
-        public boolean isCellInteractable() { return true; }
+        public boolean isCellInteractable() {
+            return true;
+        }
 
         @Override
-        public boolean isViewInteractable() { return false; }
+        public boolean isViewInteractable() {
+            return false;
+        }
 
-        public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {}
+        public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        }
     }
 }

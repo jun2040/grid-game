@@ -1,6 +1,5 @@
 package ch.epfl.cs107.icoop.actor;
 
-import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -9,13 +8,11 @@ import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.signal.logic.Logic;
 
 import java.util.Collections;
 import java.util.List;
 
-public class Container extends AreaEntity implements Interactable, Interactor, Logic {
-
+public class Container extends AreaEntity implements Interactable, Interactor {
     /**
      * Default AreaEntity constructor
      *
@@ -25,7 +22,6 @@ public class Container extends AreaEntity implements Interactable, Interactor, L
      */
     public Container(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-
     }
 
     @Override
@@ -50,7 +46,6 @@ public class Container extends AreaEntity implements Interactable, Interactor, L
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
-
     }
 
     @Override
@@ -70,16 +65,5 @@ public class Container extends AreaEntity implements Interactable, Interactor, L
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
-    }
-
-    @Override
-    public boolean isOn() {
-        return false;
-    }
-
-    @Override
-    public boolean isOff() {
-        return false;
     }
 }

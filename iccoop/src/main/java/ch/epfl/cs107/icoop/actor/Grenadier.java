@@ -87,10 +87,9 @@ public class Grenadier extends Enemy {
     }
 
     /**
-     *
      * @param deltaTime elapsed time since last update, in seconds, non-negative
-     *
-     * Description : Finite state machine for 3 states: attack, idle, protect (guard)
+     *                  <p>
+     *                  Description : Finite state machine for 3 states: attack, idle, protect (guard)
      *                  will behave appropriately to each state
      */
     @Override
@@ -184,10 +183,9 @@ public class Grenadier extends Enemy {
     /***** BEHAVIOR *****/
 
     /**
-     *
      * @param speedFactor speed of grenadier
-     *
-     *           Description : generates sudo random number dictating its subsequent movement
+     *                    <p>
+     *                    Description : generates sudo random number dictating its subsequent movement
      */
     private void moveRandom(int speedFactor) {
         if (isDisplacementOccurs())
@@ -230,7 +228,6 @@ public class Grenadier extends Enemy {
     }
 
     /**
-     *
      * @return if bomb is placed
      * Description : grenadier will try to place a bomb against the player
      */

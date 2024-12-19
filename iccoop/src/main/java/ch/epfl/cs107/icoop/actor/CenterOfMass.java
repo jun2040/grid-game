@@ -1,14 +1,16 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.play.engine.actor.Actor;
-import ch.epfl.cs107.play.engine.actor.Sprite;
 import ch.epfl.cs107.play.math.Transform;
 import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.window.Canvas;
 
 public class CenterOfMass implements Actor {
     private final Actor[] actors;
 
+    /**
+     * @param actor        (Actor) First actor
+     * @param restOfActors (Actor) Other actors
+     */
     public CenterOfMass(Actor actor, Actor... restOfActors) {
         this.actors = new Actor[restOfActors.length + 1];
         actors[0] = actor;
@@ -18,9 +20,8 @@ public class CenterOfMass implements Actor {
     @Override
     public Vector getPosition() {
         Vector position = Vector.ZERO;
-        for (Actor actor : actors) {
+        for (Actor actor : actors)
             position = position.add(actor.getPosition());
-        }
 
         return position.mul(1f / actors.length);
     }
@@ -33,9 +34,9 @@ public class CenterOfMass implements Actor {
     @Override
     public Vector getVelocity() {
         Vector velocity = Vector.ZERO;
-        for (Actor actor : actors) {
+        for (Actor actor : actors)
             velocity = velocity.add(actor.getVelocity());
-        }
+
         return velocity.mul(1f / actors.length);
     }
 }

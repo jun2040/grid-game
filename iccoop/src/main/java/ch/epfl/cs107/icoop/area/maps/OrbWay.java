@@ -15,11 +15,10 @@ import static ch.epfl.cs107.icoop.actor.ElementType.*;
 
 public class OrbWay extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
-            new DiscreteCoordinates[] { new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5) };
+            new DiscreteCoordinates[]{new DiscreteCoordinates(1, 12), new DiscreteCoordinates(1, 5)};
     public static Orientation SPAWN_ORIENTATION = RIGHT;
 
     /**
-     *
      * @param context, allows the setting of hte dialog handler
      */
     public OrbWay(Context context) {
@@ -103,6 +102,7 @@ public class OrbWay extends ICoopArea {
 
         complete();
     }
+
     /**
      * associates door with pressure plate for activation/deactiation
      */
@@ -112,19 +112,24 @@ public class OrbWay extends ICoopArea {
     }
 
     @Override
-    public boolean isViewCentered() { return true; }
+    public boolean isViewCentered() {
+        return true;
+    }
 
     /**
-     *
      * @return orientation of the arriving player
      */
-    public Orientation getSpawnOrientation(){
+    public Orientation getSpawnOrientation() {
         return Spawn.TOP_RIGHT_ORIENTATION;
     }
 
     @Override
-    public DiscreteCoordinates getPlayerSpawnPosition(int id) { return ARRIVAL_POINTS[id]; }
+    public DiscreteCoordinates getPlayerSpawnPosition(int id) {
+        return ARRIVAL_POINTS[id];
+    }
 
     @Override
-    public String getTitle() { return "OrbWay"; }
+    public String getTitle() {
+        return "OrbWay";
+    }
 }

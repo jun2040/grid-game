@@ -8,7 +8,6 @@ public class TeleportController {
     private TeleportHandler teleportHandler;
 
     /**
-     *
      * @param teleportHandler sets teleporthandler to prepare for teleportation
      */
     public void setTeleport(TeleportHandler teleportHandler) {
@@ -16,7 +15,6 @@ public class TeleportController {
     }
 
     /**
-     *
      * @return String name of destination area
      */
     public String getTargetDestination() {
@@ -24,7 +22,6 @@ public class TeleportController {
     }
 
     /**
-     *
      * @return Orientation of player in the target area
      */
     public Orientation getTargetOrientation() {
@@ -32,7 +29,6 @@ public class TeleportController {
     }
 
     /**
-     *
      * @param id
      * @return DiscreteCoordinates of new area spawning positions once teleported
      */
@@ -42,7 +38,6 @@ public class TeleportController {
     }
 
     /**
-     *
      * @return returns whether teleportation should occur
      */
     public boolean isTeleportRequested() {

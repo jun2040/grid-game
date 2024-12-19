@@ -9,11 +9,14 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class Grass extends Obstacle{
-    private Animation grassSliced;
-    private Sprite grassSprite;
-    private boolean isDestroyed;
+public class Grass extends Obstacle {
     private final static int ANIMATION_DURATION = 4;
+
+    private final Animation slicedAnimation;
+    private final Sprite sprite;
+
+    private boolean isDestroyed;
+
     /**
      * Default AreaEntity constructor
      *
@@ -23,34 +26,42 @@ public class Grass extends Obstacle{
      */
     public Grass(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-        this.grassSprite = new Sprite("icoop/grass", 1.2f, 1.2f, this);
-        this.grassSliced = new Animation(
+
+        this.sprite = new Sprite("icoop/grass", 1.2f, 1.2f, this);
+        this.slicedAnimation = new Animation(
                 "icoop/grass.sliced",
                 4, 1f, 1f,
-                this , 32, 32,
-                ANIMATION_DURATION / 2, false
-        );
+                this, 32, 32,
+                ANIMATION_DURATION / 2, false);
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if(isDestroyed)
-            grassSliced.update(deltaTime);
-        if(grassSliced.isCompleted()){
+
+        if (isDestroyed)
+            slicedAnimation.update(deltaTime);
+
+        if (slicedAnimation.isCompleted()) {
             unregister();
             dropCoin();
         }
-
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if(!isDestroyed){
-            grassSprite.draw(canvas);
-        }else{
-            grassSliced.draw(canvas);
-        }
+        if (!isDestroyed)
+            sprite.draw(canvas);
+        else
+            slicedAnimation.draw(canvas);
+    }
+
+    /**
+     * drops coin based on a sudo random probability generator
+     */
+    private void dropCoin() {
+        if (Math.random() < 0.5)
+            getOwnerArea().registerActor(new Coin(getOwnerArea(), Orientation.UP, this.getCurrentMainCellCoordinates()));
     }
 
     /**
@@ -61,29 +72,21 @@ public class Grass extends Obstacle{
     }
 
     /**
-     * drops coin based on a sudo random probability generator
+     * unregisters actor from area
      */
-    private void dropCoin(){
-        if (Math.random()< 0.5){
-            getOwnerArea().registerActor(new Coin(getOwnerArea(), Orientation.UP, this.getCurrentMainCellCoordinates()));
-        }
+    private void unregister() {
+        getOwnerArea().unregisterActor(this);
     }
 
     /**
-     * unregisters actor from area
-     */
-    private void unregister() { getOwnerArea().unregisterActor(this); }
-
-    /**
-     *
      * @return whether it has been destroyed
      */
-    public boolean isDestroyed(){
+    public boolean isDestroyed() {
         return isDestroyed;
     }
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-        ((ICoopInteractionVisitor) v).interactWith(this,isCellInteraction);
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
 }

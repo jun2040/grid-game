@@ -4,9 +4,7 @@ public class Context {
     private final DialogHandler dialogHandler;
 
     /**
-     *
-     * @param dialogHandler
-     * encapsulation for passing through the dialog handler to other entities
+     * @param dialogHandler encapsulation for passing through the dialog handler to other entities
      */
     public Context(DialogHandler dialogHandler) {
         this.dialogHandler = dialogHandler;

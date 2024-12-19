@@ -6,5 +6,6 @@ public interface WallActivateEventListener extends EventListener {
      * enables proper encapsulation
      */
     void activate();
+
     void deactivate();
 }

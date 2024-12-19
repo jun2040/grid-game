@@ -1,29 +1,27 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.area.ICoopArea;
-import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.icoop.handler.TeleportHandler;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
-import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.*;
 
 public class Door extends AreaEntity implements Interactable, Logic, TeleportHandler {
-    private String destinationAreaName;
-    private DiscreteCoordinates[] targetCoords;
-    private List<DiscreteCoordinates> positions;
+    private final String destinationAreaName;
+    private final DiscreteCoordinates[] targetCoords;
+    private final List<DiscreteCoordinates> positions;
+
     private boolean isOpen;
 
     /**
-     * Default AreaEntity constructor
+     * AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
@@ -50,27 +48,7 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
     }
 
     /**
-     * Default AreaEntity constructor
-     *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
-     * @param isOpen    (boolean): True when open for teleportation
-     * @param mainPosition (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-    */
-
-    public Door(
-            Area area,
-            Orientation orientation,
-            boolean isOpen,
-            DiscreteCoordinates mainPosition
-    ) {
-        this(area, orientation, "", isOpen, null, mainPosition);
-    }
-
-    /**
-     *
-     *
-     * Default AreaEntity constructor
+     * AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
@@ -98,26 +76,21 @@ public class Door extends AreaEntity implements Interactable, Logic, TeleportHan
         super.update(deltaTime);
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-    }
     /**
-     * opens the Door by setting isOpen true
+     * Opens the Door by setting isOpen true
      */
     public void open() {
         isOpen = true;
     }
 
     /**
-     * closes the Door by setting isOpen false
+     * Closes the Door by setting isOpen false
      */
     public void close() {
         isOpen = false;
     }
 
     /**
-     *
      * @return boolean checks for suitable destination area
      */
     public boolean teleportable() {

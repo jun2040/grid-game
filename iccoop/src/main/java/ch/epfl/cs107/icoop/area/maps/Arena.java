@@ -16,14 +16,13 @@ import static ch.epfl.cs107.play.math.Orientation.*;
 
 public class Arena extends ICoopArea {
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
-            new DiscreteCoordinates[] { new DiscreteCoordinates(4, 5), new DiscreteCoordinates(14, 15) };
+            new DiscreteCoordinates[]{new DiscreteCoordinates(4, 5), new DiscreteCoordinates(14, 15)};
     public static Orientation SPAWN_ORIENTATION = Orientation.DOWN;
 
     private Logic fireKey;
     private Logic waterKey;
 
     /**
-     *
      * @param context, allows the setting of hte dialog handler
      */
     public Arena(Context context) {
@@ -35,8 +34,8 @@ public class Arena extends ICoopArea {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
 
-        Key fireKey = new Key(this, UP, new DiscreteCoordinates(9, 16), ElementType.FIRE);
-        Key waterKey = new Key(this, UP, new DiscreteCoordinates(9, 4), ElementType.WATER);
+        Key fireKey = new Key(this, new DiscreteCoordinates(9, 16), ElementType.FIRE);
+        Key waterKey = new Key(this, new DiscreteCoordinates(9, 4), ElementType.WATER);
         Teleporter teleporter = new Teleporter(this, UP, "Spawn", Spawn.SPAWN_POINTS, new DiscreteCoordinates(10, 10));
 
         this.fireKey = fireKey;
@@ -51,7 +50,6 @@ public class Arena extends ICoopArea {
     }
 
     /**
-     *
      * @param deltaTime elapsed time since last update, in seconds, non-negative
      *                  checks if both keys were collected, then calls complete();
      *                  assigning this area to be complete to proceed to the next
@@ -70,10 +68,9 @@ public class Arena extends ICoopArea {
     }
 
     /**
-     *
      * @return orientation of the arriving player
      */
-    public Orientation getSpawnOrientation(){
+    public Orientation getSpawnOrientation() {
         return SPAWN_ORIENTATION;
     }
 

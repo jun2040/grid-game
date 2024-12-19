@@ -20,8 +20,7 @@ public class ICoopPlayerStatusGUI implements Graphics {
     private ICoopItem item = null;
 
     /**
-     *
-     * @param player (ICoopPlayer) : player for which gui is drawn
+     * @param player  (ICoopPlayer) : player for which gui is drawn
      * @param flipped (boolean) : choice of right and left hand side gui (true is left)
      */
     public ICoopPlayerStatusGUI(ICoopPlayer player, boolean flipped) {
@@ -30,7 +29,6 @@ public class ICoopPlayerStatusGUI implements Graphics {
     }
 
     /**
-     *
      * @param item, sets current gui item to this item (enables its displaying)
      */
     public void setCurrentItem(ICoopItem item) {
@@ -38,7 +36,6 @@ public class ICoopPlayerStatusGUI implements Graphics {
     }
 
     /**
-     *
      * @param canvas target, not null
      *               Description : will calculate position of player gui interface,
      *               including flipped for right and left hand side gui
@@ -65,7 +62,7 @@ public class ICoopPlayerStatusGUI implements Graphics {
         if (item != null) {
             ImageGraphics itemDisplay = new ImageGraphics(ResourcePath.getSprite(item.getSpriteName()), 0.5f,
                     0.5f, new RegionOfInterest(0, 0, 16, 16), anchor.add(new
-                    Vector (0.5f, height - 1.25f)), 1, DEPTH);
+                    Vector(0.5f, height - 1.25f)), 1, DEPTH);
             itemDisplay.draw(canvas);
         }
     }

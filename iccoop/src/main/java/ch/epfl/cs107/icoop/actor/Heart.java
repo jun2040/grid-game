@@ -8,29 +8,26 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.util.Collections;
-import java.util.List;
-
 public class Heart extends ICoopCollectable {
     private static final int ANIMATION_DURATION = 24;
 
-    private final int restorationFactor;
     private final Animation animation;
 
+    private final int restorationFactor;
+
     /**
-     /**
-     *  Default AreaEntity constructor
+     * Default AreaEntity constructor
      *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
-     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param area              (Area): Owner area. Not null
+     * @param orientation       (Orientation): Initial orientation of the entity in the Area. Not null
+     * @param position          (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      * @param restorationFactor (int) : Amount by which the player's health will be restored by
      */
     public Heart(Area area, Orientation orientation, DiscreteCoordinates position, int restorationFactor) {
         super(area, orientation, position);
 
         this.restorationFactor = restorationFactor;
-        this.animation = new Animation("icoop/heart", 4, 1, 1, this , 16, 16,
+        this.animation = new Animation("icoop/heart", 4, 1, 1, this, 16, 16,
                 ANIMATION_DURATION / 4, true);
 
     }
@@ -48,16 +45,10 @@ public class Heart extends ICoopCollectable {
     }
 
     /**
-     *
      * @return the amount by which the player's health is restored
      */
     public int getRestorationFactor() {
         return restorationFactor;
-    }
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
     @Override

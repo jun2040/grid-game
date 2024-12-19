@@ -7,18 +7,19 @@ import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class ICoopCollectable extends CollectableAreaEntity implements Interactable {
     private final ICoopItem itemModel;
 
     /**
-     *
-     /**
-     *  Default AreaEntity constructor
+     * /**
+     * Default AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-     *
      */
     public ICoopCollectable(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
@@ -27,13 +28,12 @@ public abstract class ICoopCollectable extends CollectableAreaEntity implements 
     }
 
     /**
-     *
-     *  Default AreaEntity constructor
+     * Default AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-     * @param itemModel (ICoopItem) : makes this item collectable by the player
+     * @param itemModel   (ICoopItem) : makes this item collectable by the player
      */
 
     public ICoopCollectable(Area area, Orientation orientation, DiscreteCoordinates position, ICoopItem itemModel) {
@@ -43,7 +43,6 @@ public abstract class ICoopCollectable extends CollectableAreaEntity implements 
     }
 
     /**
-     *
      * @return true if it contains an item to be collected
      */
     public boolean isItem() {
@@ -51,7 +50,6 @@ public abstract class ICoopCollectable extends CollectableAreaEntity implements 
     }
 
     /**
-     *
      * @return the item it contains
      */
 
@@ -60,13 +58,19 @@ public abstract class ICoopCollectable extends CollectableAreaEntity implements 
     }
 
     @Override
-    public boolean takeCellSpace() { return false; }
+    public boolean takeCellSpace() {
+        return false;
+    }
 
     @Override
-    public boolean isCellInteractable() { return true; }
+    public boolean isCellInteractable() {
+        return true;
+    }
 
     @Override
-    public boolean isViewInteractable() { return false; }
+    public boolean isViewInteractable() {
+        return false;
+    }
 
     @Override
     public void update(float deltaTime) {
@@ -74,5 +78,10 @@ public abstract class ICoopCollectable extends CollectableAreaEntity implements 
 
         if (isCollected())
             getOwnerArea().unregisterActor(this);
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 }

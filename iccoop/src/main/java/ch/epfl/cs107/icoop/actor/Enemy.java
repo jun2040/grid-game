@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.actor;
 
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.icoop.utility.Timer;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
@@ -17,10 +18,7 @@ import java.util.List;
 public abstract class Enemy extends MovableAreaEntity implements Interactable, Interactor {
     private static final int ANIMATION_DURATION = 24;
     private static final int GRACE_PERIOD = 10;
-    /**
-     * An integer indicating the health the entity had when created, which is by design the maximum
-     */
-    private int maxHealthPoint;
+
     /**
      * An integer indicating the health the entity had when created, which is by design the maximum
      */
@@ -30,18 +28,18 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
 
     private boolean isDead = false;
 
-    private List<ICoopPlayer.DamageType> immunityType = new ArrayList<>();
-    private boolean isInGracePeriod = false;
-    private int gracePeriodTimer = 0;
+    private final Timer gracePeriodTimer;
+
+    private final List<ICoopPlayer.DamageType> immunityType = new ArrayList<>();
 
     /**
      * Default MovableAreaEntity constructor
      *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity. Not null
-     * @param position    (Coordinate): Initial position of the entity. Not null
+     * @param area           (Area): Owner area. Not null
+     * @param orientation    (Orientation): Initial orientation of the entity. Not null
+     * @param position       (Coordinate): Initial position of the entity. Not null
      * @param maxHealthPoint (int) : maximal number of health points. Not Null
-     * @param immunityType (List<IcoppPlayer.DamageType>): List used to grant immunity from certain types of damages. Not null
+     * @param immunityType   (List<ICoopPlayer.DamageType>): List used to grant immunity from certain types of damages. Not null
      */
     public Enemy(
             Area area,
@@ -52,24 +50,23 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
     ) {
         super(area, orientation, position);
 
-        this.maxHealthPoint = maxHealthPoint;
         this.healthPoint = maxHealthPoint;
 
         this.deathAnimation =
                 new Animation(
-                        "icoop/vanish", 7, 2, 2, this , 32, 32,
-                        new Vector(-0.5f, 0f), ANIMATION_DURATION/7, false
+                        "icoop/vanish", 7, 2, 2, this, 32, 32,
+                        new Vector(-0.5f, 0f), ANIMATION_DURATION / 7, false
                 );
+
+        this.gracePeriodTimer = new Timer();
 
         this.immunityType.addAll(immunityType);
     }
 
     /**
-     *
      * @param deltaTime elapsed time since last update, in seconds, non-negative
-     *
-     * Description : loop checking if the enemy is dead, recovering or if its animation is complete,
-     *                 in order to make the appropriate responses
+     *                  Description : loop checking if the enemy is dead, recovering or if its animation is complete,
+     *                  in order to make the appropriate responses
      */
 
     @Override
@@ -85,12 +82,7 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         if (isDead && !deathAnimation.isCompleted())
             deathAnimation.update(deltaTime);
 
-        if (isInGracePeriod && gracePeriodTimer >= 0) {
-            gracePeriodTimer--;
-        } else if (gracePeriodTimer < 0) {
-            isInGracePeriod = false;
-            gracePeriodTimer = 0;
-        }
+        gracePeriodTimer.update(deltaTime);
     }
 
     /**
@@ -104,7 +96,7 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
      * if not in immunity, will deduct life points
      */
     public void hit(ICoopPlayer.DamageType damageType) {
-        if (isInGracePeriod || isDead)
+        if (!gracePeriodTimer.isCompleted() || isDead)
             return;
 
         for (ICoopPlayer.DamageType t : immunityType) {
@@ -114,9 +106,9 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
 
         healthPoint -= damageType.damage;
 
-        gracePeriodTimer = GRACE_PERIOD;
-        isInGracePeriod = true;
+        gracePeriodTimer.setTimer(GRACE_PERIOD);
     }
+
     /**
      * will check if the enemy is dead
      */
@@ -134,7 +126,6 @@ public abstract class Enemy extends MovableAreaEntity implements Interactable, I
         return true;
     }
 
-    // FIXME: Cannot do contact interaction
     @Override
     public boolean takeCellSpace() {
         return !isDead;

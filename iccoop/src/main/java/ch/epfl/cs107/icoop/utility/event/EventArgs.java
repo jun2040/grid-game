@@ -10,5 +10,6 @@ public class EventArgs {
     /**
      * event arguments which are passed on, ensuring all and only necessary information is given
      */
-    public EventArgs() {}
+    public EventArgs() {
+    }
 }

@@ -8,22 +8,20 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
-import java.util.Collections;
-import java.util.List;
+import static ch.epfl.cs107.play.math.Orientation.UP;
 
 public abstract class ElementalItem extends ICoopCollectable implements ElementalEntity, Logic {
     private final ElementType elementType;
 
     /**
-     *  Default AreaEntity constructor
+     * Default AreaEntity constructor
      *
      * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      * @param elementType (ElementType): Elemental type of item. Can be NULL
      */
-    public ElementalItem(Area area, Orientation orientation, DiscreteCoordinates position, ElementType elementType) {
-        super(area, orientation, position);
+    public ElementalItem(Area area, DiscreteCoordinates position, ElementType elementType) {
+        super(area, UP, position);
 
         this.elementType = elementType;
     }
@@ -40,6 +38,11 @@ public abstract class ElementalItem extends ICoopCollectable implements Elementa
     }
 
     @Override
+    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
+    }
+
+    @Override
     public boolean isOn() {
         return isCollected();
     }
@@ -47,15 +50,5 @@ public abstract class ElementalItem extends ICoopCollectable implements Elementa
     @Override
     public boolean isOff() {
         return !isCollected();
-    }
-
-    @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
-    }
-
-    @Override
-    public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
-        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
 }

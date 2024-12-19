@@ -33,7 +33,7 @@ public class Orb extends ElementalItem {
      * @param elementType   (ElementType): defines the orb elemental type
      */
     public Orb(Area area, DiscreteCoordinates position, ElementType elementType) {
-        super(area, UP, position, elementType);
+        super(area, position, elementType);
 
         orbType = OrbType.fromElementType(elementType);
 
