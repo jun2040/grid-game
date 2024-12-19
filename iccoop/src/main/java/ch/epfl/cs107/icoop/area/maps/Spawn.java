@@ -19,6 +19,8 @@ public class Spawn extends ICoopArea {
             new DiscreteCoordinates[]{new DiscreteCoordinates(11, 6), new DiscreteCoordinates(13, 6)};
     public static DiscreteCoordinates[] ARRIVAL_POINTS =
             new DiscreteCoordinates[]{new DiscreteCoordinates(18, 16), new DiscreteCoordinates(18, 15)};
+    public static DiscreteCoordinates[] TEMP_ARRIVAL_POINTS =
+            new DiscreteCoordinates[]{new DiscreteCoordinates(10, 0), new DiscreteCoordinates(9, 0)};
 
     public static final Orientation SPAWN_ORIENTATION = DOWN;
     private boolean isDirty = false;
@@ -60,26 +62,36 @@ public class Spawn extends ICoopArea {
                 new DiscreteCoordinates(5, 0)
         ));
 
+        //bypass to be removed
+        registerActor(new Door(
+                this, UP, "SanctumEntrance", true,
+                TEMP_ARRIVAL_POINTS,
+                new DiscreteCoordinates(11, 4),
+                new DiscreteCoordinates(11, 3)
+        ));
+
+
         manorDoor = new DialogDoor(
                 this, DOWN, false,
                 new DiscreteCoordinates(6, 11),
                 getContext().getDialogHandler(),
-                "victory", "key_required"
+                "victory", "key_required","SanctumEntrance", SanctumEntrance.ARRIVAL_POINTS
         );
 
         registerActor(manorDoor);
 
-        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(9, 9)));
-        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(11, 9)));
-        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(10, 10)));
-        registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(10, 9), 100));
+        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(7, 7)));
+        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(9, 7)));
+        registerActor(new Rock(this, LEFT, new DiscreteCoordinates(8, 8)));
+        registerActor(new Explosive(this, LEFT, new DiscreteCoordinates(8, 7), 100));
 
         registerActor(new Chest(this, UP, new DiscreteCoordinates(13, 16), Logic.FALSE, getContext().getDialogHandler()));
 
-        registerActor(new Grass(this, UP, new DiscreteCoordinates(13, 11)));
-        registerActor(new Grass(this, UP, new DiscreteCoordinates(13, 10)));
-        registerActor(new Grass(this, UP, new DiscreteCoordinates(13, 9)));
-        registerActor(new Grass(this, UP, new DiscreteCoordinates(13, 8)));
+        for(int i = 0; i < 8; i++)
+        {
+            registerActor(new Grass(this, UP, new DiscreteCoordinates(12, 8+i)));
+            registerActor(new Grass(this, UP, new DiscreteCoordinates(14, 8+i)));
+        }
     }
 
     @Override
