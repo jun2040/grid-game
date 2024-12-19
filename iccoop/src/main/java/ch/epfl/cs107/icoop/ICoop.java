@@ -48,7 +48,7 @@ public class ICoop extends AreaGame implements DialogHandler {
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             createAreas();
-            setupArea("Arena");
+            setupArea("Spawn");
             return true;
         }
 

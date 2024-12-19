@@ -79,10 +79,7 @@ public class Spawn extends ICoopArea {
 
         registerActor(new Chest(this, UP, new DiscreteCoordinates(13, 16), Logic.FALSE, getContext().getDialogHandler()));
 
-        registerActor(new Grenadier(this, DOWN, new DiscreteCoordinates(7, 7)));
-
-        for(int i = 0; i < 8; i++)
-        {
+        for (int i = 0; i < 8; i++) {
             registerActor(new Grass(this, UP, new DiscreteCoordinates(12, 8+i)));
             registerActor(new Grass(this, UP, new DiscreteCoordinates(14, 8+i)));
         }

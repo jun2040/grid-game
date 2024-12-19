@@ -90,8 +90,6 @@ public class Grenadier extends Enemy {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        System.out.println(currentState);
-
         switch (currentState) {
             case IDLE:
                 idle(deltaTime);
