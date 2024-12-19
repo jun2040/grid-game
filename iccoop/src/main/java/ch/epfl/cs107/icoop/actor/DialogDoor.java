@@ -67,7 +67,7 @@ public class DialogDoor extends Door implements Interactor {
 
     @Override
     public Orientation getDestinationOrientation() {
-        return null;
+        return Orientation.DOWN;
     }
 
     private class DialogDoorInteractionHandler implements ICoopInteractionVisitor {
@@ -81,7 +81,6 @@ public class DialogDoor extends Door implements Interactor {
                 closedDialog = new Dialog(closedDialogString);
             }
             if (isCellInteraction && !player.isDisplacementOccurs()) {
-
                 if (isOn())
                     dialogHandler.publish(openedDialog);
                 else
