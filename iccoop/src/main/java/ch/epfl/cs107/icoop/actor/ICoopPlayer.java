@@ -98,7 +98,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
                 swordAttackAnimAnchor, attackAnimOrders, 4, 2, 2, 32, 32);
 
         final Vector staffAttackAnimAnchor = new Vector(-.5f, -.20f);
-        String name = spriteName.equals("player") ? "player.staff_water" : "player2.staff_water";
+        String name = spriteName.equals("player") ? "player.staff_fire" : "player2.staff_water";
         this.staffAttackAnimation = new OrientedAnimation("icoop/" + name, STAFF_ANIMATION_DURATION , this ,
                 staffAttackAnimAnchor, attackAnimOrders, 4, 2, 2, 32, 32);
 
