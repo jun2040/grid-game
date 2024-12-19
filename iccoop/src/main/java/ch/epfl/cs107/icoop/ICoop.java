@@ -3,12 +3,10 @@ package ch.epfl.cs107.icoop;
 
 import ch.epfl.cs107.icoop.actor.CenterOfMass;
 import ch.epfl.cs107.icoop.actor.Door;
+import ch.epfl.cs107.icoop.actor.ElementType;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
-import ch.epfl.cs107.icoop.area.maps.Arena;
-import ch.epfl.cs107.icoop.area.maps.Maze;
-import ch.epfl.cs107.icoop.area.maps.OrbWay;
-import ch.epfl.cs107.icoop.area.maps.Spawn;
+import ch.epfl.cs107.icoop.area.maps.*;
 import ch.epfl.cs107.icoop.handler.Context;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.handler.TeleportController;
@@ -41,6 +39,8 @@ public class ICoop extends AreaGame implements DialogHandler {
     private OrbWay orbWay;
     private Maze maze;
     private Arena arena;
+    private SanctumEntrance sanctumEntrance;
+    private Sanctum sanctum;
 
     public final static float DEFAULT_SCALE_FACTOR = 13.f;
     private boolean paused = false;
@@ -62,11 +62,16 @@ public class ICoop extends AreaGame implements DialogHandler {
         orbWay = new OrbWay(context);
         maze = new Maze(context);
         arena = new Arena(context);
+        sanctumEntrance = new SanctumEntrance(context);
+        sanctum = new Sanctum(context);
+
 
         addArea(spawn);
         addArea(orbWay);
         addArea(maze);
         addArea(arena);
+        addArea(sanctumEntrance);
+        addArea(sanctum);
     }
 
     /**
@@ -84,6 +89,7 @@ public class ICoop extends AreaGame implements DialogHandler {
 
         player1.enterArea(area, area.getPlayerSpawnPosition(0));
         player2.enterArea(area, area.getPlayerSpawnPosition(1));
+
 
         CenterOfMass centerOfMass = new CenterOfMass(player1, player2);
         area.setViewCandidate(centerOfMass);
