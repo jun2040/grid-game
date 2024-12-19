@@ -17,28 +17,44 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents the HellSkull enemy, which moves and periodically launches flames.
+ */
 public class HellSkull extends Enemy {
+
+    /**
+     * The duration of each frame in the HellSkull's animation.
+     */
     private static final int ANIMATION_DURATION = 12;
 
+    /**
+     * The animation used to visually represent the HellSkull.
+     */
     private final OrientedAnimation animation;
 
+    /**
+     * A timer controlling the periodic flame launch behavior.
+     */
     private final Timer flameSpawnTimer;
 
+    /**
+     * Handles interactions between the HellSkull and other entities.
+     */
     private final HellSkullInteractionHandler interactionHandler;
 
     /**
-     * Default MovableAreaEntity constructor
+     * Constructs a HellSkull with the specified parameters.
      *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity. Not null
-     * @param position    (Coordinate): Initial position of the entity. Not null
+     * @param area        (Area): The area to which the HellSkull belongs. Not null.
+     * @param orientation (Orientation): The initial orientation of the HellSkull. Not null.
+     * @param position    (DiscreteCoordinates): The initial position of the HellSkull. Not null.
      */
     public HellSkull(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 1, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.FIRE, ICoopPlayer.DamageType.EXPLOSIVE)));
 
-        Orientation[] orders = new Orientation[]{Orientation.UP,
-                Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT};
-        this.animation = new OrientedAnimation("icoop/flameskull",
+        Orientation[] orders = new Orientation[]{Orientation.UP, Orientation.LEFT, Orientation.DOWN, Orientation.RIGHT};
+        this.animation = new OrientedAnimation(
+                "icoop/flameskull",
                 ANIMATION_DURATION / 3, this,
                 new Vector(-0.5f, -0.5f), orders,
                 3, 2, 2, 32, 32, true);
@@ -48,18 +64,24 @@ public class HellSkull extends Enemy {
         this.interactionHandler = new HellSkullInteractionHandler();
     }
 
+    /**
+     * Draws the HellSkull's animation or death animation based on its state.
+     *
+     * @param canvas (Canvas): The canvas to draw the HellSkull on.
+     */
     @Override
     public void draw(Canvas canvas) {
-        if (!isDead())
+        if (!isDead()) {
             animation.draw(canvas);
-        else
+        } else {
             deathAnimation.draw(canvas);
+        }
     }
 
     /**
-     * @param deltaTime elapsed time since last update, in seconds, non-negative
-     *                  <p>
-     *                  Description : launches new flame at sudo random interavals
+     * Updates the HellSkull's behavior, including its animation and flame launch logic.
+     *
+     * @param deltaTime (float): The time elapsed since the last update.
      */
     @Override
     public void update(float deltaTime) {
@@ -76,42 +98,72 @@ public class HellSkull extends Enemy {
     }
 
     /**
-     * Creates a new flame actor to be shot in a direction, from the cell right in front of the skull
+     * Launches a new flame in the HellSkull's current direction.
+     * The flame is created in the cell directly in front of the HellSkull.
      */
     private void launchFlames() {
         DiscreteCoordinates target = getFieldOfViewCells().getFirst();
 
-        // FIXME: Sketchy casting used (Area -> ICoopArea), prone to casting exception
-        if (((ICoopArea) getOwnerArea()).isCellFree(target))
+        if (((ICoopArea) getOwnerArea()).isCellFree(target)) {
             getOwnerArea().registerActor(new Flame(getOwnerArea(), getOrientation(), target, 5, 50));
+        }
     }
 
+    /**
+     * Retrieves the HellSkull's current occupied cell.
+     *
+     * @return (List < DiscreteCoordinates >): A list containing the current cell coordinates.
+     */
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
+    /**
+     * Retrieves the HellSkull's field of view, which is the cell directly in front of it.
+     *
+     * @return (List < DiscreteCoordinates >): A list containing the target cell coordinates.
+     */
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
 
+    /**
+     * Handles interactions between the HellSkull and other entities.
+     *
+     * @param other             (Interactable): The interacting entity.
+     * @param isCellInteraction (boolean): True if the interaction is at the cell level.
+     */
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(interactionHandler, isCellInteraction);
     }
 
     /**
-     * Description: Damages player when in the same cell (implicit collision)
+     * Interaction handler for the HellSkull.
+     * Damages the player when in the same cell.
      */
     private class HellSkullInteractionHandler implements ICoopInteractionVisitor {
+
+        /**
+         * Default interaction with generic interactable entities.
+         *
+         * @param other             (Interactable): The interacting entity.
+         * @param isCellInteraction (boolean): True if the interaction is at the cell level.
+         */
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {
         }
 
+        /**
+         * Handles interaction with a player, dealing fire damage.
+         *
+         * @param player            (ICoopPlayer): The player interacting with the HellSkull.
+         * @param isCellInteraction (boolean): True if the interaction is at the cell level.
+         */
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
-            // FIXME: Interaction doesn't trigger because player cannot be in the same cell (some confusion about "contact interaction")
             player.hit(ICoopPlayer.DamageType.FIRE);
         }
     }

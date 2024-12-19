@@ -9,19 +9,27 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 /**
- * A GUI that shows information about the player on the screen.
+ * A GUI that displays player status information on the screen.
  */
 public class ICoopPlayerStatusGUI implements Graphics {
 
-    private final static int DEPTH = 2000;
+    /** The rendering depth for the GUI elements. */
+    private static final int DEPTH = 2000;
+
+    /** The player whose status is displayed in the GUI. */
     private final ICoopPlayer player;
+
+    /** Indicates whether the GUI is flipped to the left-hand side. */
     private final boolean flipped;
 
+    /** The current item to be displayed in the GUI. */
     private ICoopItem item = null;
 
     /**
-     * @param player  (ICoopPlayer) : player for which gui is drawn
-     * @param flipped (boolean) : choice of right and left hand side gui (true is left)
+     * Constructs a GUI for displaying the player's status.
+     *
+     * @param player  (ICoopPlayer): The player for whom the GUI is displayed. Not null.
+     * @param flipped (boolean): Determines if the GUI is flipped to the left-hand side (true for left).
      */
     public ICoopPlayerStatusGUI(ICoopPlayer player, boolean flipped) {
         this.player = player;
@@ -29,40 +37,57 @@ public class ICoopPlayerStatusGUI implements Graphics {
     }
 
     /**
-     * @param item, sets current gui item to this item (enables its displaying)
+     * Sets the current item to be displayed in the GUI.
+     *
+     * @param item (ICoopItem): The item to display in the GUI. Can be null.
      */
     public void setCurrentItem(ICoopItem item) {
         this.item = item;
     }
 
     /**
-     * @param canvas target, not null
-     *               Description : will calculate position of player gui interface,
-     *               including flipped for right and left hand side gui
-     *               displays the gui
+     * Draws the player status GUI on the canvas.
+     *
+     * @param canvas (Canvas): The canvas on which the GUI is drawn. Not null.
      */
     @Override
     public void draw(Canvas canvas) {
-        // Compute width, height and anchor
+        // Compute canvas dimensions and aspect ratio
         float width = canvas.getTransform().getX().getX();
         float height = canvas.getTransform().getY().getY();
 
         float ratio = canvas.getWidth() / (float) canvas.getHeight();
-        if (ratio > 1)
+        if (ratio > 1) {
             height = width / ratio;
-        else
+        } else {
             width = height * ratio;
+        }
 
-        Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(flipped ? (-width / 2 + 2) : width / 2, height / 2));
+        // Determine anchor position based on flipping
+        Vector anchor = canvas.getTransform().getOrigin().sub(new Vector(
+                flipped ? (-width / 2 + 2) : width / 2,
+                height / 2
+        ));
 
-        //Draw selected gear
-        ImageGraphics gearDisplay = new ImageGraphics(ResourcePath.getSprite("icoop/gearDisplay"), 1.5f, 1.5f, new RegionOfInterest(0, 0, 32, 32), anchor.add(new Vector(0, height - 1.75f)), 1, DEPTH);
+        // Draw the gear display background
+        ImageGraphics gearDisplay = new ImageGraphics(
+                ResourcePath.getSprite("icoop/gearDisplay"),
+                1.5f, 1.5f,
+                new RegionOfInterest(0, 0, 32, 32),
+                anchor.add(new Vector(0, height - 1.75f)),
+                1, DEPTH
+        );
         gearDisplay.draw(canvas);
 
+        // Draw the selected item if available
         if (item != null) {
-            ImageGraphics itemDisplay = new ImageGraphics(ResourcePath.getSprite(item.getSpriteName()), 0.5f,
-                    0.5f, new RegionOfInterest(0, 0, 16, 16), anchor.add(new
-                    Vector(0.5f, height - 1.25f)), 1, DEPTH);
+            ImageGraphics itemDisplay = new ImageGraphics(
+                    ResourcePath.getSprite(item.getSpriteName()),
+                    0.5f, 0.5f,
+                    new RegionOfInterest(0, 0, 16, 16),
+                    anchor.add(new Vector(0.5f, height - 1.25f)),
+                    1, DEPTH
+            );
             itemDisplay.draw(canvas);
         }
     }

@@ -15,27 +15,64 @@ import java.util.*;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
 
+/**
+ * Represents a Grenadier enemy in the game.
+ * The Grenadier has multiple states including idle, walking, protecting, and attacking.
+ * It can place explosives and interact with players.
+ */
 public class Grenadier extends Enemy {
+
+    /**
+     * The duration of each frame in the animations.
+     */
     private static final int ANIMATION_DURATION = 24;
 
+    /**
+     * The animation used in the default states (idle, walking, attacking).
+     */
     private final OrientedAnimation defaultAnimation;
+
+    /**
+     * The animation used when the Grenadier is protecting itself.
+     */
     private final OrientedAnimation protectAnimation;
 
+    /**
+     * Timer for managing idle state duration.
+     */
     private final Timer idleTimer;
+
+    /**
+     * Timer for managing walk state duration.
+     */
     private final Timer walkTimer;
+
+    /**
+     * Timer for managing protect state duration.
+     */
     private final Timer protectTimer;
 
+    /**
+     * The current state of the Grenadier (Idle, Walk, Protect, or Attack).
+     */
     private GrenadierState currentState;
+
+    /**
+     * The target player for the Grenadier to attack.
+     */
     private ICoopPlayer target = null;
 
+    /**
+     * Handles interactions between the Grenadier and other entities.
+     */
     private final GrenadierInteractionHandler interactionHandler;
 
     /**
-     * Default MovableAreaEntity constructor
+     * Constructs a Grenadier with the specified parameters.
      *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity. Not null
-     * @param position    (Coordinate): Initial position of the entity. Not null
+     * @param area        (Area): The area to which the Grenadier belongs. Not null.
+     * @param orientation (Orientation): The initial orientation of the Grenadier. Not null.
+     * @param position    (DiscreteCoordinates): The initial position of the Grenadier. Not null.
      */
     public Grenadier(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 1, new ArrayList<>(Arrays.asList(ICoopPlayer.DamageType.WATER)));
@@ -67,6 +104,11 @@ public class Grenadier extends Enemy {
         this.interactionHandler = new GrenadierInteractionHandler();
     }
 
+    /**
+     * Draws the Grenadier based on its current state.
+     *
+     * @param canvas (Canvas): The canvas to draw the Grenadier on.
+     */
     @Override
     public void draw(Canvas canvas) {
         if (isDead()) {
@@ -87,10 +129,9 @@ public class Grenadier extends Enemy {
     }
 
     /**
-     * @param deltaTime elapsed time since last update, in seconds, non-negative
-     *                  <p>
-     *                  Description : Finite state machine for 3 states: attack, idle, protect (guard)
-     *                  will behave appropriately to each state
+     * Updates the Grenadier's state machine and behavior based on its current state.
+     *
+     * @param deltaTime (float): The time elapsed since the last update.
      */
     @Override
     public void update(float deltaTime) {
@@ -114,13 +155,24 @@ public class Grenadier extends Enemy {
 
     /***** ACTIONS *****/
 
+    /**
+     * Handles the Grenadier's idle behavior.
+     *
+     * @param deltaTime (float): The time elapsed since the last update.
+     */
     private void idle(float deltaTime) {
         idleTimer.update(deltaTime);
 
-        if (idleTimer.isCompleted())
+        if (idleTimer.isCompleted()) {
             gotoWalkState();
+        }
     }
 
+    /**
+     * Handles the Grenadier's walking behavior.
+     *
+     * @param deltaTime (float): The time elapsed since the last update.
+     */
     private void walk(float deltaTime) {
         defaultAnimation.update(deltaTime);
 
@@ -128,10 +180,17 @@ public class Grenadier extends Enemy {
 
         moveRandom(2);
 
-        if (walkTimer.isCompleted())
+        if (walkTimer.isCompleted()) {
             gotoIdleState();
+        }
     }
 
+    /**
+     * Handles the Grenadier's attacking behavior.
+     * Guides the Grenadier to the target and places an explosive if close enough.
+     *
+     * @param deltaTime (float): The time elapsed since the last update.
+     */
     private void attack(float deltaTime) {
         defaultAnimation.update(deltaTime);
 
@@ -145,35 +204,54 @@ public class Grenadier extends Enemy {
         }
     }
 
+    /**
+     * Handles the Grenadier's protecting behavior.
+     *
+     * @param deltaTime (float): The time elapsed since the last update.
+     */
     private void protect(float deltaTime) {
-        if (!protectAnimation.isCompleted())
+        if (!protectAnimation.isCompleted()) {
             protectAnimation.update(deltaTime);
+        }
 
         moveRandom(1);
 
         protectTimer.update(deltaTime);
 
-        if (protectTimer.isCompleted())
+        if (protectTimer.isCompleted()) {
             gotoIdleState();
+        }
     }
 
     /***** STATE HANDLERS *****/
 
+    /**
+     * Transitions the Grenadier to the Idle state.
+     */
     private void gotoIdleState() {
         defaultAnimation.reset();
         currentState = GrenadierState.IDLE;
         idleTimer.setTimer(generateRandomTime(5));
     }
 
+    /**
+     * Transitions the Grenadier to the Walk state.
+     */
     private void gotoWalkState() {
         currentState = GrenadierState.WALK;
         walkTimer.setTimer(generateRandomTime(2, 3));
     }
 
+    /**
+     * Transitions the Grenadier to the Attack state.
+     */
     private void gotoAttackState() {
         currentState = GrenadierState.ATTACK;
     }
 
+    /**
+     * Transitions the Grenadier to the Protect state.
+     */
     private void gotoProtectState() {
         protectAnimation.reset();
         currentState = GrenadierState.PROTECT;
@@ -183,13 +261,14 @@ public class Grenadier extends Enemy {
     /***** BEHAVIOR *****/
 
     /**
-     * @param speedFactor speed of grenadier
-     *                    <p>
-     *                    Description : generates sudo random number dictating its subsequent movement
+     * Moves the Grenadier in a random direction.
+     *
+     * @param speedFactor (int): The speed of the movement.
      */
     private void moveRandom(int speedFactor) {
-        if (isDisplacementOccurs())
+        if (isDisplacementOccurs()) {
             return;
+        }
 
         boolean changeDirection = RandomGenerator.getInstance().nextDouble() < 0.4;
         if (changeDirection) {
@@ -201,18 +280,19 @@ public class Grenadier extends Enemy {
     }
 
     /**
-     * Description : Homing target locking system to guide grenadier to player
+     * Moves the Grenadier towards its target.
      */
     private void moveToTarget() {
-        if (isDisplacementOccurs())
+        if (isDisplacementOccurs()) {
             return;
+        }
 
         Vector v = target.getPosition().sub(getPosition());
 
-        if (v.getLength() <= 1.5f)
+        if (v.getLength() <= 1.5f) {
             return;
+        }
 
-        // Use values over Orientation.fromVector method to prevent null pointer exception
         Orientation horizontal = v.x > 0 ? RIGHT : LEFT;
         Orientation vertical = v.y > 0 ? UP : DOWN;
 
@@ -228,15 +308,12 @@ public class Grenadier extends Enemy {
     }
 
     /**
-     * @return if bomb is placed
-     * Description : grenadier will try to place a bomb against the player
+     * Places an explosive at the Grenadier's position.
      */
     private void placeExplosive() {
         Explosive explosive = new Explosive(getOwnerArea(), LEFT, getFieldOfViewCells().getFirst(), 100);
 
-        // FIXME: Bombs can be placed in the same tile since they are walkable & does not take cell space
         if (getOwnerArea().canEnterAreaCells(explosive, getFieldOfViewCells())) {
-            // FIXME: Prevent activation of bomb immediately after placing
             getOwnerArea().registerActor(explosive);
             explosive.activate();
         }
@@ -244,10 +321,23 @@ public class Grenadier extends Enemy {
 
     /***** RANDOM GENERATOR *****/
 
+    /**
+     * Generates a random time within a maximum range.
+     *
+     * @param max (float): The maximum time.
+     * @return (float): A random time.
+     */
     private float generateRandomTime(float max) {
         return RandomGenerator.getInstance().nextFloat(0, max);
     }
 
+    /**
+     * Generates a random time within a range.
+     *
+     * @param min (float): The minimum time.
+     * @param max (float): The maximum time.
+     * @return (float): A random time.
+     */
     private float generateRandomTime(float min, float max) {
         return RandomGenerator.getInstance().nextFloat(min, max);
     }
@@ -256,8 +346,9 @@ public class Grenadier extends Enemy {
 
     @Override
     public void hit(ICoopPlayer.DamageType damageType) {
-        if (!currentState.equals(GrenadierState.PROTECT))
+        if (!currentState.equals(GrenadierState.PROTECT)) {
             super.hit(damageType);
+        }
     }
 
     @Override
@@ -270,8 +361,9 @@ public class Grenadier extends Enemy {
         if (currentState != GrenadierState.ATTACK) {
             List<DiscreteCoordinates> perceptionField = new ArrayList<>(8);
 
-            for (int i = 1; i <= 8; i++)
+            for (int i = 1; i <= 8; i++) {
                 perceptionField.add(getCurrentMainCellCoordinates().jump(getOrientation().toVector().mul(i)));
+            }
 
             return perceptionField;
         }
@@ -302,27 +394,43 @@ public class Grenadier extends Enemy {
     /***** STATES *****/
 
     /**
-     * enum of finite state machine for grenadier
+     * Enum representing the finite states of the Grenadier.
      */
     private enum GrenadierState {
         IDLE,
         WALK,
         PROTECT,
-        ATTACK,
-        ;
+        ATTACK
     }
 
     /***** INTERACTION HANDLERS *****/
 
+    /**
+     * Handles specific interactions for the Grenadier.
+     */
     private class GrenadierInteractionHandler implements ICoopInteractionVisitor {
+
+        /**
+         * Default interaction with generic interactable entities.
+         *
+         * @param other             (Interactable): The interacting entity.
+         * @param isCellInteraction (boolean): True if the interaction is at the cell level.
+         */
         @Override
         public void interactWith(Interactable other, boolean isCellInteraction) {
         }
 
+        /**
+         * Handles interaction with a player, transitioning the Grenadier to attack mode.
+         *
+         * @param player            (ICoopPlayer): The player interacting with the Grenadier.
+         * @param isCellInteraction (boolean): True if the interaction is at the cell level.
+         */
         @Override
         public void interactWith(ICoopPlayer player, boolean isCellInteraction) {
-            if (currentState == GrenadierState.PROTECT)
+            if (currentState == GrenadierState.PROTECT) {
                 return;
+            }
 
             gotoAttackState();
 

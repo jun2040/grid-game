@@ -430,7 +430,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     /**
-     * will move the player in the orienation given by the keybinds
+     * Moves the player in the orientation given by the keybinds.
      */
     private void moveIfPressed(Orientation orientation, Button b) {
         if (b.isDown()) {
@@ -442,7 +442,9 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     /**
-     * @param damageType sets immunity to this damage type
+     * Sets immunity to a specific damage type.
+     *
+     * @param damageType the damage type to be set as immune.
      */
     private void setImmunityType(DamageType damageType) {
         this.immunityType = damageType;
@@ -460,18 +462,18 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(Door door, boolean isCellInteraction) {
-            if (isCellInteraction && door.teleportable() && door.isOn())
+            if (isCellInteraction && door.teleportable() && door.isOn()) {
                 teleportController.setTeleport(door);
+            }
         }
 
         @Override
         public void interactWith(Explosive explosive, boolean isCellInteraction) {
             if (isCellInteraction) {
-                // FIXME: Flatten out if-statements for readability + branching minimization
                 if (!explosive.isActivated() && !explosive.isExploded()) {
-                    if (!explosive.isCollected())
+                    if (!explosive.isCollected()) {
                         inventory.addPocketItem(ICoopItem.BOMB, 1);
-
+                    }
                     explosive.collect();
                 }
             } else {
@@ -484,14 +486,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(ElementalWall elementalWall, boolean isCellInteraction) {
-            if (isCellInteraction && elementalWall.isOn())
+            if (isCellInteraction && elementalWall.isOn()) {
                 hit(DamageType.toType(element));
+            }
         }
 
         @Override
         public void interactWith(ElementalItem elementalItem, boolean isCellInteraction) {
-            if (isCellInteraction && elementalItem.element().equals(element))
+            if (isCellInteraction && elementalItem.element().equals(element)) {
                 elementalItem.collect();
+            }
         }
 
         @Override
@@ -512,14 +516,16 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
 
         @Override
         public void interactWith(PressurePlate pressurePlate, boolean isCellInteraction) {
-            if (isCellInteraction)
+            if (isCellInteraction) {
                 pressurePlate.activate();
+            }
         }
 
         @Override
         public void interactWith(Enemy enemy, boolean isCellInteraction) {
-            if (!isCellInteraction && currentState == PlayerState.ATTACK && currentItem.equals(ICoopItem.SWORD))
+            if (!isCellInteraction && currentState == PlayerState.ATTACK && currentItem.equals(ICoopItem.SWORD)) {
                 enemy.hit(DamageType.PHYSICAL);
+            }
         }
 
         @Override
@@ -550,12 +556,12 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
         public void interactWith(Staff staff, boolean isCellInteraction) {
             if (isCellInteraction) {
                 staff.collect();
-                if (staff.element().equals(ElementType.WATER.getName()))
+                if (staff.element().equals(ElementType.WATER.getName())) {
                     inventory.addPocketItem(ICoopItem.STAFF_WATER, 1);
-                else
+                } else {
                     inventory.addPocketItem(ICoopItem.STAFF_FIRE, 1);
+                }
             }
-
         }
 
         @Override
@@ -565,7 +571,7 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
     }
 
     /**
-     * enum associates damage type to the damage dealt, and its name
+     * Enum representing different damage types and their properties.
      */
     public enum DamageType {
         PHYSICAL(2, "physical"),
@@ -582,16 +588,26 @@ public class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, I
             this.damageName = damageName;
         }
 
+        /**
+         * Converts a string to a corresponding DamageType.
+         *
+         * @param damageName (String): The name of the damage type.
+         * @return (DamageType): The corresponding damage type.
+         */
         public static DamageType toType(String damageName) {
             for (DamageType damageType : DamageType.values()) {
-                if (damageType.damageName.equals(damageName))
+                if (damageType.damageName.equals(damageName)) {
                     return damageType;
+                }
             }
 
             return NONE;
         }
     }
 
+    /**
+     * Enum representing the possible states of the player.
+     */
     private enum PlayerState {
         IDLE,
         ATTACK;

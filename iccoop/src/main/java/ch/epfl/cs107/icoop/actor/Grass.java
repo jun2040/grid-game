@@ -9,20 +9,38 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Canvas;
 
+/**
+ * Represents a grass obstacle in the game.
+ * The grass can be destroyed, triggering a sliced animation and a chance to drop a coin.
+ */
 public class Grass extends Obstacle {
+
+    /**
+     * The duration of each frame in the sliced animation.
+     */
     private final static int ANIMATION_DURATION = 4;
 
+    /**
+     * The animation displayed when the grass is sliced.
+     */
     private final Animation slicedAnimation;
+
+    /**
+     * The sprite representing the grass in its initial state.
+     */
     private final Sprite sprite;
 
+    /**
+     * Tracks whether the grass has been destroyed.
+     */
     private boolean isDestroyed;
 
     /**
-     * Default AreaEntity constructor
+     * Constructs a Grass entity with the specified parameters.
      *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
-     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param area        (Area): The area to which the grass belongs. Not null.
+     * @param orientation (Orientation): The initial orientation of the grass. Not null.
+     * @param position    (DiscreteCoordinates): The initial position of the grass. Not null.
      */
     public Grass(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
@@ -35,12 +53,18 @@ public class Grass extends Obstacle {
                 ANIMATION_DURATION / 2, false);
     }
 
+    /**
+     * Updates the state of the grass, including the sliced animation and coin drop logic.
+     *
+     * @param deltaTime (float): The time elapsed since the last update.
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        if (isDestroyed)
+        if (isDestroyed) {
             slicedAnimation.update(deltaTime);
+        }
 
         if (slicedAnimation.isCompleted()) {
             unregister();
@@ -48,43 +72,58 @@ public class Grass extends Obstacle {
         }
     }
 
+    /**
+     * Draws the appropriate representation of the grass based on its state.
+     *
+     * @param canvas (Canvas): The canvas to draw the grass on.
+     */
     @Override
     public void draw(Canvas canvas) {
-        if (!isDestroyed)
+        if (!isDestroyed) {
             sprite.draw(canvas);
-        else
+        } else {
             slicedAnimation.draw(canvas);
+        }
     }
 
     /**
-     * drops coin based on a sudo random probability generator
+     * Drops a coin with a 50% chance upon grass destruction.
      */
     private void dropCoin() {
-        if (Math.random() < 0.5)
+        if (Math.random() < 0.5) {
             getOwnerArea().registerActor(new Coin(getOwnerArea(), Orientation.UP, this.getCurrentMainCellCoordinates()));
+        }
     }
 
     /**
-     * Destroys grass bush
+     * Marks the grass as destroyed, triggering the sliced animation.
      */
     public void destroy() {
         isDestroyed = true;
     }
 
     /**
-     * unregisters actor from area
+     * Unregisters the grass from its owner area.
      */
     private void unregister() {
         getOwnerArea().unregisterActor(this);
     }
 
     /**
-     * @return whether it has been destroyed
+     * Checks whether the grass has been destroyed.
+     *
+     * @return (boolean): True if the grass is destroyed, false otherwise.
      */
     public boolean isDestroyed() {
         return isDestroyed;
     }
 
+    /**
+     * Handles interactions with other entities, delegating to the visitor.
+     *
+     * @param v                 (AreaInteractionVisitor): The visitor handling the interaction.
+     * @param isCellInteraction (boolean): True if the interaction is at the cell level.
+     */
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);

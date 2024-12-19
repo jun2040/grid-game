@@ -8,43 +8,59 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Canvas;
 
+/**
+ * Represents a Rock entity, which acts as an obstacle in the game.
+ */
 public class Rock extends Obstacle {
+
+    /** The sprite representing the visual appearance of the rock. */
     private final Sprite sprite;
 
+    /** Indicates whether the rock is destroyed. */
     private boolean isDestroyed;
 
     /**
-     * Default AreaEntity constructor
+     * Constructs a Rock entity.
      *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
-     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param area        (Area): The area to which the rock belongs. Not null.
+     * @param orientation (Orientation): The initial orientation of the rock. Not null.
+     * @param position    (DiscreteCoordinates): The initial position of the rock in the area. Not null.
      */
     public Rock(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
-
         this.sprite = new Sprite("rock.1", 1, 1, this);
     }
 
     /**
-     * calls unregister
+     * Destroys the rock by unregistering it from the area.
      */
     public void destroy() {
         unregister();
     }
 
     /**
-     * unregisters the projectile from the current area
+     * Unregisters the rock from the current area.
      */
     private void unregister() {
         getOwnerArea().unregisterActor(this);
     }
 
+    /**
+     * Draws the rock's sprite on the canvas.
+     *
+     * @param canvas (Canvas): The canvas to draw on.
+     */
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
     }
 
+    /**
+     * Handles interactions with the rock.
+     *
+     * @param v                (AreaInteractionVisitor): The visitor managing the interaction.
+     * @param isCellInteraction (boolean): True if the interaction is at the cell level.
+     */
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
