@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Chest extends Container implements ElementalEntity, Interactable, Interactor, Logic {
+public class Chest extends Container implements Interactable, Interactor, Logic {
     private final Animation spriteOpening;
     private final static int ANIMATION_DURATION = 10;
     private Logic isOpen = Logic.FALSE;
@@ -33,12 +33,11 @@ public class Chest extends Container implements ElementalEntity, Interactable, I
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
-     * @param elementType
      * @param dialog
      * @param isOpen
      */
-    public Chest(Area area, Orientation orientation, DiscreteCoordinates position, Logic isOpen, ElementType elementType, DialogHandler dialog) {
-        super(area, orientation, position, elementType);
+    public Chest(Area area, Orientation orientation, DiscreteCoordinates position, Logic isOpen, DialogHandler dialog) {
+        super(area, orientation, position);
         //this.sprite =  new Sprite("external/chest_closed", 1, 1, this);
         this.isOpen = isOpen;
         this.dialogHandler = dialog;
@@ -90,5 +89,10 @@ public class Chest extends Container implements ElementalEntity, Interactable, I
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public boolean takeCellSpace() {
+        return super.takeCellSpace();
     }
 }
